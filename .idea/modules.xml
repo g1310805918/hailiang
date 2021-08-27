@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common-service/common-service.iml" filepath="$PROJECT_DIR$/common-service/common-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-web/common-web.iml" filepath="$PROJECT_DIR$/common-web/common-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java-common-vastbase-hailiang.iml" filepath="$PROJECT_DIR$/java-common-vastbase-hailiang.iml" />
+    </modules>
+  </component>
+</project>

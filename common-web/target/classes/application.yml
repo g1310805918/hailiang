@@ -1,0 +1,52 @@
+server:
+  servlet:
+    context-path: /
+  port: 7979
+
+spring:
+  application:
+    name: common-web
+  task:
+    scheduling:
+      pool:
+        size: 32
+  #数据源
+  datasource:
+    url: jdbc:postgresql://139.9.47.39:8888/vbcrm?currentSchema=vbcrm
+    username: vbcrm
+    password: Vbcrm@2021
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      # 第一次建表create  后面用update，要不然每次重启都会新建表，，，
+      ddl-auto: update
+    show-sql: true
+  #redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guo
+    password: guo
+    virtual-host: /hailiang
+
+#mybatis-plus
+mybatis-plus:
+  #全局配置
+  global-config:
+    #数据库配置
+    db-config:
+      # 全局删除标志 ，，不用修改
+      logic-delete-field: flag
+      # 逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
+  #mybatis-plus打印SQL语句
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  #mapper文件位置
+  mapper-locations: classpath*:mapper/*.xml

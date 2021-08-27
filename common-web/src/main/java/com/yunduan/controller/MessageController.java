@@ -1,0 +1,82 @@
+package com.yunduan.controller;
+
+
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yunduan.entity.AccountMsg;
+import com.yunduan.request.front.message.InitListReq;
+import com.yunduan.service.AccountMsgService;
+import com.yunduan.utils.AESUtil;
+import com.yunduan.utils.ContextUtil;
+import com.yunduan.utils.ResultUtil;
+import com.yunduan.utils.StatusCodeUtil;
+import com.yunduan.vo.MsgDetailVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.Map;
+
+@RestController
+@Api(tags = {"系统、验证 消息接口"})
+@RequestMapping("/api/msg")
+public class MessageController {
+
+    private static final transient Logger log = LoggerFactory.getLogger(MessageController.class);
+
+    @Autowired
+    private ResultUtil resultUtil;
+    @Autowired
+    private AccountMsgService accountMsgService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+
+    @GetMapping("/account-msg-record")
+    @ApiOperation(httpMethod = "GET",value = "用户消息列表")
+    public ResultUtil<Map<String, Object>> accountMsgRecord(InitListReq initListReq) {
+        initListReq = AESUtil.decryptToObj(initListReq.getData(),InitListReq.class);
+        //消息列表
+        Map<String, Object> map = accountMsgService.accountMsgListVo(ContextUtil.getUserId(), initListReq);
+        return resultUtil.AesJSONSuccess("SUCCESS",map);
+    }
+
+
+    @GetMapping("/msg-detail/{id}")
+    @ApiOperation(httpMethod = "GET",value = "消息详情")
+    public ResultUtil<MsgDetailVo> msgDetail(@PathVariable("id") String id) {
+        if (StrUtil.hasEmpty(id)) {
+            log.error("消息详情 id 为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        MsgDetailVo detailVo = accountMsgService.queryMsgById(id);
+        return detailVo != null ? resultUtil.AesJSONSuccess("SUCCESS",detailVo) : resultUtil.AesFAILError("未知错误");
+    }
+
+
+    @PostMapping("/remove-msg/{id}")
+    @ApiOperation(httpMethod = "POST",value = "删除消息")
+    public ResultUtil<String> removeMsg(@PathVariable("id") String id){
+        if (StrUtil.hasEmpty(id)) {
+            log.error("删除消息 id 为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        AccountMsg accountMsg = accountMsgService.getOne(new QueryWrapper<AccountMsg>().eq("id", id));
+        if (accountMsg == null) {
+            return resultUtil.AesFAILError("消息不存在");
+        }
+        accountMsg.setDelFlag(StatusCodeUtil.DELETE_FLAG).setUpdateTime(new Date());
+        boolean flag = accountMsgService.update(accountMsg, new QueryWrapper<AccountMsg>().eq("id", id));
+        return flag ? resultUtil.AesJSONSuccess("删除成功","") : resultUtil.AesFAILError("删除失败");
+    }
+
+
+
+}
