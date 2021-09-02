@@ -1,6 +1,5 @@
 package com.yunduan.serviceimpl;
 
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -43,7 +42,7 @@ public class AccountMsgServiceImpl extends ServiceImpl<AccountMsgMapper, Account
         List<AccountMsg> accountMsgList = accountMsgMapper.selectPage(
                 new Page<>(initListReq.getPageNo(), initListReq.getPageSize()),
                 new QueryWrapper<AccountMsg>()
-                        .eq("user_id", userId)
+                        .eq("account_id", userId)
                         .eq(initListReq.getMessageType() != null,"msg_type",initListReq.getMessageType())
         ).getRecords();
 
@@ -51,14 +50,14 @@ public class AccountMsgServiceImpl extends ServiceImpl<AccountMsgMapper, Account
             AccountMessageListVo vo = null;
             for (AccountMsg msg : accountMsgList) {
                 vo = new AccountMessageListVo();
-                vo.setId(msg.getId().toString()).setCreateTime(DateUtil.formatDateTime(msg.getCreateTime())).setMessageTitle(msg.getMsgTitle()).setMessageType(msg.getMsgType());
+                vo.setId(msg.getId().toString()).setCreateTime(msg.getCreateTime()).setMessageTitle(msg.getMsgTitle()).setMessageType(msg.getMsgType());
                 voList.add(vo);
             }
         }
         //总消息数
-        Integer total = accountMsgMapper.selectCount(new QueryWrapper<AccountMsg>().eq("user_id", userId).eq(initListReq.getMessageType() != null, "msg_type", initListReq.getMessageType()));
+        Integer total = accountMsgMapper.selectCount(new QueryWrapper<AccountMsg>().eq("account_id", userId).eq(initListReq.getMessageType() != null, "msg_type", initListReq.getMessageType()));
         //未读数量
-        Integer noReadTotal = accountMsgMapper.selectCount(new QueryWrapper<AccountMsg>().eq("user_id", userId).eq(initListReq.getMessageType() != null, "msg_type", initListReq.getMessageType()).eq("is_read", 0));
+        Integer noReadTotal = accountMsgMapper.selectCount(new QueryWrapper<AccountMsg>().eq("account_id", userId).eq(initListReq.getMessageType() != null, "msg_type", initListReq.getMessageType()).eq("is_read", 0));
         map.put("voList",voList);
         map.put("total",total);
         map.put("noReadTotal",noReadTotal);

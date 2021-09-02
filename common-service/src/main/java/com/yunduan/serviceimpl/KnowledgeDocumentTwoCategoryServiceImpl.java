@@ -12,6 +12,7 @@ import com.yunduan.vo.KnowledgeTwoThreeCategoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,27 @@ public class KnowledgeDocumentTwoCategoryServiceImpl extends ServiceImpl<Knowled
                 vo.setThreeCategoryList(threeVoList);
                 voList.add(vo);
             }
+        }
+        return voList;
+    }
+
+
+    /**
+     * 获取一级分类下的二级列表
+     * @param oneCategoryId 一级id
+     * @return list
+     */
+    @Override
+    public List<KnowledgeOneCategoryVo> queryTwoCategoryList(String oneCategoryId) {
+        List<KnowledgeOneCategoryVo> voList = new ArrayList<>();
+        //二级分裂列表
+        List<KnowledgeDocumentTwoCategory> twoCategoryList = knowledgeDocumentTwoCategoryMapper.selectList(new QueryWrapper<KnowledgeDocumentTwoCategory>().eq("one_category_id", oneCategoryId));
+        if (!CollectionUtils.isEmpty(twoCategoryList)) {
+            twoCategoryList.forEach(twoCategory -> {
+                KnowledgeOneCategoryVo vo = new KnowledgeOneCategoryVo();
+                vo.setId(twoCategory.getId().toString()).setTitle(twoCategory.getCategoryTitle());
+                voList.add(vo);
+            });
         }
         return voList;
     }

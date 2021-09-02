@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunduan.mapper.BindingAccountCSIMapper">
+
+    <!-- 用户绑定的CSI记录列表 -->
+    <select id="selectAccountBindingRecord" resultType="com.yunduan.vo.AccountBindingCSI">
+        SELECT
+            A.ID AS binding_id,
+            A.IDENTITY AS IDENTITY,
+            A.status AS status,
+            b.csi_number AS csi_number,
+            b.company_name AS company_name,
+            b.product_name AS product_name
+        FROM
+            tb_binding_account_csi
+            A LEFT JOIN tb_company_csi b ON A.csi_id = b.ID
+        WHERE
+            b.del_flag = 0
+            AND A.account_id = #{accountId}
+    </select>
+
+
+    <!-- 查询CSI下绑定的人员列表 -->
+    <select id="selectCSIBindingPersonList" resultType="com.yunduan.vo.AccountBindingCSIPersonList">
+        SELECT
+            b.username AS username,
+            b.mobile AS mobile,
+            b.ID AS account_id,
+            A.create_time AS create_time,
+            A.status AS status
+        FROM
+            tb_binding_account_csi
+            A LEFT JOIN tb_account b ON A.account_id = b.ID
+        WHERE
+            A.id != #{bindingId}
+            AND A.csi_id = #{csiId}
+            AND A.IDENTITY = 1
+        ORDER BY A.create_time DESC
+    </select>
+
+
+</mapper>

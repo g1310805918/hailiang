@@ -22,6 +22,7 @@
         <lombok.version>1.18.20</lombok.version>
         <alibaba.durid.version>1.1.18</alibaba.durid.version>
         <swagger.version>2.9.2</swagger.version>
+        <swagger.models.version>1.5.22</swagger.models.version>
         <httpclient.version>4.5.6</httpclient.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <fastjson.version>1.2.75</fastjson.version>
@@ -34,10 +35,18 @@
         <thymeleaf.spring5.version>3.0.12.RELEASE</thymeleaf.spring5.version>
         <thymeleaf.extras.java8time.version>3.0.4.RELEASE</thymeleaf.extras.java8time.version>
         <amqp.version>2.3.12.RELEASE</amqp.version>
+        <qiniu.version>7.8.0</qiniu.version>
+        <javax.mail.version>1.4.7</javax.mail.version>
     </properties>
 
 
     <dependencies>
+
+        <!-- websocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
 
         <!--rabbitmq-->
         <dependency>
@@ -46,20 +55,19 @@
             <version>${amqp.version}</version>
         </dependency>
 
-        <!-- javaMail API 发送邮件-->
+        <!-- Mail -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <version>${javax.mail.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5 -->
+        <!-- thymeleaf-spring5 -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring5</artifactId>
             <version>${thymeleaf.spring5.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-java8time</artifactId>
@@ -68,7 +76,6 @@
 
 
         <!-- 日志门面 -->
-        <!-- private static final transient Logger log = LoggerFactory.getLogger(Quickstart.class); -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -160,7 +167,7 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
-            <version>1.5.22</version>
+            <version>${swagger.models.version}</version>
         </dependency>
 
 
@@ -176,7 +183,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- fastjson -->
@@ -221,16 +227,16 @@
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>7.2.6</version>
-            <scope>compile</scope>
+            <version>${qiniu.version}</version>
         </dependency>
 
-
-        <!-- 前后端交互Long转String -->
+        <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
+
+        <!-- 前后端交互Long转String -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -246,6 +252,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <!-- 注解验证依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
 

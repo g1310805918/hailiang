@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunduan.mapper.KnowledgeDocumentMapper">
+
+    <!-- 模糊搜所知识文档以及文档分类 -->
+    <select id="selectKnowledgeLazySearch" resultType="com.yunduan.vo.KnowledgeLazySearchVo">
+        SELECT id,category_title, 1 AS type FROM tb_knowledge_document_one_category WHERE del_flag = 0 AND category_title LIKE concat('%',#{searchContent},'%')
+        UNION ALL
+        SELECT id,category_title, 2 AS type  FROM tb_knowledge_document_two_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
+        UNION ALL
+        SELECT id,category_title, 3 AS type  FROM tb_knowledge_document_three_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
+        UNION ALL
+        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document WHERE del_flag = 0 AND  doc_title LIKE concat ('%',#{searchContent},'%')
+        UNION ALL
+        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document WHERE del_flag = 0 AND  doc_content LIKE concat ('%',#{searchContent},'%')
+    </select>
+
+    <!-- 某搜索包含xxx的id集合 -->
+    <select id="selectDocumentIdList" resultType="java.lang.Long">
+        SELECT DISTINCT three_category_id from tb_knowledge_document WHERE del_flag = 0 AND  doc_content LIKE concat ('%',#{searchContent},'%')
+    </select>
+
+
+</mapper>

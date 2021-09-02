@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.yunduan.config.LongJsonDeserializer;
+import com.yunduan.config.LongJsonSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,6 +33,8 @@ public class KnowledgeDocumentTwoCategory implements Serializable {
     @Id
     @TableId(type = IdType.NONE)
     @ApiModelProperty("id")
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     @ApiModelProperty("一级分类id")

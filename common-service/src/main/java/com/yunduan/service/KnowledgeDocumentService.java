@@ -3,8 +3,12 @@ package com.yunduan.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.KnowledgeDocument;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
+import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
 import com.yunduan.vo.KnowledgeDetailVo;
+import com.yunduan.vo.KnowledgeLazySearchVo;
+import com.yunduan.vo.KnowledgeLevel3CategoryList;
 
+import java.util.List;
 import java.util.Map;
 
 public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
@@ -25,4 +29,29 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
      * @return KnowledgeDetailVo
      */
     KnowledgeDetailVo queryDocDetailInfo(String id);
+
+
+    /**
+     * 模糊搜索知识文档
+     * @param searchContent 搜索内容
+     * @return list
+     */
+    List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent);
+
+
+    /**
+     * 模糊搜索知识文档列表数据
+     * @param knowledgeSearchReq 搜索对象
+     * @return map
+     */
+    Map<String,Object> queryKnowledgeResult(KnowledgeSearchReq knowledgeSearchReq);
+
+
+    /**
+     * 搜索内容所属文档分类
+     * @param searchContent 搜索内容
+     * @return list
+     */
+    List<KnowledgeLevel3CategoryList> querySearchContentInCategoryList(String searchContent);
+
 }

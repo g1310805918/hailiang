@@ -63,6 +63,8 @@ public class RedisUtil {
             stringSerializerInit();
             String redisCode = (String) redisTemplate.opsForValue().get(StatusCodeUtil.VERIFICATION_CODE + mobile);
             if (StrUtil.isNotEmpty(code)){
+                //删除验证码
+                removeKey(StatusCodeUtil.VERIFICATION_CODE + mobile);
                 return Objects.equals(code,redisCode) ? true : false;
             }
         }

@@ -48,7 +48,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         String frontAccountToken = httpServletRequest.getHeader(FRONT_TOKEN);
         if (StrUtil.hasEmpty(frontAccountToken)){
             responseData(httpServletResponse);
-            log.error(uri + ":token失效请重新登陆");
+            log.error("【拦截器】" + uri + ":token失效请重新登陆");
             return false;
         }
         if ("yun".equals(frontAccountToken)){
@@ -61,7 +61,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             log.error(uri + ":token失效请重新登陆");
             return false;
         }
-
         if (StrUtil.isNotEmpty(userId)) {
             ContextUtil.setUserId(Convert.toLong(userId));
         }

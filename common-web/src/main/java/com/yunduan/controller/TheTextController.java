@@ -24,7 +24,7 @@ public class TheTextController {
     @GetMapping("/privacy-policy")
     @ApiOperation(httpMethod = "GET",value = "隐私政策")
     public String toPrivacyPolicyPage(HttpServletRequest request) {
-        TheText text = theTextService.getOne(new QueryWrapper<TheText>().eq("code_title", "隐私政策"));
+        TheText text = theTextService.getOne(new QueryWrapper<TheText>().eq("id", "442841936986902528"));
         if (text != null) {
             request.setAttribute("title",text.getCodeTitle());
             request.setAttribute("content",text.getContent());
@@ -37,7 +37,7 @@ public class TheTextController {
     @GetMapping("/agreement")
     @ApiOperation(httpMethod = "GET",value = "海量数据服务协议")
     public String toAgreementPage(HttpServletRequest request) {
-        TheText text = theTextService.getOne(new QueryWrapper<TheText>().eq("code_title", "海量数据服务协议"));
+        TheText text = theTextService.getOne(new QueryWrapper<TheText>().eq("id", "442841936986902529"));
         if (text != null) {
             request.setAttribute("title",text.getCodeTitle());
             request.setAttribute("content",text.getContent());

@@ -1,25 +1,27 @@
 package com.yunduan.serviceimpl;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.Account;
-import com.yunduan.mapper.AccountMapper;
+import com.yunduan.entity.BindingAccountCSI;
+import com.yunduan.entity.CollectionAccountDocument;
+import com.yunduan.entity.CollectionFavorites;
+import com.yunduan.mapper.*;
 import com.yunduan.mapper.dao.AccountDao;
 import com.yunduan.request.front.account.AccountReq;
 import com.yunduan.request.front.account.RegisteredReq;
 import com.yunduan.service.AccountService;
 import com.yunduan.utils.*;
+import com.yunduan.vo.AccountBindingCSI;
+import com.yunduan.vo.FavoritesVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import javax.persistence.Id;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -32,6 +34,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     private AccountDao accountDao;
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    private CollectionFavoritesMapper collectionFavoritesMapper;
+    @Autowired
+    private CollectionAccountDocumentMapper collectionAccountDocumentMapper;
+    @Autowired
+    private BindingAccountCSIMapper bindingAccountCSIMapper;
 
 
     /**
@@ -99,5 +107,107 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
 
+    /**
+     * 查询用户个人中心基本信息
+     * @return Account
+     */
+    @Override
+    public Account queryAccountBaseInfo() {
+        Account account = accountMapper.selectOne(new QueryWrapper<Account>().eq("id", ContextUtil.getUserId()));
+        if (account != null) {
+            //查询用户所有收藏夹
+            List<CollectionFavorites> favoritesList = collectionFavoritesMapper.selectList(new QueryWrapper<CollectionFavorites>().eq("account_id", account.getId()));
+            //收藏夹集合
+            List<FavoritesVo> favoritesVoList = new ArrayList<>();
+            if (favoritesList.size() > 0 && favoritesList != null) {
+                //添加默认收藏夹
+                FavoritesVo vo = new FavoritesVo();
+                vo.setId(null).setCount(collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("account_id", account.getId()).eq("favorites_id", null))).setFavoritesName("默认收藏夹");
+                favoritesVoList.add(vo);
+                //得到用户创建收藏夹
+                for (CollectionFavorites collectionFavorites : favoritesList) {
+                    vo = new FavoritesVo();
+                    vo.setId(collectionFavorites.getId().toString()).setFavoritesName(collectionFavorites.getFavoritesName());
+                    //收藏夹下的文档总数
+                    Integer total = collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("account_id", account.getId()).eq("favorites_id", collectionFavorites.getId()).orderByDesc("create_time"));
+                    vo.setCount(total);
+                    favoritesVoList.add(vo);
+                }
+            }
+            //设置收藏夹
+            account.setFavoritesVoList(favoritesVoList);
+            //设置用户绑定CSI记录列表
+            List<AccountBindingCSI> bindingCSIS = bindingAccountCSIMapper.selectAccountBindingRecord(account.getId().toString());
+            account.setBindingCSIList(bindingCSIS);
+            return account;
+        }
+        return null;
+    }
+
+
+    /**
+     * 解除绑定CSI
+     * @param bindingId 绑定id
+     * @return int
+     */
+    @Override
+    public int unBindingCSI(String bindingId) {
+        BindingAccountCSI one = bindingAccountCSIMapper.selectOne(new QueryWrapper<BindingAccountCSI>().eq("id", bindingId));
+        if (one != null) {
+            return bindingAccountCSIMapper.deleteById(one.getId());
+        }
+        return 0;
+    }
+
+
+    /**
+     * 编辑用户名
+     * @param accountId 用户id
+     * @param username 用户名
+     * @return int
+     */
+    @Override
+    public int changeUsername(String accountId, String username) {
+        Account account = accountMapper.selectOne(new QueryWrapper<Account>().eq("id", accountId));
+        if (account != null) {
+            account.setUsername(username);
+            return accountMapper.update(account,new QueryWrapper<Account>().eq("id",account.getId()));
+        }
+        return 0;
+    }
+
+
+    /**
+     * 修改手机号
+     * @param accountId 用户id
+     * @param mobile 新手机号
+     * @return int
+     */
+    @Override
+    public int changeMobile(String accountId, String mobile) {
+        Account account = accountMapper.selectOne(new QueryWrapper<Account>().eq("mobile", mobile));
+        if (account != null) {
+            account.setMobile(mobile);
+            return accountMapper.update(account, new QueryWrapper<Account>().eq("id", account.getId()));
+        }
+        return 0;
+    }
+
+
+    /**
+     * 修改头像
+     * @param accountId 用户id
+     * @param headPic 头像
+     * @return int
+     */
+    @Override
+    public int changeHeadPic(String accountId, String headPic) {
+        Account account = accountMapper.selectOne(new QueryWrapper<Account>().eq("id", accountId));
+        if (account != null) {
+            account.setHeadPic(StrUtil.hasEmpty(headPic) ? account.getHeadPic() : headPic);
+            return accountMapper.update(account,new QueryWrapper<Account>().eq("id",account.getId()));
+        }
+        return 0;
+    }
 
 }

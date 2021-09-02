@@ -14,4 +14,6 @@ public class SubmitEditPasswordReq extends RequestBodyReq {
 
     @ApiModelProperty("新密码")
     private String afterPassword;
+
+
 }

@@ -1,8 +1,10 @@
 package com.yunduan.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yunduan.entity.Account;
 import com.yunduan.entity.AccountMsg;
 import com.yunduan.request.front.message.InitListReq;
 import com.yunduan.service.AccountMsgService;
@@ -35,8 +37,6 @@ public class MessageController {
     private ResultUtil resultUtil;
     @Autowired
     private AccountMsgService accountMsgService;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
 
     @GetMapping("/account-msg-record")
@@ -72,10 +72,20 @@ public class MessageController {
         if (accountMsg == null) {
             return resultUtil.AesFAILError("消息不存在");
         }
-        accountMsg.setDelFlag(StatusCodeUtil.DELETE_FLAG).setUpdateTime(new Date());
+        accountMsg.setDelFlag(StatusCodeUtil.DELETE_FLAG).setUpdateTime(DateUtil.now());
         boolean flag = accountMsgService.update(accountMsg, new QueryWrapper<AccountMsg>().eq("id", id));
         return flag ? resultUtil.AesJSONSuccess("删除成功","") : resultUtil.AesFAILError("删除失败");
     }
+
+// 监听RabbitMQ消息
+//    @RabbitListener(queues = {"topic"})
+//    @RabbitHandler
+//    public void test(Account account) {
+//        System.out.println("account = " + account);
+//    }
+
+
+
 
 
 

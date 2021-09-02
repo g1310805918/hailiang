@@ -5,19 +5,21 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.entity.Account;
+import com.yunduan.entity.Engineer;
 import com.yunduan.request.front.account.*;
-import com.yunduan.service.AccountService;
+import com.yunduan.service.*;
 import com.yunduan.utils.*;
+import com.yunduan.vo.KnowledgeOneCategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,7 +42,14 @@ public class AccountRegisteredController {
     private SendEmailUtils sendEmailUtils;
     @Autowired
     private AccountService accountService;
-
+    @Autowired
+    private EngineerService engineerService;
+    @Autowired
+    private KnowledgeDocumentOneCategoryService oneCategoryService;
+    @Autowired
+    private KnowledgeDocumentTwoCategoryService twoCategoryService;
+    @Autowired
+    private KnowledgeDocumentThreeCategoryService threeCategoryService;
 
     @PostMapping("/registered-account")
     @ApiOperation(httpMethod = "POST",value = "注册用户")
@@ -57,7 +66,6 @@ public class AccountRegisteredController {
             log.error("注册用户【" + registeredReq.getMobile() + "~" + registeredReq.getEmail() + "】 ---->  账号已存在");
             return resultUtil.AesFAILError("改账号已存在");
         }
-        log.error("测试log");
         return row > 0 ? resultUtil.AesJSONSuccess("注册成功","") : resultUtil.AesFAILError("注册失败");
     }
 
@@ -70,7 +78,7 @@ public class AccountRegisteredController {
         if (account == null) {
             return resultUtil.AesFAILError("您输入的用户不存在");
         }
-        if (!Objects.equals(AESUtil.encrypt(account.getPassword()),accountReq.getPassword())) {
+        if (!Objects.equals(account.getPassword(),AESUtil.encrypt(accountReq.getPassword()))) {
             return resultUtil.AesFAILError("你输入的账号或者密码错误");
         }
         Map<String, String> map = accountService.changeUserTokenForLogin(account.getId());
@@ -127,6 +135,7 @@ public class AccountRegisteredController {
         securityCheckReq = AESUtil.decryptToObj(securityCheckReq.getData(),SecurityCheckReq.class);
         int type = MatchDataUtil.matchDataType(securityCheckReq.getMobile());
         if (type == -1) {
+            log.error("【检查手机号或邮箱以及图片验证码是否正确】手机号或邮箱格式错误！");
             return resultUtil.AesFAILError("非法请求");
         }
         Account account = accountService.getOne(new QueryWrapper<Account>()
@@ -201,5 +210,93 @@ public class AccountRegisteredController {
         }
         return resultUtil.AesJSONSuccess("邮件发送成功","");
     }
+
+
+    @PostMapping("/pic-upload")
+    @ApiOperation(httpMethod = "POST",value = "图片上传")
+    public ResultUtil<String> picUpload(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            log.error("图片上传 file 为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        String savePath = QNiuUtil.uploadMultipartFile(file);
+        if (StrUtil.hasEmpty(savePath)) {
+            return resultUtil.AesFAILError("上传失败");
+        }
+        return resultUtil.AesJSONSuccess("SUCCESS",savePath);
+    }
+
+
+    @PostMapping("/engineer-login")
+    @ApiOperation(httpMethod = "POST",value = "工程师登录")
+    public ResultUtil<Engineer> engineerLogin(AccountReq accountReq) {
+        accountReq = AESUtil.decryptToObj(accountReq.getData(),AccountReq.class);
+        //工程师账号
+        Engineer engineer = engineerService.findByEmail(accountReq.getMobileOrEmail());
+        if (!Objects.equals(engineer.getPassword(),AESUtil.encrypt(accountReq.getPassword()))) {
+            return resultUtil.AesFAILError("您输入的账号或密码错误");
+        }
+        if (engineer.getAccountStatus() == StatusCodeUtil.ENGINEER_ACCOUNT_DISABLE_STATUS) {
+            return resultUtil.AesFAILError("该账号已被冻结，请联系管理员！");
+        }
+        engineer = engineerService.engineerLoginUpdateToken(engineer);
+        return engineer != null ? resultUtil.AesJSONSuccess("登录成功",engineer) : resultUtil.AesFAILError("登录失败");
+    }
+
+
+    @PostMapping("/engineer-change-password")
+    @ApiOperation(httpMethod = "POST",value = "工程师修改密码")
+    public ResultUtil<String> engineerChangePassword(SubmitEditPasswordReq submitEditPasswordReq) {
+        submitEditPasswordReq = AESUtil.decryptToObj(submitEditPasswordReq.getData(),SubmitEditPasswordReq.class);
+        Boolean flag = false;
+        int type = MatchDataUtil.matchDataType(submitEditPasswordReq.getMobile());
+        Engineer one = engineerService.getOne(new QueryWrapper<Engineer>().eq(type == 1, "mobile", submitEditPasswordReq.getMobile()).eq(type == 2, "email", submitEditPasswordReq.getMobile()));
+        if (one != null) {
+            one.setPassword(AESUtil.encrypt(submitEditPasswordReq.getAfterPassword()));
+            flag = engineerService.updateById(one);
+        }
+        return flag ? resultUtil.AesJSONSuccess("修改密码成功","") : resultUtil.AesFAILError("修改密码失败");
+    }
+
+
+    @GetMapping("/get-one-categoty")
+    @ApiOperation(httpMethod = "GET",value = "获取所有一级分类")
+    public ResultUtil<List<KnowledgeOneCategoryVo>> getOneCategory() {
+        //一级分类列表
+        List<KnowledgeOneCategoryVo> oneCategoryList = oneCategoryService.getKnowledgeDocOneCategoryList();
+        return resultUtil.AesJSONSuccess("SUCCESS",oneCategoryList);
+    }
+
+
+    @GetMapping("/get-two-category/{oneCategoryId}")
+    @ApiOperation(httpMethod = "GET",value = "获取一级分类下的二级分类列表")
+    public ResultUtil<List<KnowledgeOneCategoryVo>> getTwoCategory(@PathVariable("oneCategoryId") String oneCategoryId) {
+        if (StrUtil.hasEmpty(oneCategoryId)) {
+            log.error("获取一级分类下的二级分类列表【oneCategoryId】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        List<KnowledgeOneCategoryVo> voList = twoCategoryService.queryTwoCategoryList(oneCategoryId);
+        return resultUtil.AesJSONSuccess("SUCCESS",voList);
+    }
+
+
+    @GetMapping("/get-three-category/{twoCategoryId}")
+    @ApiOperation(httpMethod = "GET",value = "获取二级分类下的三级分类列表")
+    public ResultUtil<List<KnowledgeOneCategoryVo>> getThreeCategory(@PathVariable("twoCategoryId") String twoCategoryId) {
+        if (StrUtil.hasEmpty(twoCategoryId)) {
+            log.error("获取二级分类下的三级分类列表【twoCategoryId】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        List<KnowledgeOneCategoryVo> voList = threeCategoryService.queryThreeCategory(twoCategoryId);
+        return resultUtil.AesJSONSuccess("SUCCESS",voList);
+    }
+
+
+
+
+
+
+
+
 
 }

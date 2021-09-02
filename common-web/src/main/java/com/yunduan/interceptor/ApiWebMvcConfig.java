@@ -1,15 +1,12 @@
 package com.yunduan.interceptor;
 
-import com.yunduan.config.PcObjectMapper;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 2021/1/22
@@ -38,12 +35,6 @@ public class ApiWebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/swagger-resources/**", "*.js", "/**/*.js", "*.css", "/**/*.css",
                         "*.html", "/**/*.html", "/social/user", "/druid/**", "/swagger-ui.html", "/v2/api-docs",
                         "/webjars/**", "/error", "/**.ico","/api/login/**","/api/th-txt/**");
-    }
-
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        PcObjectMapper.buildMvcMessageConverter(converters);
     }
 
 }

@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.yunduan.config.LongJsonDeserializer;
+import com.yunduan.config.LongJsonSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,7 +33,14 @@ public class CollectionFavorites implements Serializable {
     @Id
     @TableId(type = IdType.NONE)
     @ApiModelProperty("id")
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("字符串id")
+    private String strId;
 
     @ApiModelProperty("用户id")
     private Long accountId;
@@ -40,12 +51,10 @@ public class CollectionFavorites implements Serializable {
     @ApiModelProperty("添加时间")
     private String createTime;
 
-
     @Transient
     @TableField(exist = false)
     @ApiModelProperty("收藏夹文件数量")
     private Integer collectionCount;
-
 
     @Transient
     @TableField(exist = false)

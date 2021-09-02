@@ -1,6 +1,12 @@
 package com.yunduan.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.yunduan.config.LongJsonDeserializer;
+import com.yunduan.config.LongJsonSerializer;
+import com.yunduan.vo.AccountBindingCSI;
+import com.yunduan.vo.FavoritesVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,6 +35,8 @@ public class Account implements Serializable {
     @Id
     @TableId(type = IdType.NONE)
     @ApiModelProperty("主键id")
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     @ApiModelProperty("用户名称")
@@ -70,4 +79,14 @@ public class Account implements Serializable {
     @TableField(exist = false)
     @ApiModelProperty("修改时间yyyy-MM-dd HH:mm:ss")
     private String updateDateTime;
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("用户收藏夹列表")
+    private List<FavoritesVo> favoritesVoList;
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("绑定记录")
+    private List<AccountBindingCSI> bindingCSIList;
 }

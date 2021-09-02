@@ -18,9 +18,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      # 第一次建表create  后面用update，要不然每次重启都会新建表，，，
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   #redis
   redis:
     host: 127.0.0.1

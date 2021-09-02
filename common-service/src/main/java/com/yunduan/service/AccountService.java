@@ -5,6 +5,7 @@ import com.yunduan.entity.Account;
 import com.yunduan.request.front.account.AccountReq;
 import com.yunduan.request.front.account.RegisteredReq;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AccountService extends IService<Account> {
@@ -34,4 +35,44 @@ public interface AccountService extends IService<Account> {
     Map<String,String> changeUserTokenForLogin(Long id);
 
 
+    /**
+     * 查询用户个人中心基本信息
+     * @return Account
+     */
+    Account queryAccountBaseInfo();
+
+
+    /**
+     * 解除绑定CSI
+     * @param bindingId 绑定id
+     * @return int
+     */
+    int unBindingCSI(String bindingId);
+
+
+    /**
+     * 编辑用户名
+     * @param accountId 用户id
+     * @param username 用户名
+     * @return int
+     */
+    int changeUsername(String accountId,String username);
+
+
+    /**
+     * 修改手机号
+     * @param accountId 用户id
+     * @param mobile 新手机号
+     * @return int
+     */
+    int changeMobile(String accountId,String mobile);
+
+
+    /**
+     * 修改头像
+     * @param accountId 用户id
+     * @param headPic 头像
+     * @return int
+     */
+    int changeHeadPic(String accountId,String headPic);
 }

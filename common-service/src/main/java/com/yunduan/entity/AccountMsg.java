@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.yunduan.config.LongJsonDeserializer;
+import com.yunduan.config.LongJsonSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,6 +34,8 @@ public class AccountMsg implements Serializable {
     @Id
     @TableId(type = IdType.NONE)
     @ApiModelProperty("id")
+    @JsonSerialize(using = LongJsonSerializer.class)
+    @JsonDeserialize(using = LongJsonDeserializer.class)
     private Long id;
 
     @ApiModelProperty("用户id")
@@ -52,8 +58,8 @@ public class AccountMsg implements Serializable {
     private Integer delFlag;
 
     @ApiModelProperty("更新时间")
-    private Date updateTime;
+    private String updateTime;
 
     @ApiModelProperty("添加时间")
-    private Date createTime;
+    private String createTime;
 }

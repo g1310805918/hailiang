@@ -21,6 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @SpringBootApplication
 public class WebApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(WebApplication.class, args);
     }
@@ -49,7 +50,6 @@ public class WebApplication {
         return executor;
     }
 
-
     //创建交换机
     @Bean
     public TopicExchange topicExchange() {
@@ -69,6 +69,17 @@ public class WebApplication {
     public Binding binding() {
         return BindingBuilder.bind(queue()).to(topicExchange()).with("*.orange.#");
     }
+
+
+//
+//    /**
+//     * 自动注册 @serverEndpoint 的bean对象
+//     * @return ServerEndpointExporter
+//     */
+//    @Bean
+//    public ServerEndpointExporter serverEndpointExporter() {
+//        return new ServerEndpointExporter();
+//    }
 
 
 }

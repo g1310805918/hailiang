@@ -114,12 +114,10 @@ public class AESUtil {
      * @throws NoSuchAlgorithmException
      * @throws UnsupportedEncodingException
      */
-    public static String decrypt(final String decryptStr) {
+    public static String decrypt(String decryptStr) {
         try {
-//            return decryptStr;
-//            if (hasUrlEncoded(decryptStr)) {
-//                return getAes().decryptStr(URLDecoder.decode(decryptStr), Charset.forName("UTF-8")).replaceAll(" ", "");
-//            }
+            //替换加密串中 空格 为 加号
+            decryptStr = decryptStr.replaceAll(" ","+");
             return getAes().decryptStr(decryptStr, Charset.forName("UTF-8")).replaceAll(" ", "");
         } catch (Exception e) {
             log.error("解密错误  " + decryptStr, e);
@@ -202,7 +200,8 @@ public class AESUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(decrypt("iDn0MXePT4MByFvMq4SPjCPv8yTetZsnS3KfgYkOPdteAfMJmLKcY+sEnR8FZ0sENfhzNGSqw946aSZzfkOZi2GuqxE5RWluXplPMRoT2o08anmIvEICnIXySKpkgE9XUj8/Yx1VTnr/ZTbT8G0ZZ6i7gldGGPCjlZYmu5z93jRYJS6s0qVFKdX6YhJ6gmsG"));
+        System.out.println(decrypt("6JDu9o85OCoNpEbdj2V83IkITXrlTVj4s8qzoiiefNtgu+7QL0E4XP8NSTAxw3GcySMVxG7ijqgAzn1X/y/P53i8mRVtMZpNMU6JTm2l8GotnYQXpWT4li9jCk3UCL0uAb8QuMC+5solaF11QjNyvg=="));
+//        System.out.println(encrypt("123"));
     }
 
 }

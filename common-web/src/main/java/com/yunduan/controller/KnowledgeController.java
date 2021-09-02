@@ -4,14 +4,14 @@ package com.yunduan.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.entity.CollectionFavorites;
+import com.yunduan.request.front.knowledge.KnowledgeLazySearchReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
+import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
 import com.yunduan.service.*;
 import com.yunduan.utils.AESUtil;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.ResultUtil;
-import com.yunduan.vo.KnowledgeDetailVo;
-import com.yunduan.vo.KnowledgeOneCategoryVo;
-import com.yunduan.vo.KnowledgeTwoThreeCategoryVo;
+import com.yunduan.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -92,12 +92,40 @@ public class KnowledgeController {
     @GetMapping("/favorites-list/{documentId}")
     @ApiOperation(httpMethod = "GET",value = "用户收藏夹列表")
     public ResultUtil<List<CollectionFavorites>> favoritesList(@PathVariable("documentId") String documentId) {
+        if (StrUtil.hasEmpty(documentId)) {
+            log.error("用户收藏夹列表【documentId】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
         List<CollectionFavorites> favorites = collectionFavoritesService.queryFavoritesCollectionCount(ContextUtil.getUserId().toString(),documentId);
         return resultUtil.AesJSONSuccess("SUCCESS",favorites);
     }
 
 
+    @GetMapping("/search-knowledge-lazy-recommended")
+    @ApiOperation(httpMethod = "GET",value = "搜索【模糊推荐】知识文档")
+    public ResultUtil<List<KnowledgeLazySearchVo>> searchKnowledgeLazyRecommended(KnowledgeLazySearchReq knowledgeLazySearchReq) {
+        knowledgeLazySearchReq = AESUtil.decryptToObj(knowledgeLazySearchReq.getData(),KnowledgeLazySearchReq.class);
+        List<KnowledgeLazySearchVo> searchVos = knowledgeDocumentService.queryKnowledgeLazySearch(knowledgeLazySearchReq.getSearchContent());
+        return resultUtil.AesJSONSuccess("SUCCESS",searchVos);
+    }
 
+
+    @GetMapping("/search-knowledge-result")
+    @ApiOperation(httpMethod = "GET",value = "模糊搜索知识文档列表结果")
+    public ResultUtil<Map<String, Object>> searchKnowledgeResult(KnowledgeSearchReq knowledgeSearchReq) {
+        knowledgeSearchReq = AESUtil.decryptToObj(knowledgeSearchReq.getData(),KnowledgeSearchReq.class);
+        Map<String, Object> map = knowledgeDocumentService.queryKnowledgeResult(knowledgeSearchReq);
+        return resultUtil.AesJSONSuccess("SUCCESS",map);
+    }
+
+
+    @GetMapping("/get-knowledge-in-category-list")
+    @ApiOperation(httpMethod = "GET",value = "获取搜索内容下的知识文档所属分类列表")
+    public ResultUtil<List<KnowledgeLevel3CategoryList>> getKnowledgeInCategoryList(KnowledgeLazySearchReq knowledgeLazySearchReq) {
+        knowledgeLazySearchReq = AESUtil.decryptToObj(knowledgeLazySearchReq.getData(),KnowledgeLazySearchReq.class);
+        List<KnowledgeLevel3CategoryList> resultList = knowledgeDocumentService.querySearchContentInCategoryList(knowledgeLazySearchReq.getSearchContent());
+        return resultUtil.AesJSONSuccess("SUCCESS",resultList);
+    }
 
 
 }

@@ -1,18 +1,28 @@
 package com.yunduan.serviceimpl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.CollectionAccountDocument;
 import com.yunduan.entity.CollectionFavorites;
+import com.yunduan.entity.KnowledgeDocument;
 import com.yunduan.mapper.CollectionAccountDocumentMapper;
 import com.yunduan.mapper.CollectionFavoritesMapper;
+import com.yunduan.mapper.KnowledgeDocumentMapper;
+import com.yunduan.request.front.center.FavoritesReq;
 import com.yunduan.service.CollectionFavoritesService;
+import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
+import com.yunduan.utils.ContextUtil;
+import com.yunduan.utils.ExtractRichTextUtil;
+import com.yunduan.vo.KnowledgeListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -22,6 +32,10 @@ public class CollectionFavoritesServiceImpl extends ServiceImpl<CollectionFavori
     private CollectionFavoritesMapper collectionFavoritesMapper;
     @Autowired
     private CollectionAccountDocumentMapper collectionAccountDocumentMapper;
+    @Autowired
+    private KnowledgeDocumentMapper knowledgeDocumentMapper;
+    @Autowired
+    private KnowledgeDocumentThreeCategoryService knowledgeDocumentThreeCategoryService;
 
 
     /**
@@ -62,6 +76,65 @@ public class CollectionFavoritesServiceImpl extends ServiceImpl<CollectionFavori
         return favorites;
     }
 
+
+    /**
+     * 查询用户收藏夹信息
+     * @param favoritesReq 查询对象
+     * @return list
+     */
+    @Override
+    public Map<String,Object> queryAccountFavoritesVos(FavoritesReq favoritesReq) {
+        Map<String,Object> map = new HashMap<>();
+        //收藏夹id
+        String favoritesId = favoritesReq.getFavoritesId();
+
+        //收藏夹下的文档分页记录
+        List<CollectionAccountDocument> records = collectionAccountDocumentMapper.selectPage(
+                new Page<>(favoritesReq.getPageNo(), favoritesReq.getPageSize()),
+                new QueryWrapper<CollectionAccountDocument>()
+                        .eq("favorites_id", favoritesId)
+                        .eq("account_id", ContextUtil.getUserId())
+        ).getRecords();
+
+        //收藏夹下的知识文档内容
+        List<KnowledgeListVo> voList = new ArrayList<>();
+        if (records.size() > 0 && records != null) {
+            KnowledgeListVo vo = null;
+            for (CollectionAccountDocument record : records) {
+                //查询文档
+                KnowledgeDocument document = knowledgeDocumentMapper.selectOne(new QueryWrapper<KnowledgeDocument>().eq("id", record.getDocumentId()));
+                if (document == null) {
+                    continue;
+                }
+                vo = new KnowledgeListVo();
+                String categoryName = knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(document.getThreeCategoryId().toString());
+                vo.setId(record.getId().toString()).setDocTitle(document.getDocTitle()).setCategoryName(categoryName).setDocProfile(ExtractRichTextUtil.dealContent(document.getDocContent()));
+                voList.add(vo);
+            }
+        }
+        Integer total = collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("favorites_id", favoritesId).eq("account_id", ContextUtil.getUserId()));
+        map.put("voList",voList);
+        map.put("total",total);
+        return map;
+    }
+
+
+    /**
+     * 修改收藏夹名称
+     * @param id 收藏夹id
+     * @param favoritesName 收藏夹名称
+     * @return int
+     */
+    @Override
+    public int changeFavoritesName(String id, String favoritesName) {
+        //收藏夹
+        CollectionFavorites favorites = collectionFavoritesMapper.selectOne(new QueryWrapper<CollectionFavorites>().eq("id", id));
+        if (favorites != null) {
+            favorites.setFavoritesName(favoritesName);
+            return collectionFavoritesMapper.update(favorites, new QueryWrapper<CollectionFavorites>().eq("id", favorites.getId()));
+        }
+        return 0;
+    }
 
 
 }
