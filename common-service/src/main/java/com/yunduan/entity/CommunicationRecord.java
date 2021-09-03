@@ -21,9 +21,9 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@ApiModel("用户表")
-@Table(name = "tb_company_csi")
-@TableName("tb_company_csi")
+@ApiModel("工单沟通记录表")
+@Table(name = "tb_communication_record")
+@TableName("tb_communication_record")
 @Accessors(chain = true)
 public class CommunicationRecord implements Serializable {
     private static final long serialVersionUID = -891402970227265673L;

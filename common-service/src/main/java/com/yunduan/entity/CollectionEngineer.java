@@ -1,5 +1,6 @@
 package com.yunduan.entity;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -42,6 +43,6 @@ public class CollectionEngineer implements Serializable {
     private Long workOrderId;
 
     @ApiModelProperty("添加时间")
-    private String createTime;
+    private String createTime = DateUtil.now();
 
 }

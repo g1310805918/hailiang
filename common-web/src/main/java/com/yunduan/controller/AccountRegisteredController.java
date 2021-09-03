@@ -39,7 +39,7 @@ public class AccountRegisteredController {
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private SendEmailUtils sendEmailUtils;
+    private SendEmailUtil sendEmailUtil;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -95,7 +95,7 @@ public class AccountRegisteredController {
             return resultUtil.AesFAILError("非法请求，请检查手机号是否正确！");
         }
         try {
-            String code = SendVerificationCodeUtil.sendSms(sendVerificationCodeReq.getMobile());
+            String code = SendVerificationCodeUtil.send(sendVerificationCodeReq.getMobile());
             //验证码3分钟有效
             redisUtil.setStringKeyValue(StatusCodeUtil.VERIFICATION_CODE + sendVerificationCodeReq.getMobile(),code,3, TimeUnit.MINUTES);
         } catch (Exception e) {
@@ -203,7 +203,8 @@ public class AccountRegisteredController {
             return resultUtil.AesFAILError("非法请求，请检查邮箱是否正确？");
         }
         try {
-            sendEmailUtils.send(sendEmailVerCodeReq.getEmail());
+            String randomCode = sendEmailUtil.sendAuthEmail(sendEmailVerCodeReq.getEmail());
+            redisUtil.setStringKeyValue(sendEmailVerCodeReq.getEmail(),randomCode,3,TimeUnit.MINUTES);
         } catch (Exception e) {
             log.error("【获取邮箱验证码】邮件发送失败 Message ----> " + e.getMessage());
             return resultUtil.AesFAILError("邮件发送失败");

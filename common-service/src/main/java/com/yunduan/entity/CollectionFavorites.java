@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@ApiModel("用户表")
+@ApiModel("用户收藏夹表")
 @Table(name = "tb_collection_favorites")
 @TableName("tb_collection_favorites")
 @Accessors(chain = true)

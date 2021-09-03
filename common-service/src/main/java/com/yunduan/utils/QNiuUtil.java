@@ -12,6 +12,10 @@ import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.yunduan.entity.Setting;
+import com.yunduan.service.SettingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -19,16 +23,18 @@ import java.net.URLEncoder;
 
 /**
  * 2021/1/21
+ * 七牛云工具类
  */
 public class QNiuUtil {
 
-
-    /* 测试 */
-    public static String accessKey = "-eFxOz7nCmhjyOks8QCshTUjAlibvcN2hllfvRuV";
-    public static String secretKey = "PibqljD48Z9vDUxWPidtO5GAMDuCaAoawsqaqYUN";
+    /* 海量 */
+    public static String accessKey = "Pk61rdUWJhidicNQR7o-mo5T-CPCl0MvJt-L3zdM";
+    public static String secretKey = "nnqTY8mgkifplcgUC15k-vIZfzWyO0etdiuwfGcL";
     //空间名
-    public static String bucket = "staticauth";
-    public static String domain = "http://qxedhpf35.hb-bkt.clouddn.com";
+    public static String bucket = "repairorder";
+    //空间绑定的域名
+    public static String domain = "http://mvs.vastdata.com.cn";
+
 
 
     /**

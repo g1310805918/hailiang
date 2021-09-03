@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yunduan.entity.Engineer;
 import com.yunduan.entity.SysDictionary;
 import com.yunduan.entity.WorkOrder;
 import com.yunduan.request.front.servicerequest.*;
@@ -49,6 +50,8 @@ public class ServiceRequestController {
     private CollectionAccountService collectionAccountService;
     @Autowired
     private EngineerService engineerService;
+    @Autowired
+    private CollectionEngineerService collectionEngineerService;
 
     @GetMapping("/company-work-order-statistical")
     @ApiOperation(httpMethod = "GET", value = "用户-首页公司订单统计")
@@ -245,8 +248,52 @@ public class ServiceRequestController {
     }
 
 
+    @GetMapping("/engineer-index-init")
+    @ApiOperation(httpMethod = "GET",value = "工程师-工单列表")
+    public ResultUtil<Map<String, Object>> engineerIndexInit(EngineerIndexInitReq engineerIndexInitReq) {
+        engineerIndexInitReq = AESUtil.decryptToObj(engineerIndexInitReq.getData(),EngineerIndexInitReq.class);
+        Map<String, Object> map = workOrderService.queryEngineerIndexInit(engineerIndexInitReq);
+        return resultUtil.AesJSONSuccess("SUCCESS",map);
+    }
 
 
+    @PostMapping("/engineer-collection-work-order/{workOrderId}")
+    @ApiOperation(httpMethod = "POST",value = "工程师收藏工单")
+    public ResultUtil<String> engineerCollectionWorkOrder(@PathVariable("workOrderId") String workOrderId) {
+        if (StrUtil.hasEmpty(workOrderId)) {
+            log.error("工程师收藏工单【workOrderId】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        int row = collectionEngineerService.createCollectionEngineer(ContextUtil.getUserId(), Convert.toLong(workOrderId));
+        return row == 1 ? resultUtil.AesJSONSuccess("收藏成功","") : row == -1 ? resultUtil.AesFAILError("收藏失败") : row == 2 ? resultUtil.AesJSONSuccess("取消收藏成功","") : resultUtil.AesFAILError("取消失败");
+    }
 
+    @PostMapping("/engineer-change-online-status/{status}")
+    @ApiOperation(httpMethod = "POST",value = "修改工程师在线状态")
+    public ResultUtil<String> engineerChangeOnlineStatus(@PathVariable("status") String status) {
+        if (StrUtil.hasEmpty(status)) {
+            log.error("修改工程师在线状态【status】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        boolean flag = false;
+        Engineer engineer = engineerService.getById(ContextUtil.getUserId());
+        if (engineer != null) {
+            engineer.setOnlineStatus(Convert.toInt(status));
+            flag = engineerService.updateById(engineer);
+        }
+        return flag ? resultUtil.AesJSONSuccess("个人状态更新成功","") : resultUtil.AesFAILError("个人状态更新失败");
+    }
+
+
+    @GetMapping("/engineer-get-work-order-base-info/{workOrderId}")
+    @ApiOperation(httpMethod = "GET",value = "工程师获取工单基本信息")
+    public ResultUtil engineerGetWorkOrderBaseInfo(@PathVariable("workOrderId") String workOrderId) {
+        if (StrUtil.hasEmpty(workOrderId)) {
+            log.error("工程师获取工单基本信息【workOrderId】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        EngineerWorkOrderBaseInfoVo vo = workOrderService.engineerQueryWorkOrderBaseInfo(workOrderId);
+        return resultUtil;
+    }
 
 }

@@ -6,99 +6,90 @@
   <component name="ChangeListManager">
     <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/common-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/config/PcObjectMapper.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/AccountMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/AccountMsg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionAccountDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionAccountDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/BindingAccountCSI.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/BindingAccountCSI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionEngineer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionEngineer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionFavorites.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionFavorites.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocument.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentOneCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentOneCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentThreeCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentThreeCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentTwoCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentTwoCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/TheText.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/TheText.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/mapper/KnowledgeDocumentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/mapper/KnowledgeDocumentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/request/front/account/AccountReq.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/request/front/account/AccountReq.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/request/front/account/SubmitEditPasswordReq.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/request/front/account/SubmitEditPasswordReq.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CollectionFavoritesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CollectionFavoritesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentOneCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentOneCategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentThreeCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentThreeCategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentTwoCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentTwoCategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/AccountMsgServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/AccountMsgServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/AccountServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CollectionFavoritesServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CollectionFavoritesServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/AESUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/AESUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/NumberTurnChineseUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/RedisUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/RedisUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SnowFlakeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SnowFlakeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/resources/rebel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/resources/rebel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/config/PcObjectMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/Account.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/AccountMsg.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/AccountMsg.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionAccountDocument.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionAccountDocument.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionFavorites.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionFavorites.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocument.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocument.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentOneCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentOneCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentThreeCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentThreeCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentTwoCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentTwoCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/TheText.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/TheText.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/mapper/KnowledgeDocumentMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/mapper/KnowledgeDocumentMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/request/front/account/AccountReq.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/request/front/account/AccountReq.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/AccountService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/AccountService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CollectionFavoritesService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CollectionFavoritesService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentOneCategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentOneCategoryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentThreeCategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentThreeCategoryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentTwoCategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentTwoCategoryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/AccountMsgServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/AccountMsgServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/AccountServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/AccountServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CollectionFavoritesServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CollectionFavoritesServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/AESUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/AESUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/NumberTurnChineseUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/RedisUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/RedisUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/SnowFlakeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/SnowFlakeUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/rebel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/rebel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/WebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/WebApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CommunicationRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CommunicationRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/SysDictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/SysDictionary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/WorkOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/WorkOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/mapper/dao/AccountDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/mapper/dao/AccountDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CollectionEngineerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CollectionEngineerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/QNiuUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/QNiuUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendEmailUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendEmailUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendVerificationCodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendVerificationCodeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/WorkOrderDetailBaseInfoVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/WorkOrderDetailBaseInfoVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/ws/ChatEndpoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionEngineer.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionEngineer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CollectionEngineerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CollectionEngineerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/WorkOrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/WorkOrderService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/QNiuUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/QNiuUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/SendEmailUtils$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/SendEmailUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/ws/ChatEndpoint.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountRegisteredController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountRegisteredController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/KnowledgeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/KnowledgeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/MessageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/TheTextController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/TheTextController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/interceptor/ApiWebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/interceptor/ApiWebMvcConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/interceptor/TokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/interceptor/TokenInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/resources/rebel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/resources/rebel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/WebApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/WebApplication.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/AccountRegisteredController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/AccountRegisteredController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/KnowledgeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/KnowledgeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/MessageController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/MessageController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/TheTextController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/TheTextController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/interceptor/ApiWebMvcConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/interceptor/ApiWebMvcConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/interceptor/TokenInterceptor.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/interceptor/TokenInterceptor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/rebel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/rebel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/test-classes/com/yunduan/WebApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/test-classes/com/yunduan/WebApplicationTests.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountRegisteredController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Setting.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendEmailUtil.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Account.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="JRebelWorkspace">
+    <option name="jrebelEnabledAutocompile" value="true" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="JPA Inspector" value="true" />
+        <entry key="JPA Palette" value="true" />
+        <entry key="JPA Structure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="JPA Inspector" value="false" />
+        <entry key="JPA Palette" value="false" />
+        <entry key="JPA Structure" value="false" />
+      </map>
+    </option>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -109,6 +100,9 @@
     </option>
   </component>
   <component name="ProjectId" id="1xZvt0XuM2dJFPrXrTTul1sboXf" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
@@ -116,11 +110,113 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../parent_folder" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
   </component>
   <component name="RebelAgentSelection">
     <selection>jr</selection>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.yunduan.utils" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.WebApplication">
+    <configuration name="SendEmailUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.utils.SendEmailUtil" />
+      <module name="common-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SendVerificationCodeUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.utils.SendVerificationCodeUtil" />
+      <module name="common-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebApplicationTests.testSaveSetting" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="common-web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yunduan" />
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
+      <option name="METHOD_NAME" value="testSaveSetting" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebApplicationTests.testSendEmail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="common-web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yunduan" />
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
+      <option name="METHOD_NAME" value="testSendEmail" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebApplicationTests.testUploadImage" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="common-web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yunduan" />
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
+      <option name="METHOD_NAME" value="testUploadImage" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="common-web" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yunduan.WebApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.WebApplicationTests.testUploadImage" />
+        <item itemvalue="JUnit.WebApplicationTests.testSendEmail" />
+        <item itemvalue="Application.SendEmailUtil" />
+        <item itemvalue="JUnit.WebApplicationTests.testSaveSetting" />
+        <item itemvalue="Application.SendVerificationCodeUtil" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -130,11 +226,205 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1630575641130</updated>
-      <workItem from="1630575645314" duration="28000" />
+      <workItem from="1630575645314" duration="544000" />
+      <workItem from="1630577109147" duration="797000" />
+      <workItem from="1630627136240" duration="23647000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:org.slf4j:jul-to-slf4j" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.xml.bind:jakarta.xml.bind-api" />
+    <option featureType="dependencySupport" implementationName="java:org.javassist:javassist" />
+    <option featureType="dependencySupport" implementationName="java:com.zaxxer:HikariCP" />
+    <option featureType="dependencySupport" implementationName="java:javax.activation:javax.activation-api" />
+    <option featureType="dependencySupport" implementationName="java:com.squareup.okhttp3:okhttp" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf:thymeleaf-spring5" />
+    <option featureType="dependencySupport" implementationName="java:net.minidev:accessors-smart" />
+    <option featureType="dependencySupport" implementationName="java:com.alibaba:druid-spring-boot-starter" />
+    <option featureType="dependencySupport" implementationName="java:com.google.code.gson:gson" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.amqp:spring-amqp" />
+    <option featureType="dependencySupport" implementationName="java:org.aspectj:aspectjweaver" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:endpoint-util" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-swagger2" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.tomcat.embed:tomcat-embed-core" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml:classmate" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-test" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.datatype:jackson-datatype-jsr310" />
+    <option featureType="dependencySupport" implementationName="java:javax.mail:mail" />
+    <option featureType="dependencySupport" implementationName="java:io.netty:netty-transport" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate:hibernate-core" />
+    <option featureType="dependencySupport" implementationName="java:org.glassfish.jaxb:jaxb-runtime" />
+    <option featureType="dependencySupport" implementationName="java:org.skyscreamer:jsonassert" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.tomcat.embed:tomcat-embed-websocket" />
+    <option featureType="dependencySupport" implementationName="java:ch.qos.logback:logback-classic" />
+    <option featureType="dependencySupport" implementationName="java:com.alibaba:druid" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.validation:jakarta.validation-api" />
+    <option featureType="dependencySupport" implementationName="java:org.glassfish.jaxb:txw2" />
+    <option featureType="dependencySupport" implementationName="java:org.mockito:mockito-junit-jupiter" />
+    <option featureType="dependencySupport" implementationName="java:org.opentest4j:opentest4j" />
+    <option featureType="dependencySupport" implementationName="java:org.objenesis:objenesis" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-tx" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter" />
+    <option featureType="dependencySupport" implementationName="java:junit:junit" />
+    <option featureType="dependencySupport" implementationName="java:org.ini4j:ini4j" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-keyvalue" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.xml.bind:jaxb-impl" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-data-redis" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-jcl" />
+    <option featureType="dependencySupport" implementationName="java:org.attoparser:attoparser" />
+    <option featureType="dependencySupport" implementationName="java:com.alibaba:fastjson" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-web" />
+    <option featureType="dependencySupport" implementationName="java:io.lettuce:lettuce-core" />
+    <option featureType="dependencySupport" implementationName="java:io.swagger:swagger-annotations" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-logging" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-aop" />
+    <option featureType="dependencySupport" implementationName="java:org.bouncycastle:bcprov-jdk15on" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.httpcomponents:httpcore" />
+    <option featureType="dependencySupport" implementationName="java:ch.qos.logback:logback-core" />
+    <option featureType="dependencySupport" implementationName="java:org.checkerframework:checker-qual" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.validator:hibernate-validator" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.core:jackson-databind" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.logging.log4j:log4j-to-slf4j" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.plugin:spring-plugin-metadata" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter" />
+    <option featureType="dependencySupport" implementationName="java:org.jboss.logging:jboss-logging" />
+    <option featureType="dependencySupport" implementationName="java:org.slf4j:slf4j-api" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:tea-openapi" />
+    <option featureType="dependencySupport" implementationName="java:org.ow2.asm:asm" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.retry:spring-retry" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf.extras:thymeleaf-extras-java8time" />
+    <option featureType="dependencySupport" implementationName="java:com.google.guava:guava" />
+    <option featureType="dependencySupport" implementationName="java:org.yaml:snakeyaml" />
+    <option featureType="dependencySupport" implementationName="java:com.baomidou:mybatis-plus-core" />
+    <option featureType="dependencySupport" implementationName="java:org.mybatis:mybatis" />
+    <option featureType="dependencySupport" implementationName="java:antlr:antlr" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-autoconfigure" />
+    <option featureType="dependencySupport" implementationName="java:org.postgresql:postgresql" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-test-autoconfigure" />
+    <option featureType="dependencySupport" implementationName="java:org.mybatis:mybatis-spring" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-json" />
+    <option featureType="dependencySupport" implementationName="java:io.projectreactor:reactor-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-expression" />
+    <option featureType="dependencySupport" implementationName="java:org.glassfish:jakarta.el" />
+    <option featureType="dependencySupport" implementationName="java:org.reactivestreams:reactive-streams" />
+    <option featureType="dependencySupport" implementationName="java:org.mapstruct:mapstruct" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.datatype:jackson-datatype-jdk8" />
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.httpcomponents:httpclient" />
+    <option featureType="dependencySupport" implementationName="java:com.github.jsqlparser:jsqlparser" />
+    <option featureType="dependencySupport" implementationName="java:org.assertj:assertj-core" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.module:jackson-module-parameter-names" />
+    <option featureType="dependencySupport" implementationName="java:com.vaadin.external.google:android-json" />
+    <option featureType="dependencySupport" implementationName="java:org.apiguardian:apiguardian-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-jdbc" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-jdbc" />
+    <option featureType="dependencySupport" implementationName="java:org.mockito:mockito-core" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.transaction:jakarta.transaction-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-thymeleaf" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:dysmsapi20170525" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-messaging" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-core" />
+    <option featureType="dependencySupport" implementationName="java:net.bytebuddy:byte-buddy" />
+    <option featureType="dependencySupport" implementationName="java:org.xmlunit:xmlunit-core" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter-params" />
+    <option featureType="dependencySupport" implementationName="java:org.jacoco:org.jacoco.agent" />
+    <option featureType="dependencySupport" implementationName="java:commons-codec:commons-codec" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-spring-web" />
+    <option featureType="dependencySupport" implementationName="java:com.baomidou:mybatis-plus" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-validation" />
+    <option featureType="dependencySupport" implementationName="java:org.hamcrest:hamcrest" />
+    <option featureType="dependencySupport" implementationName="java:com.baomidou:mybatis-plus-generator" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-data-jpa" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.platform:junit-platform-engine" />
+    <option featureType="dependencySupport" implementationName="java:net.bytebuddy:byte-buddy-agent" />
+    <option featureType="dependencySupport" implementationName="java:javax.activation:activation" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:credentials-java" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.vintage:junit-vintage-engine" />
+    <option featureType="dependencySupport" implementationName="java:io.netty:netty-resolver" />
+    <option featureType="dependencySupport" implementationName="java:org.jboss:jandex" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-aspects" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-oxm" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.amqp:spring-rabbit" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-swagger-ui" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-websocket" />
+    <option featureType="dependencySupport" implementationName="java:org.dom4j:dom4j" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-test" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-beans" />
+    <option featureType="dependencySupport" implementationName="java:com.jayway.jsonpath:json-path" />
+    <option featureType="dependencySupport" implementationName="java:com.squareup.okio:okio" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.common:hibernate-commons-annotations" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf:thymeleaf" />
+    <option featureType="dependencySupport" implementationName="java:com.baomidou:mybatis-plus-extension" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-jpa" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-swagger-common" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.xml.bind:jaxb-core" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.activation:jakarta.activation-api" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:tea" />
+    <option featureType="dependencySupport" implementationName="java:io.netty:netty-buffer" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-schema" />
+    <option featureType="dependencySupport" implementationName="java:io.netty:netty-common" />
+    <option featureType="dependencySupport" implementationName="java:com.baomidou:mybatis-plus-boot-starter" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter-engine" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-amqp" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:tea-util" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:io.netty:netty-codec" />
+    <option featureType="dependencySupport" implementationName="java:javax.xml.bind:jaxb-api" />
+    <option featureType="dependencySupport" implementationName="java:org.unbescape:unbescape" />
+    <option featureType="dependencySupport" implementationName="java:com.qiniu:qiniu-java-sdk" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-tomcat" />
+    <option featureType="dependencySupport" implementationName="java:cn.hutool:hutool-all" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.core:jackson-annotations" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-test" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.core:jackson-core" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:tea-rpc" />
+    <option featureType="dependencySupport" implementationName="java:org.slf4j:jcl-over-slf4j" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-websocket" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.platform:junit-platform-commons" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.annotation:jakarta.annotation-api" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.persistence:jakarta.persistence-api" />
+    <option featureType="dependencySupport" implementationName="java:com.yunduan:common-service" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-orm" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-context-support" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:tea-rpc-util" />
+    <option featureType="dependencySupport" implementationName="java:io.swagger:swagger-models" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-context" />
+    <option featureType="dependencySupport" implementationName="java:com.aliyun:openapiutil" />
+    <option featureType="dependencySupport" implementationName="java:com.baomidou:mybatis-plus-annotation" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.istack:istack-commons-runtime" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-aop" />
+    <option featureType="dependencySupport" implementationName="java:io.netty:netty-handler" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.plugin:spring-plugin-core" />
+    <option featureType="dependencySupport" implementationName="java:com.rabbitmq:amqp-client" />
+    <option featureType="dependencySupport" implementationName="java:io.springfox:springfox-spi" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter-api" />
+    <option featureType="dependencySupport" implementationName="java:net.minidev:json-smart" />
+    <option featureType="dependencySupport" implementationName="java:org.slf4j:slf4j-log4j12" />
+    <option featureType="dependencySupport" implementationName="java:org.bouncycastle:bcpkix-jdk15on" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-web" />
+    <option featureType="dependencySupport" implementationName="java:javax.servlet:javax.servlet-api" />
+    <option featureType="dependencySupport" implementationName="java:log4j:log4j" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.activation:jakarta.activation" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.logging.log4j:log4j-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-redis" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

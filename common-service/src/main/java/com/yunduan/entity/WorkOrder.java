@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@ApiModel("用户工单记录表")
+@ApiModel("用户工单表")
 @Table(name = "tb_work_order")
 @TableName("tb_work_order")
 @Accessors(chain = true)
@@ -152,5 +152,11 @@ public class WorkOrder implements Serializable {
 
     @ApiModelProperty("用户关闭工单反馈")
     private String closeFeedback;
+
+    @ApiModelProperty("当前工单流程【1-1、1-2、2-1、2-2、。。。。。。】")
+    private String currentProcess;
+
+    @ApiModelProperty("工程师关闭工单时所关联的结单文档")
+    private Long closeAssDocument;
 
 }

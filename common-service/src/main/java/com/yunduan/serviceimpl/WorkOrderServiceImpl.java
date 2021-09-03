@@ -3,6 +3,7 @@ package com.yunduan.serviceimpl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -43,6 +44,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     private EngineerMapper engineerMapper;
     @Autowired
     private CollectionEngineerMapper collectionEngineerMapper;
+    @Autowired
+    private KnowledgeDocumentThreeCategoryMapper threeCategoryMapper;
 
 
     /**
@@ -204,32 +207,48 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 log.error("查询工单基本信息【companyCSI】为空");
                 return null;
             }
-            WorkOrderDetailBaseInfoVo vo = new WorkOrderDetailBaseInfoVo();
-            //是否是自己的工单，0否、1是  ||  工单状态
-            vo.setIsMySelf(ContextUtil.getUserId().compareTo(workOrder.getAccountId()) == 0 ? 1 : 0).setStatus(workOrder.getStatus());
-            //创建时间、工单id、客户服务号、公司名
-            vo.setCreateTime(workOrder.getCreateTime().substring(0,16)).setWorkOrderId(workOrder.getId().toString()).setCsiNumber(workOrder.getCsiNumber()).setCompanyName(companyCSI.getCompanyName());
-            //部署方式、硬件平台、最后更新时间
-            vo.setDeploymentWay(workOrder.getDeploymentWay()).setHardwarePlatform(workOrder.getHardwarePlatform()).setLastUpdateTime(workOrder.getLastUpdateTime().substring(0,16));
-            //主要联系人、备用联系人、操作系统、版本、语言
-            vo.setMainContact(workOrder.getMainContact()).setStandbyContact(workOrder.getStandbyContact()).setOperatingSystem(workOrder.getOperatingSystem()).setOperatingSystemVersion(workOrder.getOperatingSystemVersion()).setOperatingSystemLanguage(workOrder.getOperatingSystemLanguage());
-            //工单编号、问题概要、问题严重等级、产品名称版本、问题类型
-            vo.setOutTradeNo(workOrder.getOutTradeNo()).setProblemProfile(workOrder.getProblemProfile()).setProblemSeverity(workOrder.getProblemSeverity()).setProductNameVersion(workOrder.getProductNameVersion()).setProblemType(workOrder.getProblemType());
-            //升级状态、升级原因
-            vo.setUpgradeStatus(workOrder.getUpgradeStatus()).setUpgradeReason(StrUtil.hasEmpty(workOrder.getUpgradeReason()) ? "" : workOrder.getUpgradeReason());
-            List<String> list = new ArrayList<>();
-            //相关附件
-            vo.setAttachmentPath(StrUtil.hasEmpty(workOrder.getAttachmentPath()) ? list : Arrays.asList(workOrder.getAttachmentPath().split(",")));
-            //相关链接
-            vo.setRelatedLinks(StrUtil.hasEmpty(workOrder.getRelatedLinks()) ? list : Arrays.asList(workOrder.getRelatedLinks().split(",")));
-            //相关知识文档
-            vo.setKnowledgeDocId(getKnowledgeList(workOrder.getRelatedDoc(),1));
-            //相关bug文档
-            vo.setKnowLedgeBugDocId(getKnowledgeList(workOrder.getRelatedBugDoc(),2));
+            WorkOrderDetailBaseInfoVo vo = getWorkOrderBaseInfo(workOrder, companyCSI);
+            //判断用户是否收藏工单
+            Integer collectionCount = collectionAccountMapper.selectCount(new QueryWrapper<CollectionAccount>().eq("account_id", ContextUtil.getUserId()).eq("work_order_id", workOrder.getId()));
+            vo.setIsCollection(collectionCount > 0 ? 1 : 0);
             return vo;
         }
         return null;
     }
+
+
+    /**
+     * 获取工单基本信息
+     * @param workOrder 工单
+     * @param companyCSI 公司CSI信息
+     * @return WorkOrderDetailBaseInfoVo
+     */
+    public WorkOrderDetailBaseInfoVo getWorkOrderBaseInfo(WorkOrder workOrder,CompanyCSI companyCSI) {
+        WorkOrderDetailBaseInfoVo vo = new WorkOrderDetailBaseInfoVo();
+        //是否是自己的工单，0否、1是  ||  工单状态
+        vo.setIsMySelf(ContextUtil.getUserId().compareTo(workOrder.getAccountId()) == 0 ? 1 : 0).setStatus(workOrder.getStatus());
+        //创建时间、工单id、客户服务号、公司名
+        vo.setCreateTime(workOrder.getCreateTime().substring(0,16)).setWorkOrderId(workOrder.getId().toString()).setCsiNumber(workOrder.getCsiNumber()).setCompanyName(companyCSI.getCompanyName());
+        //部署方式、硬件平台、最后更新时间
+        vo.setDeploymentWay(workOrder.getDeploymentWay()).setHardwarePlatform(workOrder.getHardwarePlatform()).setLastUpdateTime(workOrder.getLastUpdateTime().substring(0,16));
+        //主要联系人、备用联系人、操作系统、版本、语言
+        vo.setMainContact(workOrder.getMainContact()).setStandbyContact(workOrder.getStandbyContact()).setOperatingSystem(workOrder.getOperatingSystem()).setOperatingSystemVersion(workOrder.getOperatingSystemVersion()).setOperatingSystemLanguage(workOrder.getOperatingSystemLanguage());
+        //工单编号、问题概要、问题严重等级、产品名称版本、问题类型
+        vo.setOutTradeNo(workOrder.getOutTradeNo()).setProblemProfile(workOrder.getProblemProfile()).setProblemSeverity(workOrder.getProblemSeverity()).setProductNameVersion(workOrder.getProductNameVersion()).setProblemType(workOrder.getProblemType());
+        //升级状态、升级原因
+        vo.setUpgradeStatus(workOrder.getUpgradeStatus()).setUpgradeReason(StrUtil.hasEmpty(workOrder.getUpgradeReason()) ? "" : workOrder.getUpgradeReason());
+        List<String> list = new ArrayList<>();
+        //相关附件
+        vo.setAttachmentPath(StrUtil.hasEmpty(workOrder.getAttachmentPath()) ? list : Arrays.asList(workOrder.getAttachmentPath().split(",")));
+        //相关链接
+        vo.setRelatedLinks(StrUtil.hasEmpty(workOrder.getRelatedLinks()) ? list : Arrays.asList(workOrder.getRelatedLinks().split(",")));
+        //相关知识文档
+        vo.setKnowledgeDocId(getKnowledgeList(workOrder.getRelatedDoc(),1));
+        //相关bug文档
+        vo.setKnowLedgeBugDocId(getKnowledgeList(workOrder.getRelatedBugDoc(),2));
+        return vo;
+    }
+
 
 
     /**
@@ -370,6 +389,106 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         return map;
     }
 
+
+    /**
+     * 初始化工程师端工单列表
+     * @param engineerIndexInitReq 初始化对象
+     * @return map
+     */
+    @Override
+    public Map<String, Object> queryEngineerIndexInit(EngineerIndexInitReq engineerIndexInitReq) {
+        Map<String, Object> map = new HashMap<>();
+        //当前工程师id
+        Long userId = ContextUtil.getUserId();
+        //三级分类id不为空时，表示筛选了三级分类
+        String threeCategoryName = "";
+        if (StrUtil.isNotEmpty(engineerIndexInitReq.getThreeCategoryId())) {
+            KnowledgeDocumentThreeCategory threeCategory = threeCategoryMapper.selectById(engineerIndexInitReq.getThreeCategoryId());
+            threeCategoryName = threeCategory == null ? "" : threeCategory.getCategoryTitle();
+        }
+        //工程师收藏的工单id列表
+        List<Long> workOrderIdList = new ArrayList<>();
+        if (engineerIndexInitReq.getMyCollectionOrder() != null && engineerIndexInitReq.getMyCollectionOrder()) {
+            //工程师收藏列表
+            List<CollectionEngineer> collectionEngineerList = collectionEngineerMapper.selectList(new QueryWrapper<CollectionEngineer>().eq("engineer_id", userId));
+            if (!CollectionUtils.isEmpty(collectionEngineerList)) {
+                collectionEngineerList.forEach(collection -> {
+                    workOrderIdList.add(collection.getWorkOrderId());
+                });
+            }
+        }
+        //条件构造器
+        QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>()
+                .eq(StrUtil.isNotEmpty(engineerIndexInitReq.getOutTradeNo()), "out_trade_no", engineerIndexInitReq.getOutTradeNo())
+                .eq(StrUtil.isNotEmpty(engineerIndexInitReq.getProblemProfile()), "problem_profile", engineerIndexInitReq.getProblemProfile())
+                .eq(StrUtil.isNotEmpty(engineerIndexInitReq.getAcceptPerson()), "engineer_id", engineerIndexInitReq.getAcceptPerson())
+                .eq(StrUtil.isNotEmpty(threeCategoryName), "problem_type", threeCategoryName)
+                //我受理中的工单
+                .eq(engineerIndexInitReq.getMyAcceptOrder(), "engineer_id", userId)
+                .eq(engineerIndexInitReq.getMyAcceptOrder(), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
+                //我的已完结工单
+                .eq(engineerIndexInitReq.getMyCloseOrder(), "engineer_id", userId)
+                .eq(engineerIndexInitReq.getMyAcceptOrder(), "status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS)
+                //我收藏的工单
+                .in(workOrderIdList.size() > 0 && workOrderIdList != null, "id", workOrderIdList)
+                //开始时间
+                .ge(StrUtil.isNotEmpty(engineerIndexInitReq.getStartTime()), "create_time", engineerIndexInitReq.getStartTime())
+                //结束时间
+                .le(StrUtil.isNotEmpty(engineerIndexInitReq.getEndTime()), "last_update_time", engineerIndexInitReq.getEndTime())
+                //id倒序排序
+                .orderByDesc("id");
+        //筛选后的工单分页列表
+        List<WorkOrder> records = workOrderMapper.selectPage(new Page<>(engineerIndexInitReq.getPageNo(), engineerIndexInitReq.getPageSize()), queryWrapper).getRecords();
+        //结果封装
+        List<WorkOrderListVo> voList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(records)) {
+            WorkOrderListVo vo = null;
+            for (WorkOrder record : records) {
+                vo = new WorkOrderListVo();
+                //工单id、问题概要、工单编号、分类名称、开始时间、最后更新时间
+                vo.setId(record.getId().toString()).setProblemProfile(record.getProblemProfile()).setOutTradeNo(record.getOutTradeNo()).setCategoryName(record.getProductNameVersion() + record.getProblemType()).setCreateTime(record.getCreateTime().substring(0,16)).setUpdateTime(record.getLastUpdateTime().substring(0,16));
+                //严重等级、联系人、工单状态、客户服务号
+                vo.setProblemSeverity(record.getProblemSeverity()).setMainContact(record.getMainContact()).setStatus(record.getStatus()).setCsiNumber(record.getCsiNumber());
+                //是否收藏工单
+                Integer count = collectionEngineerMapper.selectCount(new QueryWrapper<CollectionEngineer>().eq("engineer_id", userId).eq("work_order_id", record.getId()));
+                vo.setIsCollection(count > 0 ? 1 : 0);
+                voList.add(vo);
+            }
+        }
+        map.put("voList",voList);
+        map.put("total",workOrderMapper.selectCount(queryWrapper));
+        return map;
+    }
+
+
+    /**
+     * 工程师查看工单基本信息
+     * @param workOrderId 工单id
+     * @return EngineerWorkOrderBaseInfoVo
+     */
+    @Override
+    public EngineerWorkOrderBaseInfoVo engineerQueryWorkOrderBaseInfo(String workOrderId) {
+        //当前工单
+        WorkOrder workOrder = workOrderMapper.selectById(workOrderId);
+        if (workOrder != null) {
+            CompanyCSI companyCSI = companyCSIMapper.selectOne(new QueryWrapper<CompanyCSI>().eq("csi_number", workOrder.getCsiNumber()));
+            if (companyCSI != null) {
+                //获取基本工单信息
+                WorkOrderDetailBaseInfoVo orderBaseInfo = getWorkOrderBaseInfo(workOrder, companyCSI);
+                //转换为JSON字符串
+                String jsonString = JSONObject.toJSONString(orderBaseInfo);
+                //解析为结果对象
+                EngineerWorkOrderBaseInfoVo resultVo = JSONObject.parseObject(jsonString, EngineerWorkOrderBaseInfoVo.class);
+                //设置当前工单处理流程
+                resultVo.setCurrentProcess(StrUtil.hasEmpty(workOrder.getCurrentProcess()) ? "" : workOrder.getCurrentProcess());
+                //设置工程师是否收藏工单
+                Integer collectionCount = collectionEngineerMapper.selectCount(new QueryWrapper<CollectionEngineer>().eq("engineer_id", ContextUtil.getUserId()).eq("work_order_id", workOrderId));
+                resultVo.setIsCollection(collectionCount > 0 ? 1 : 0);
+                return resultVo;
+            }
+        }
+        return null;
+    }
 
 
 }

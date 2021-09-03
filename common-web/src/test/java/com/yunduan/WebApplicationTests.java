@@ -7,12 +7,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.entity.Account;
 import com.yunduan.entity.CompanyCSI;
 import com.yunduan.entity.Engineer;
+import com.yunduan.entity.Setting;
 import com.yunduan.service.AccountService;
 import com.yunduan.service.CompanyCSIService;
 import com.yunduan.service.EngineerService;
-import com.yunduan.utils.AESUtil;
-import com.yunduan.utils.SnowFlakeUtil;
-import com.yunduan.utils.StatusCodeUtil;
+import com.yunduan.service.SettingService;
+import com.yunduan.utils.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,11 @@ class WebApplicationTests {
     private EngineerService engineerService;
     @Autowired
     private CompanyCSIService companyCSIService;
+    @Autowired
+    private SettingService settingService;
+    @Autowired
+    private SendEmailUtil sendEmailUtil;
+
 
     @Test
     void contextLoads() {
@@ -126,6 +131,25 @@ class WebApplicationTests {
 
         boolean empty = CollectionUtils.isEmpty(list);
         System.out.println("Result = " + empty);
+    }
+
+
+    @Test
+    public void testSaveSetting() {
+        Setting setting = new Setting().setTemCode("腾讯邮箱").setEmailAddress("ceshi@vastdata.com.cn").setEmailPassword(AESUtil.encrypt("Vastdat@8118")).setUpdateTime(DateUtil.now());
+        settingService.save(setting);
+    }
+
+
+    @Test
+    public void testSendEmail() throws Exception {
+        sendEmailUtil.sendAuthEmail("1310805918@qq.com");
+    }
+
+    @Test
+    public void testUploadImage() {
+        String path = QNiuUtil.uploadLocalImg("D:\\Desktop\\topImage.png");
+        System.out.println("path = " + path);
     }
 
 }

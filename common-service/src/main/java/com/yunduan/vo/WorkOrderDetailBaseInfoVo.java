@@ -53,10 +53,10 @@ public class WorkOrderDetailBaseInfoVo implements Serializable {
     @ApiModelProperty("相关链接")
     private List<String> relatedLinks;
 
-    @ApiModelProperty("相关知识文档id")
+    @ApiModelProperty("相关知识文档")
     private List<KnowledgeListVo> knowledgeDocId;
 
-    @ApiModelProperty("相关bug文档id")
+    @ApiModelProperty("相关bug文档")
     private List<KnowledgeListVo> knowLedgeBugDocId;
 
     @ApiModelProperty("客户服务号")

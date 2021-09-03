@@ -3,6 +3,7 @@ package com.yunduan.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.WorkOrder;
 import com.yunduan.request.front.servicerequest.*;
+import com.yunduan.vo.EngineerWorkOrderBaseInfoVo;
 import com.yunduan.vo.WorkOrderDetailBaseInfoVo;
 
 import java.util.Map;
@@ -80,4 +81,20 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return map
      */
     Map<String,Integer> queryEngineerWorkOrderStatistical(String engineerId);
+
+
+    /**
+     * 初始化工程师端工单列表
+     * @param engineerIndexInitReq 初始化对象
+     * @return map
+     */
+    Map<String,Object> queryEngineerIndexInit(EngineerIndexInitReq engineerIndexInitReq);
+
+
+    /**
+     * 工程师查看工单基本信息
+     * @param workOrderId 工单id
+     * @return EngineerWorkOrderBaseInfoVo
+     */
+    EngineerWorkOrderBaseInfoVo engineerQueryWorkOrderBaseInfo(String workOrderId);
 }

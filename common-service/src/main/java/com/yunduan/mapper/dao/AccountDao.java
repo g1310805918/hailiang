@@ -12,4 +12,5 @@ public interface AccountDao extends JpaRepository<Account,Long> {
      * @return account
      */
     Account findByMobileAndEmail(String mobile,String email);
+
 }

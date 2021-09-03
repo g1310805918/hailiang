@@ -1,75 +1,124 @@
 package com.yunduan.utils;
 
 import cn.hutool.core.util.RandomUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.aliyun.dysmsapi20170525.Client;
-import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
-import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
-import com.aliyun.teaopenapi.models.Config;
-import com.google.gson.Gson;
+import cn.hutool.core.util.StrUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 /**
  * 2021/8/12
- * 阿里云发送短信验证码
+ * 短信宝发送短信验证码
  * 工具类
  */
 public class SendVerificationCodeUtil {
 
-    //访问的域名
-    static final String DOMAIN = "dysmsapi.aliyuncs.com";
-    // 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    static final String ACCESS_KEY_ID = "LTAI5tPTrKNqCGKjW3poWTV1";
-    static final String ACCESS_KEY_SECRET = "NvGw6iWG96jH9KT2fUNdHjg7jIuOry";
-    //短信签名-可在短信控制台中找到
-    static final String SIGN_NAME = "华度新星";
-    //短信模板-可在短信控制台中找到
-    static final String TEMPLATE_CODE = "SMS_221805026";
+    public static final transient Logger log = LoggerFactory.getLogger(SendVerificationCodeUtil.class);
+
+    //短信宝-账号
+    public static final String USERNAME = "vastdata";
+    //短信宝-密码
+    public static final String PASSWORD = "Vastdata8118";
+
+
 
 
     /**
-     * 使用AK&SK初始化账号Client
-     * @param accessKeyId ACCESS_KEY_ID
-     * @param accessKeySecret ACCESS_KEY_SECRET
-     * @return Client
-     */
-    public static Client createClient(String accessKeyId, String accessKeySecret) throws Exception {
-        Config config = new Config()
-                // 您的AccessKey ID
-                .setAccessKeyId(accessKeyId)
-                // 您的AccessKey Secret
-                .setAccessKeySecret(accessKeySecret);
-        // 访问的域名
-        config.endpoint = DOMAIN;
-        return new Client(config);
-    }
-
-
-    /**
-     * 【新版】发送验证码
+     * 发送短信验证码
      * @param mobile 手机号
-     * @return 【验证码】
-     * @throws Exception 异常
+     * @return 验证码
      */
-    public static String sendSms(String mobile) throws Exception {
-        Client client = createClient(ACCESS_KEY_ID, ACCESS_KEY_SECRET);
-        //生成验证码
-        String numbers = RandomUtil.randomNumbers(6);
-        SendSmsRequest request = new SendSmsRequest()
-                .setPhoneNumbers(mobile)
-                .setSignName(SIGN_NAME)
-                .setTemplateCode(TEMPLATE_CODE)
-                .setTemplateParam("{\"code\":\"" + numbers + "\"}");
-        SendSmsResponse response = client.sendSms(request);
-        String responseJson = new Gson().toJson(response.body);
-        JSONObject jsonObject = JSONObject.parseObject(responseJson);
-        if ("OK".equalsIgnoreCase(jsonObject.getString("code")) && "OK".equalsIgnoreCase(jsonObject.getString("message"))){
-            return numbers;
+    public static String send(String mobile) {
+        if (StrUtil.hasEmpty(mobile)) {
+            log.error("【短信宝】发送短信验证码失败：mobile 为空");
+            return null;
         }
-        return "";
+        //生成短信验证码
+        String code = RandomUtil.randomNumbers(6);
+        // 注意测试时，也请带上公司简称或网站签名，发送正规内容短信。千万不要发送无意义的内容：例如 测一下、您好。否则可能会收不到
+        //这里我已经配置了默认签名，所以不带签名
+        String testContent = "您的验证码为：" + code + "，3分钟内有效。若非本人操作请忽略此消息。";
+        String httpUrl = "http://api.smsbao.com/sms";
+        StringBuffer httpArg = new StringBuffer();
+        httpArg.append("u=").append(USERNAME).append("&");
+        httpArg.append("p=").append(md5(PASSWORD)).append("&");
+        httpArg.append("m=").append(mobile).append("&");
+        httpArg.append("c=").append(encodeUrlString(testContent, "UTF-8"));
+        String result = request(httpUrl, httpArg.toString());
+        return Objects.equals("0",result) ? code : null;
     }
 
-    public static void main(String[] args) throws Exception {
-        sendSms("15235656200");
+
+    public static String request(String httpUrl, String httpArg) {
+        BufferedReader reader = null;
+        String result = null;
+        StringBuffer sbf = new StringBuffer();
+        httpUrl = httpUrl + "?" + httpArg;
+
+        try {
+            URL url = new URL(httpUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            InputStream is = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String strRead = reader.readLine();
+            if (strRead != null) {
+                sbf.append(strRead);
+                while ((strRead = reader.readLine()) != null) {
+                    sbf.append("\n");
+                    sbf.append(strRead);
+                }
+            }
+            reader.close();
+            result = sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String md5(String plainText) {
+        StringBuffer buf = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(plainText.getBytes());
+            byte b[] = md.digest();
+            int i;
+            buf = new StringBuffer("");
+            for (int offset = 0; offset < b.length; offset++) {
+                i = b[offset];
+                if (i < 0)
+                    i += 256;
+                if (i < 16)
+                    buf.append("0");
+                buf.append(Integer.toHexString(i));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return buf.toString();
+    }
+
+    public static String encodeUrlString(String str, String charset) {
+        String strret = null;
+        if (str == null)
+            return str;
+        try {
+            strret = java.net.URLEncoder.encode(str, charset);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return strret;
     }
 
 }

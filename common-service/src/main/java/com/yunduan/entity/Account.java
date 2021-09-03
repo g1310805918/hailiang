@@ -31,7 +31,6 @@ import java.util.List;
 public class Account implements Serializable {
     private static final long serialVersionUID = -2257083485104008000L;
 
-
     @Id
     @TableId(type = IdType.NONE)
     @ApiModelProperty("主键id")

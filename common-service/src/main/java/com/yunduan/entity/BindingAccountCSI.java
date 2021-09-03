@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@ApiModel("用户表")
+@ApiModel("用户绑定CSI记录表")
 @Table(name = "tb_binding_account_csi")
 @TableName("tb_binding_account_csi")
 @Accessors(chain = true)
