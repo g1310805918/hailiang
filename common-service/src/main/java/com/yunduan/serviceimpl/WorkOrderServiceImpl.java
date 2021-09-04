@@ -237,6 +237,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         vo.setOutTradeNo(workOrder.getOutTradeNo()).setProblemProfile(workOrder.getProblemProfile()).setProblemSeverity(workOrder.getProblemSeverity()).setProductNameVersion(workOrder.getProductNameVersion()).setProblemType(workOrder.getProblemType());
         //升级状态、升级原因
         vo.setUpgradeStatus(workOrder.getUpgradeStatus()).setUpgradeReason(StrUtil.hasEmpty(workOrder.getUpgradeReason()) ? "" : workOrder.getUpgradeReason());
+        //空集合
         List<String> list = new ArrayList<>();
         //相关附件
         vo.setAttachmentPath(StrUtil.hasEmpty(workOrder.getAttachmentPath()) ? list : Arrays.asList(workOrder.getAttachmentPath().split(",")));
@@ -489,6 +490,9 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         }
         return null;
     }
+
+
+
 
 
 }

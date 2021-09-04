@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunduan.mapper.AdminRoleMapper">
+
+    <select id="findByUserId" resultType="com.yunduan.entity.Role">
+        SELECT r.id id, name, r.data_type
+        FROM tb_admin_role ur
+                 LEFT JOIN tb_role r
+                           ON ur.role_id = r.id
+        WHERE user_Id = #{userId}
+    </select>
+
+
+    <select id="findUserByRoleId" resultType="com.yunduan.entity.AdminAccount">
+        SELECT
+            u.id AS id,
+            u.nick_name AS nickName
+        FROM
+            tb_admin_account u
+                INNER JOIN tb_admin_role ur ON u.id = ur.user_id
+                AND ur.role_id = #{roleId}
+    </select>
+
+</mapper>

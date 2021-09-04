@@ -14,6 +14,12 @@ import java.util.List;
 public class CommunicationResult implements Serializable {
     private static final long serialVersionUID = 3347991636267456060L;
 
+    @ApiModelProperty("沟通记录id")
+    private String recordId;
+
+    @ApiModelProperty("用户是否可见【布尔值】")
+    private Boolean isShow;
+
     @ApiModelProperty("头像")
     private String headPic;
 

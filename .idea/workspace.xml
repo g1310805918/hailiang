@@ -6,36 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/common-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/BindingAccountCSI.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/BindingAccountCSI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionEngineer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionEngineer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionFavorites.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CollectionFavorites.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CommunicationRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/CommunicationRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/SysDictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/SysDictionary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/WorkOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/WorkOrder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/mapper/dao/AccountDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/mapper/dao/AccountDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CollectionEngineerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CollectionEngineerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CommunicationRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CommunicationRecordService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CommunicationRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CommunicationRecordServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/QNiuUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/QNiuUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendEmailUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendEmailUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendVerificationCodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/SendVerificationCodeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/WorkOrderDetailBaseInfoVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/WorkOrderDetailBaseInfoVo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/ws/ChatEndpoint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionEngineer.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/CollectionEngineer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CollectionEngineerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CollectionEngineerService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/WorkOrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/WorkOrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CollectionEngineerServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/CommunicationResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/CommunicationResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CommunicationRecordService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CommunicationRecordService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CommunicationRecordServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CommunicationRecordServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/QNiuUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/QNiuUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/SendEmailUtils$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/SendEmailUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/ws/ChatEndpoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountRegisteredController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountRegisteredController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/vo/CommunicationResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/vo/CommunicationResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/AccountRegisteredController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/AccountRegisteredController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -107,11 +90,20 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../parent_folder" />
+    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../VueProjects/java-common" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.19153675" />
+    <property name="project.structure.side.proportion" value="0.25083986" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="Errors" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -122,11 +114,24 @@
     <selection>jr</selection>
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan" />
+      <recent name="D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\resources\mapper" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.yunduan.entity" />
+      <recent name="com.yunduan.controller" />
       <recent name="com.yunduan.utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.WebApplication">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.BackApplication">
     <configuration name="SendEmailUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.yunduan.utils.SendEmailUtil" />
       <module name="common-service" />
@@ -201,13 +206,33 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WebApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <module name="common-web" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yunduan.WebApplication" />
+    <configuration name="BackApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="common-back" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yunduan.BackApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="WebApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="common-web" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yunduan.WebApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.SendEmailUtil" />
+      <item itemvalue="Application.SendVerificationCodeUtil" />
+      <item itemvalue="JUnit.WebApplicationTests.testSaveSetting" />
+      <item itemvalue="JUnit.WebApplicationTests.testSendEmail" />
+      <item itemvalue="JUnit.WebApplicationTests.testUploadImage" />
+      <item itemvalue="Spring Boot.BackApplication" />
+      <item itemvalue="Spring Boot.WebApplication" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.WebApplicationTests.testUploadImage" />
@@ -228,7 +253,8 @@
       <updated>1630575641130</updated>
       <workItem from="1630575645314" duration="544000" />
       <workItem from="1630577109147" duration="797000" />
-      <workItem from="1630627136240" duration="23647000" />
+      <workItem from="1630627136240" duration="24836000" />
+      <workItem from="1630717985685" duration="12907000" />
     </task>
     <servers />
   </component>

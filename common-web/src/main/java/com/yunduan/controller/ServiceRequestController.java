@@ -21,9 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @Api(tags = {"服务请求接口"})
@@ -269,7 +271,7 @@ public class ServiceRequestController {
     }
 
     @PostMapping("/engineer-change-online-status/{status}")
-    @ApiOperation(httpMethod = "POST",value = "修改工程师在线状态")
+    @ApiOperation(httpMethod = "POST",value = "修改工程师在线状态【1在线、2离线】")
     public ResultUtil<String> engineerChangeOnlineStatus(@PathVariable("status") String status) {
         if (StrUtil.hasEmpty(status)) {
             log.error("修改工程师在线状态【status】为空");
@@ -278,7 +280,7 @@ public class ServiceRequestController {
         boolean flag = false;
         Engineer engineer = engineerService.getById(ContextUtil.getUserId());
         if (engineer != null) {
-            engineer.setOnlineStatus(Convert.toInt(status));
+            engineer.setOnlineStatus(Objects.equals("1",status) ? StatusCodeUtil.ENGINEER_ACCOUNT_ONLINE_STATUS : StatusCodeUtil.ENGINEER_ACCOUNT_OFFLINE_STATUS);
             flag = engineerService.updateById(engineer);
         }
         return flag ? resultUtil.AesJSONSuccess("个人状态更新成功","") : resultUtil.AesFAILError("个人状态更新失败");
@@ -287,13 +289,42 @@ public class ServiceRequestController {
 
     @GetMapping("/engineer-get-work-order-base-info/{workOrderId}")
     @ApiOperation(httpMethod = "GET",value = "工程师获取工单基本信息")
-    public ResultUtil engineerGetWorkOrderBaseInfo(@PathVariable("workOrderId") String workOrderId) {
+    public ResultUtil<EngineerWorkOrderBaseInfoVo> engineerGetWorkOrderBaseInfo(@PathVariable("workOrderId") String workOrderId) {
         if (StrUtil.hasEmpty(workOrderId)) {
             log.error("工程师获取工单基本信息【workOrderId】为空");
             return resultUtil.AesFAILError("非法请求");
         }
         EngineerWorkOrderBaseInfoVo vo = workOrderService.engineerQueryWorkOrderBaseInfo(workOrderId);
-        return resultUtil;
+        return vo != null ? resultUtil.AesJSONSuccess("SUCCESS",vo) : resultUtil.AesFAILError("网络错误");
     }
+
+
+    @GetMapping("/engineer-get-work-order-communication-record")
+    @ApiOperation(httpMethod = "GET",value = "工程师获取工单沟通记录")
+    public ResultUtil<Map<String, Object>> engineerGetWorkOrderCommunicationRecord(WorkOrderCommunicationReq workOrderCommunicationReq) {
+        workOrderCommunicationReq = AESUtil.decryptToObj(workOrderCommunicationReq.getData(),WorkOrderCommunicationReq.class);
+        Map<String, Object> map = communicationRecordService.engineerQueryWorkOrderCommunicationRecord(workOrderCommunicationReq);
+        return resultUtil.AesJSONSuccess("SUCCESS",map);
+    }
+
+
+    @PostMapping("/engineer-change-communication-record-show-status")
+    @ApiOperation(httpMethod = "POST",value = "工程师修改沟通记录可见状态")
+    public ResultUtil<String> engineerChangeCommunicationRecordShowStatus(ChangeCommunicationRecordShowStatusReq changeCommunicationRecordShowStatusReq) {
+        changeCommunicationRecordShowStatusReq = AESUtil.decryptToObj(changeCommunicationRecordShowStatusReq.getData(),ChangeCommunicationRecordShowStatusReq.class);
+        int row = communicationRecordService.engineerChangeRecordShowStatus(changeCommunicationRecordShowStatusReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("修改成功","") : resultUtil.AesFAILError("修改失败");
+    }
+
+
+    @PostMapping("/engineer-change-communication-record-content")
+    @ApiOperation(httpMethod = "POST",value = "工程师编辑沟通记录")
+    public ResultUtil<String> engineerChangeCommunicationRecordContent (ChangeCommunicationRecordContentReq changeCommunicationRecordContentReq) {
+        changeCommunicationRecordContentReq = AESUtil.decryptToObj(changeCommunicationRecordContentReq.getData(),ChangeCommunicationRecordContentReq.class);
+        int row = communicationRecordService.engineerChangeRecordContent(changeCommunicationRecordContentReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("修改成功","") : resultUtil.AesFAILError("修改失败");
+    }
+
+    
 
 }

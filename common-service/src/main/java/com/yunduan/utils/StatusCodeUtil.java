@@ -112,4 +112,19 @@ public class StatusCodeUtil {
     public static final Integer ENGINEER_ACCOUNT_OFFLINE_STATUS = 2;
 
 
+    //工程师处理流程 -- 复杂方式
+    public static final String PROCESSING_FLOW_1_1 = "1-1";  //问题澄清
+    public static final String PROCESSING_FLOW_1_2 = "1-2";  //问题证据
+    public static final String PROCESSING_FLOW_1_3 = "1-3";  //问题原因
+    public static final String PROCESSING_FLOW_1_4 = "1-4";  //诊断依据
+    public static final String PROCESSING_FLOW_1_5 = "1-5";  //解决方案
+    public static final String PROCESSING_FLOW_1_6 = "1-6";  //方案依据
+    public static final String PROCESSING_FLOW_1_7 = "1-7";  //文档管理
+    //工程师处理流程 -- 简单方式
+    public static final String PROCESSING_FLOW_2_1 = "2-1";  //问题
+    public static final String PROCESSING_FLOW_2_2 = "2-2";  //回答
+    public static final String PROCESSING_FLOW_2_3 = "2-3";  //文档管理
+
+
+
 }

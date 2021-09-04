@@ -97,4 +97,5 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return EngineerWorkOrderBaseInfoVo
      */
     EngineerWorkOrderBaseInfoVo engineerQueryWorkOrderBaseInfo(String workOrderId);
+
 }
