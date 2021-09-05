@@ -51,4 +51,13 @@ public class Setting implements Serializable {
     @ApiModelProperty("添加时间")
     private String createTime = DateUtil.now();
 
+    @ApiModelProperty("服务器地址")
+    private String serviceHost;
+
+    @ApiModelProperty("服务器端口")
+    private String servicePort;
+
+    @ApiModelProperty("协议名称")
+    private String serviceAgreement;
+
 }

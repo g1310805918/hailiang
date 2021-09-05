@@ -71,12 +71,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/common/needLogin", "/login","/css/**","/js/**","/index.html","/img/**","/fonts/**","/favicon.ico","/register/**","/register/");
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 

@@ -1,5 +1,6 @@
 package com.yunduan.config;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -29,7 +30,8 @@ public class SwaggerConfig {
                 .enable(true)
                 .pathMapping("/")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.yunduan.controller"))
+//                .apis(RequestHandlerSelectors.basePackage("com.yunduan.controller"))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build().apiInfo(new ApiInfoBuilder()
                         .title("Api接口文档")

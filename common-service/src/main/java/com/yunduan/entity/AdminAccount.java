@@ -26,7 +26,6 @@ import java.util.List;
  */
 @Data
 @Entity
-@EqualsAndHashCode(callSuper = false)
 @TableName("tb_admin_account")
 @Table(name = "tb_admin_account")
 @Where(clause = "del_flag = 0")

@@ -12,9 +12,6 @@
     <artifactId>common-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>common-back</name>
-    <description>common-back</description>
-
     <properties>
         <java.version>1.8</java.version>
     </properties>

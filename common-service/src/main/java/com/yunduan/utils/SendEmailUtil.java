@@ -31,14 +31,14 @@ public class SendEmailUtil {
     public String account = null;
     //登录密码
     public String password = null;
-    //发件邮箱对象id
+    //发件邮箱对象id(数据库表id)
     private static final String SEND_EMAIL_ID = "446128498935861248";
     //服务器地址
-    private static final String HOST = "smtp.exmail.qq.com";
+    private String HOST = "";
     //端口号
-    private static final String PORT = "465";
+    private String PORT = "";
     //协议
-    private static final String PROTOCOL = "smtp";
+    private String PROTOCOL = "";
 
 
     /**
@@ -138,6 +138,9 @@ public class SendEmailUtil {
         if (setting != null) {
             account = setting.getEmailAddress();
             password = AESUtil.decrypt(setting.getEmailPassword());
+            PORT = setting.getServicePort();
+            HOST = setting.getServiceHost();
+            PROTOCOL = setting.getServiceAgreement();
         }else {
             log.error("初始化邮件对象失败");
         }

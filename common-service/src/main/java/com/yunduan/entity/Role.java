@@ -1,9 +1,6 @@
 package com.yunduan.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,8 +10,9 @@ import org.hibernate.annotations.Where;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
-
+import java.util.List;
 
 
 @Data
@@ -60,4 +58,8 @@ public class Role implements Serializable {
     @ApiModelProperty(value = "数据权限类型 0全部默认 1自定义")
     private Integer dataType;
 
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty(value = "拥有权限")
+    private List<RolePermission> permissions;
 }

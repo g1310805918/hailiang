@@ -30,7 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         String flagKey = "loginFailFlag:" + username;
         String value = redisTemplate.opsForValue().get(flagKey);
         Long timeRest = redisTemplate.getExpire(flagKey, TimeUnit.MINUTES);
@@ -41,4 +40,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         AdminAccount user = adminAccountService.findByUsername(username);
         return new SecurityUserDetails(user);
     }
+
+
 }
