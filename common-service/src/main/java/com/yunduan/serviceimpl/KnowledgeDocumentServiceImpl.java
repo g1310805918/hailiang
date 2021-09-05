@@ -13,6 +13,7 @@ import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.ExtractRichTextUtil;
+import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -318,6 +319,26 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
             }
         }
         return voList;
+    }
+
+
+    /**
+     * 工程师删除知识文档
+     * @param documentId 文档id
+     * @return int
+     */
+    @Override
+    public int engineerRemoveDocument(String documentId) {
+        int row = 0;
+        KnowledgeDocument document1 = knowledgeDocumentMapper.selectById(documentId);
+        KnowledgeDocumentNoPass document2 = noPassMapper.selectById(documentId);
+        if (document1 != null && document2 != null) {
+            document1.setDelFlag(StatusCodeUtil.DELETE_FLAG);
+            document2.setDelFlag(StatusCodeUtil.DELETE_FLAG);
+            row += knowledgeDocumentMapper.updateById(document1);
+            row += noPassMapper.updateById(document2);
+        }
+        return row;
     }
 
 

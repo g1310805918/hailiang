@@ -1,5 +1,8 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,8 +13,11 @@ import com.yunduan.mapper.CollectionEngineerDocumentMapper;
 import com.yunduan.mapper.EngineerMapper;
 import com.yunduan.mapper.KnowledgeDocumentNoPassMapper;
 import com.yunduan.mapper.KnowledgeDocumentThreeCategoryMapper;
+import com.yunduan.request.front.document.CreateDocumentReq;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
+import com.yunduan.utils.SnowFlakeUtil;
+import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.DocumentDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,4 +63,32 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
         }
         return null;
     }
+
+    /**
+     * 工程师发布知识文档
+     * @param engineerId 工程师id
+     * @param createDocumentReq 添加对象
+     * @return int
+     */
+    @Override
+    public int engineerCreateDocument(String engineerId, CreateDocumentReq createDocumentReq) {
+        KnowledgeDocumentNoPass noPass = new KnowledgeDocumentNoPass();
+        //id、工程师id、文档编号
+        noPass.setId(SnowFlakeUtil.getPrimaryKeyId()).setEngineerId(Convert.toLong(engineerId)).setDocNumber(RandomUtil.randomNumbers(10));
+        //文档类型、三级分类id、文档内容
+        noPass.setDocType(createDocumentReq.getDocumentType()).setThreeCategoryId(Convert.toLong(createDocumentReq.getThreeCategoryId())).setDocContent(createDocumentReq.getDocumentContent());
+        //更新时间、添加时间、删除标志、对内对外显示、文档标题
+        noPass.setUpdateTime(DateUtil.now()).setCreateTime(DateUtil.now()).setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setIsShow(createDocumentReq.getIsShow()).setDocTitle(createDocumentReq.getDocumentTitle());
+        //待审核状态
+        noPass.setDocStatus(1);
+        int row = knowledgeDocumentNoPassMapper.insert(noPass);
+        if (row > 0) {
+            //todo 异步执行剩余任务（1、发送文档审核消息至COE工程师。）
+
+        }
+        return row;
+    }
+
+
+
 }

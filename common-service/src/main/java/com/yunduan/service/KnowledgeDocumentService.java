@@ -64,4 +64,10 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
     Map<String,Object> engineerInitPage(InitDocumentManagerReq initDocumentManagerReq);
 
 
+    /**
+     * 工程师删除知识文档
+     * @param documentId 文档id
+     * @return int
+     */
+    int engineerRemoveDocument(String documentId);
 }

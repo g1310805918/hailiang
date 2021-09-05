@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentNoPassService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentNoPassService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentNoPassServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentNoPassServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/KnowledgeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/KnowledgeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/DocManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/DocManagerController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -257,7 +259,7 @@
       <workItem from="1630800206050" duration="644000" />
       <workItem from="1630800919392" duration="87000" />
       <workItem from="1630802408562" duration="20016000" />
-      <workItem from="1630832476590" duration="6007000" />
+      <workItem from="1630832476590" duration="8696000" />
     </task>
     <servers />
   </component>

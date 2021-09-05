@@ -2,6 +2,7 @@ package com.yunduan.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.yunduan.request.front.document.CreateDocumentReq;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.service.CollectionEngineerDocumentService;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
@@ -68,5 +69,28 @@ public class DocManagerController {
         DocumentDetailVo detailVo = knowledgeDocumentNoPassService.engineerDocumentDetail(ContextUtil.getUserId().toString(), documentId);
         return resultUtil.AesJSONSuccess("SUCCESS",detailVo);
     }
+
+
+    @PostMapping("/engineer-remove-document/{documentId}")
+    @ApiOperation(httpMethod = "POST",value = "工程师删除文档")
+    public ResultUtil<String> engineerRemoveDocument(@PathVariable("documentId") String documentId) {
+        if (StrUtil.hasEmpty(documentId)) {
+            log.error("工程师删除文档【documentId】为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        int row = knowledgeDocumentService.engineerRemoveDocument(documentId);
+        return row > 0 ? resultUtil.AesJSONSuccess("删除成功","") : resultUtil.AesFAILError("删除失败");
+    }
+
+
+    @PostMapping("/engineer-create-document")
+    @ApiOperation(httpMethod = "POST",value = "添加知识文档")
+    public ResultUtil<String> engineerCreateDocument(CreateDocumentReq createDocumentReq) {
+        createDocumentReq = AESUtil.decryptToObj(createDocumentReq.getData(),CreateDocumentReq.class);
+        int row = knowledgeDocumentNoPassService.engineerCreateDocument(ContextUtil.getUserId().toString(), createDocumentReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("文档审核申请已提交","") : resultUtil.AesFAILError("提交审核失败");
+    }
+
+
 
 }
