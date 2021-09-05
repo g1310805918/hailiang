@@ -2,6 +2,7 @@ package com.yunduan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.KnowledgeDocument;
+import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
 import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
 import com.yunduan.vo.KnowledgeDetailVo;
@@ -53,5 +54,14 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
      * @return list
      */
     List<KnowledgeLevel3CategoryList> querySearchContentInCategoryList(String searchContent);
+
+
+    /**
+     * 工程师初始化文档管理页面
+     * @param initDocumentManagerReq 初始化对象
+     * @return map
+     */
+    Map<String,Object> engineerInitPage(InitDocumentManagerReq initDocumentManagerReq);
+
 
 }

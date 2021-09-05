@@ -127,5 +127,4 @@ public class KnowledgeController {
         return resultUtil.AesJSONSuccess("SUCCESS",resultList);
     }
 
-
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.*;
 import com.yunduan.mapper.*;
+import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
 import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
 import com.yunduan.service.KnowledgeDocumentService;
@@ -35,6 +36,13 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
     private KnowledgeDocumentTwoCategoryMapper twoCategoryMapper;
     @Autowired
     private KnowledgeDocumentOneCategoryMapper oneCategoryMapper;
+    @Autowired
+    private KnowledgeDocumentNoPassMapper noPassMapper;
+    @Autowired
+    private CollectionEngineerDocumentMapper engineerDocumentMapper;
+    @Autowired
+    private EngineerMapper engineerMapper;
+
 
 
     /**
@@ -227,6 +235,89 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
             }
         }
         return resultList;
+    }
+
+
+    /**
+     * 工程师初始化文档管理页面
+     * @param initDocumentManagerReq 初始化对象
+     * @return map
+     */
+    @Override
+    public Map<String, Object> engineerInitPage(InitDocumentManagerReq initDocumentManagerReq) {
+        Map<String,Object> map = new HashMap<>();
+        Long userId = ContextUtil.getUserId();
+        //公司总文档数
+        map.put("totalDocumentCount",knowledgeDocumentMapper.selectCount(new QueryWrapper<>()));
+        //我发布成功的文档
+        map.put("myFbCount",knowledgeDocumentMapper.selectCount(new QueryWrapper<KnowledgeDocument>().eq("engineer_id",userId)));
+        //我的待审核文档
+        map.put("myNoCheckCount",noPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("engineer_id",userId).eq("doc_status",1)));
+        //我收藏的文档
+        map.put("myCollectionCount",engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id",userId)));
+
+        //我收藏的文档选中时
+        List<Long> docIdList = new ArrayList<>();
+        if (initDocumentManagerReq.getMyCollection()) {
+            //工程师收藏的文档列表
+            List<CollectionEngineerDocument> documentList = engineerDocumentMapper.selectList(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", userId));
+            if (documentList.size() > 0 && documentList != null) {
+                for (CollectionEngineerDocument collectionEngineerDocument : documentList) {
+                    docIdList.add(collectionEngineerDocument.getDocumentId());
+                }
+            }
+        }
+        //条件构造器
+        QueryWrapper<KnowledgeDocumentNoPass> queryWrapper = new QueryWrapper<KnowledgeDocumentNoPass>()
+                //全部创建人
+                .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getEngineerId()), "engineer_id", initDocumentManagerReq.getEngineerId())
+                //文档所属分类
+                .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getCategoryId()), "threeCategory_id", initDocumentManagerReq.getCategoryId())
+                //我创建的文档
+                .eq(initDocumentManagerReq.getMyCreate(), "engineer_id", userId)
+                //我发布成功的文档
+                .eq(initDocumentManagerReq.getMyFb(), "doc_status", 2)
+                //我收藏的文档
+                .in(docIdList.size() > 0 && docIdList != null, "id", docIdList)
+                //文档id
+                .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getDocumentId()), "id", initDocumentManagerReq.getDocumentId())
+                //文档标题
+                .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getDocumentTitle()), "doc_title", initDocumentManagerReq.getDocumentTitle());
+        //我的初始化文档列表
+        List<KnowledgeDocumentNoPass> records = noPassMapper.selectPage(new Page<>(initDocumentManagerReq.getPageNo(), initDocumentManagerReq.getPageSize()),queryWrapper).getRecords();
+        //结果封装
+        List<InitDocumentListVo> voList = queryInitResult(records);
+        map.put("voList",voList);
+        map.put("pageTotal",noPassMapper.selectCount(queryWrapper));
+        return map;
+    }
+
+
+    /**
+     * 封装工程师文档列表初始化结果
+     * @param records 文档列表
+     * @return list
+     */
+    private List<InitDocumentListVo> queryInitResult(List<KnowledgeDocumentNoPass> records) {
+        List<InitDocumentListVo> voList = new ArrayList<>();
+        if (records.size() > 0 && records != null) {
+            InitDocumentListVo vo = null;
+            for (KnowledgeDocumentNoPass record : records) {
+                Engineer engineer = engineerMapper.selectById(record.getEngineerId());
+                if (engineer == null) {
+                    continue;
+                }
+                vo = new InitDocumentListVo();
+                vo.setDocumentId(record.getId().toString()).setDocumentTitle(record.getDocTitle());
+                vo.setDocumentNum(record.getDocNumber()).setCategoryName(knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(record.getThreeCategoryId().toString()));
+                vo.setDocumentType(record.getDocType()).setCreateBy(StrUtil.hasEmpty(engineer.getUsername()) ? "" : engineer.getUsername()).setCreateTime(record.getCreateTime().substring(0,16));
+                vo.setLastUpdateTime(StrUtil.hasEmpty(record.getUpdateTime()) ? "" : record.getUpdateTime().substring(0,16)).setDocumentStatus(record.getDocStatus());
+                Integer count = engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", engineer.getId()).eq("document_id", record.getId()));
+                vo.setIsCollect(count > 0 ? 1 : 0);
+                voList.add(vo);
+            }
+        }
+        return voList;
     }
 
 

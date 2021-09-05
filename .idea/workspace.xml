@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/SettingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/SettingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/SettingController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/SettingController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/KnowledgeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/KnowledgeController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,9 +112,9 @@
       <recent name="D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\resources\mapper" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.yunduan.entity" />
       <recent name="com.yunduan.controller" />
       <recent name="com.yunduan.config.interceptor" />
-      <recent name="com.yunduan.entity" />
       <recent name="com.yunduan.utils" />
     </key>
   </component>
@@ -223,9 +226,9 @@
       <item itemvalue="JUnit.WebApplicationTests.testSaveSetting" />
       <item itemvalue="JUnit.WebApplicationTests.testSendEmail" />
       <item itemvalue="JUnit.WebApplicationTests.testUploadImage" />
+      <item itemvalue="JUnit.BackApplicationTests.contextLoads" />
       <item itemvalue="Spring Boot.BackApplication" />
       <item itemvalue="Spring Boot.WebApplication" />
-      <item itemvalue="JUnit.BackApplicationTests.contextLoads" />
     </list>
     <recent_temporary>
       <list>
@@ -253,7 +256,8 @@
       <workItem from="1630740011831" duration="9964000" />
       <workItem from="1630800206050" duration="644000" />
       <workItem from="1630800919392" duration="87000" />
-      <workItem from="1630802408562" duration="18823000" />
+      <workItem from="1630802408562" duration="20016000" />
+      <workItem from="1630832476590" duration="6007000" />
     </task>
     <servers />
   </component>
