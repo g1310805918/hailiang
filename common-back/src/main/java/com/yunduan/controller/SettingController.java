@@ -2,6 +2,7 @@ package com.yunduan.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.common.utils.Result;
 import com.yunduan.common.utils.ResultUtil;
@@ -13,10 +14,10 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/setting")
@@ -48,6 +49,24 @@ public class SettingController {
         Setting setting = settingService.getOne(new QueryWrapper<Setting>().eq("tem_code", "腾讯邮箱"));
         return setting != null ? ResultUtil.data(AESUtil.decrypt(setting.getEmailPassword())) : ResultUtil.error("未知错误");
     }
+
+
+    @PostMapping("/email/set")
+    @ApiOperation(httpMethod = "POST",value = "修改邮箱信息")
+    public Result<String> emailSet(@ModelAttribute Setting setting) {
+        if (setting == null || StrUtil.hasEmpty(setting.getEmailAddress()) || StrUtil.hasEmpty(setting.getEmailPassword())) {
+            log.error("修改邮箱信息【setting】为空");
+            return ResultUtil.error("非法请求");
+        }
+        boolean flag = false;
+        Setting one = settingService.getOne(new QueryWrapper<Setting>().eq("email_address", setting.getEmailAddress()));
+        if (one != null) {
+            one.setEmailPassword(AESUtil.encrypt(setting.getEmailPassword()));
+            flag = settingService.updateById(one);
+        }
+        return flag ? ResultUtil.success("修改成功") : ResultUtil.error("修改失败");
+    }
+
 
 
 }
