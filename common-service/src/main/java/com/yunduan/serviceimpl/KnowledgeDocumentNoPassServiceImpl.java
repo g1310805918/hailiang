@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.CollectionEngineerDocument;
 import com.yunduan.entity.Engineer;
@@ -12,16 +13,24 @@ import com.yunduan.entity.KnowledgeDocumentNoPass;
 import com.yunduan.mapper.CollectionEngineerDocumentMapper;
 import com.yunduan.mapper.EngineerMapper;
 import com.yunduan.mapper.KnowledgeDocumentNoPassMapper;
-import com.yunduan.mapper.KnowledgeDocumentThreeCategoryMapper;
 import com.yunduan.request.front.document.CreateDocumentReq;
+import com.yunduan.request.front.document.InitDocumentManagerReq;
+import com.yunduan.request.front.review.ReviewInitReq;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
+import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.SnowFlakeUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.DocumentDetailVo;
+import com.yunduan.vo.InitDocumentListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -36,6 +45,8 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
     private EngineerMapper engineerMapper;
     @Autowired
     private KnowledgeDocumentThreeCategoryService knowledgeDocumentThreeCategoryService;
+    @Autowired
+    private CollectionEngineerDocumentMapper engineerDocumentMapper;
 
 
     /**
@@ -90,6 +101,118 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
         return row;
     }
 
+
+    /**
+     * COE文档审核页面初始化
+     * @return map
+     */
+    @Override
+    public Map<String, Integer> queryDocumentReviewStatistical() {
+        Map<String, Integer> map = new HashMap<>();
+        //待审核的文档
+        map.put("noPassCount",knowledgeDocumentNoPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("doc_status",1)));
+        //审核已通过的文档
+        map.put("passCount",knowledgeDocumentNoPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("doc_status",2)));
+        //审核已拒绝的文档
+        map.put("refusedCount",knowledgeDocumentNoPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("doc_status",3)));
+        //我收藏的文档
+        map.put("collectCount",collectionEngineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineerId", ContextUtil.getUserId())));
+        return map;
+    }
+
+
+    /**
+     * COE文档审核分页初始化
+     * @param reviewInitReq 初始化对象
+     * @return map
+     */
+    @Override
+    public Map<String, Object> queryReviewInitPage(ReviewInitReq reviewInitReq) {
+        Map<String,Object> map = new HashMap<>();
+        //条件构造器
+        QueryWrapper<KnowledgeDocumentNoPass> queryWrapper = new QueryWrapper<KnowledgeDocumentNoPass>()
+                //创建人
+                .eq(StrUtil.isNotEmpty(reviewInitReq.getEngineerId()), "engineer_id", reviewInitReq.getEngineerId())
+                //三级文档分类
+                .eq(StrUtil.isNotEmpty(reviewInitReq.getThreeCategoryId()), "three_category_id", reviewInitReq.getThreeCategoryId())
+                //待审核
+                .eq(reviewInitReq.getNoPassReview(), "doc_status", 1)
+                //审核通过
+                .eq(reviewInitReq.getPassReview(), "doc_status", 2)
+                //审核拒绝
+                .eq(reviewInitReq.getRefusedReview(), "doc_status", 3)
+                //文档编号
+                .eq(StrUtil.isNotEmpty(reviewInitReq.getDocumentId()), "doc_number", reviewInitReq.getDocumentId())
+                //文档标题
+                .like(StrUtil.isNotEmpty(reviewInitReq.getDocumentTitle()), "doc_title", reviewInitReq.getDocumentTitle())
+                .orderByDesc("create_time");
+        //文档审核记录
+        List<KnowledgeDocumentNoPass> records = knowledgeDocumentNoPassMapper.selectPage(new Page<>(reviewInitReq.getPageNo(), reviewInitReq.getPageSize()), queryWrapper).getRecords();
+
+        map.put("voList",getInitPageData(records));
+        map.put("total",knowledgeDocumentNoPassMapper.selectCount(queryWrapper));
+        return map;
+    }
+
+
+    /**
+     * 封装文档列表结果
+     * @param documentNoPassList 审核记录列表
+     * @return list
+     */
+    private List<InitDocumentListVo> getInitPageData(List<KnowledgeDocumentNoPass> documentNoPassList){
+        List<InitDocumentListVo> voList = new ArrayList<>();
+        if (documentNoPassList != null && documentNoPassList.size() > 0) {
+            InitDocumentListVo vo = null;
+            for (KnowledgeDocumentNoPass noPass : documentNoPassList) {
+                Engineer engineer = engineerMapper.selectById(noPass.getEngineerId());
+                if (engineer == null) {
+                    continue;
+                }
+                vo = new InitDocumentListVo();
+                vo.setDocumentId(noPass.getId().toString()).setDocumentTitle(noPass.getDocTitle());
+                vo.setDocumentNum(noPass.getDocNumber()).setCategoryName(knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(noPass.getThreeCategoryId().toString()));
+                vo.setDocumentType(noPass.getDocType()).setCreateBy(StrUtil.hasEmpty(engineer.getUsername()) ? "" : engineer.getUsername()).setCreateTime(noPass.getCreateTime().substring(0,16));
+                vo.setLastUpdateTime(StrUtil.hasEmpty(noPass.getUpdateTime()) ? "" : noPass.getUpdateTime().substring(0,16)).setDocumentStatus(noPass.getDocStatus());
+                Integer count = engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", engineer.getId()).eq("document_id", noPass.getId()));
+                vo.setIsCollect(count > 0 ? 1 : 0);
+                voList.add(vo);
+            }
+        }
+        return voList;
+    }
+
+
+    /**
+     * COE管理员审核文档通过或者拒绝操作
+     * @param documentId 文档id
+     * @param docStatus 文档状态
+     * @return int
+     */
+    @Override
+    public int changeDocumentStatus(String documentId, Integer docStatus) {
+        KnowledgeDocumentNoPass noPass = knowledgeDocumentNoPassMapper.selectById(documentId);
+        if (noPass != null) {
+            noPass.setDocStatus(docStatus);
+            return knowledgeDocumentNoPassMapper.updateById(noPass);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 文档详情
+     * @param documentId 文档id
+     * @return DocumentDetailVo
+     */
+    @Override
+    public DocumentDetailVo documentDetail(String documentId) {
+        KnowledgeDocumentNoPass noPass = knowledgeDocumentNoPassMapper.selectById(documentId);
+        if (noPass != null) {
+            return engineerDocumentDetail(noPass.getEngineerId().toString(),documentId);
+        }
+        return null;
+    }
 
 
 }

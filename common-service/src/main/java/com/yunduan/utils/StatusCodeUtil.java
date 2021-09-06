@@ -127,4 +127,11 @@ public class StatusCodeUtil {
 
 
 
+    //bug审核管理文档状态
+    public static final Integer BUG_DOC_NO_REVIEW_STATUS = 1;
+    public static final Integer BUG_DOC_PASS_REVIEW_STATUS = 2;
+    public static final Integer BUG_DOC_NO_PASS_REVIEW_STATUS = 3;
+
+
+
 }
