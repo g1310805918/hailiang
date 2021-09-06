@@ -35,9 +35,10 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
     /**
      * 模糊搜索知识文档
      * @param searchContent 搜索内容
+     * @param nullStr 搜索标志
      * @return list
      */
-    List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent);
+    List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent,String nullStr);
 
 
     /**

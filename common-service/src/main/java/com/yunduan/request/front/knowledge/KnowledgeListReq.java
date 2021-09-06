@@ -9,6 +9,9 @@ import lombok.Data;
 @ApiModel("分类下的知识文档")
 public class KnowledgeListReq extends RequestPageReq {
 
+    @ApiModelProperty("是否是工程师端查看文档列表，布尔值【true、false】，空表示false")
+    private Boolean engineerFlag;
+
     @ApiModelProperty("三级分类id")
     private String threeCategoryId;
 

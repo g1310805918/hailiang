@@ -59,7 +59,8 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 new Page<>(knowledgeListReq.getPageNo(), knowledgeListReq.getPageSize()),
                 new QueryWrapper<KnowledgeDocument>()
                         .eq("three_category_id", knowledgeListReq.getThreeCategoryId())
-                        .eq("is_show", 1)
+                        //如果为空或者false标志当前用户未工程师。则查看公司所有文档
+                        .eq((knowledgeListReq.getEngineerFlag() == null || knowledgeListReq.getEngineerFlag() == false),"is_show", 1)
                         .eq(knowledgeListReq.getDocType() != null, "doc_type", knowledgeListReq.getDocType())
         ).getRecords();
         //结果封装
@@ -118,11 +119,12 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
     /**
      * 模糊搜索知识文档
      * @param searchContent 搜索内容
+     * @param nullStr 搜索标志
      * @return list
      */
     @Override
-    public List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent) {
-        return knowledgeDocumentMapper.selectKnowledgeLazySearch(searchContent);
+    public List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent,String nullStr) {
+        return knowledgeDocumentMapper.selectKnowledgeLazySearch(searchContent,nullStr);
     }
 
 

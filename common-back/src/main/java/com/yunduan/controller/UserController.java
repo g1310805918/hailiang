@@ -32,6 +32,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -54,11 +56,16 @@ public class UserController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
 
     @GetMapping("/info")
     @ApiOperation(httpMethod = "GET", value = "获取当前登录用户接口")
     public Result<AdminAccount> getUserInfo() {
         AdminAccount user = securityUtil.getCurrUser();
+        // 清除持久上下文环境 避免后面语句导致持久化
+        entityManager.clear();
         user.setPassword(null);
         return new ResultUtil<AdminAccount>().setData(user);
     }
@@ -82,6 +89,8 @@ public class UserController {
             // 关联角色
             List<Role> list = adminRoleService.findByUserId(u.getId());
             u.setRoles(list);
+            // 清除持久上下文环境 避免后面语句导致持久化
+            entityManager.clear();
             u.setPassword(null);
         }
         return new ResultUtil<Page<AdminAccount>>().setData(page);
@@ -90,9 +99,8 @@ public class UserController {
 
     @RequestMapping(value = "/admin/add", method = RequestMethod.POST)
     @ApiOperation(value = "添加用户")
-    public Result<Object> regist(@ModelAttribute AdminAccount u,
-                                 @RequestParam(required = false) String[] roles) {
-
+    public Result<Object> regist(@ModelAttribute AdminAccount u, @RequestParam(required = false) String[] roles) {
+        //当前登录用户
         AdminAccount currUser = securityUtil.getCurrUser();
 
         if (StrUtil.isBlank(u.getUsername()) || StrUtil.isBlank(u.getPassword())) {
@@ -107,6 +115,7 @@ public class UserController {
 
         String encryptPass = new BCryptPasswordEncoder().encode(u.getPassword());
         u.setPassword(encryptPass).setId(SnowFlakeUtil.getPrimaryKeyId().toString()).setCreateTime(DateUtil.now()).setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setCreateBy(currUser.getId()).setUpdateTime(DateUtil.now()).setUpdateBy(currUser.getId());
+
         boolean flag = adminAccountService.save(u);
         if (!flag) {
             return new ResultUtil<Object>().setErrorMsg("添加失败");
@@ -239,6 +248,8 @@ public class UserController {
 
         List<AdminAccount> list = adminAccountService.list();
         for (AdminAccount u : list) {
+            // 清除持久上下文环境 避免后面语句导致持久化
+            entityManager.clear();
             u.setPassword(null);
         }
         return new ResultUtil<List<AdminAccount>>().setData(list);

@@ -196,7 +196,7 @@ public class AccountRegisteredController {
 
 
     @GetMapping("/send-reset-password-email")
-    @ApiOperation(httpMethod = "GET",value = "使用邮箱获取验证码")
+    @ApiOperation(httpMethod = "GET",value = "发送邮箱验证码")
     public ResultUtil<String> sendResetPasswordEmail(SendEmailVerCodeReq sendEmailVerCodeReq) {
         sendEmailVerCodeReq = AESUtil.decryptToObj(sendEmailVerCodeReq.getData(),SendEmailVerCodeReq.class);
         if (MatchDataUtil.matchDataType(sendEmailVerCodeReq.getEmail()) != 2){

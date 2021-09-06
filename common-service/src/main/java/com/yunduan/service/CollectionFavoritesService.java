@@ -2,6 +2,7 @@ package com.yunduan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.CollectionFavorites;
+import com.yunduan.request.front.center.AddFavoritesReq;
 import com.yunduan.request.front.center.FavoritesReq;
 
 import java.util.List;
@@ -34,4 +35,13 @@ public interface CollectionFavoritesService extends IService<CollectionFavorites
      * @return int
      */
     int changeFavoritesName(String id,String favoritesName);
+
+
+    /**
+     * 添加收藏夹
+     * @param engineerId 工程师id
+     * @param addFavoritesReq 收藏夹对象
+     * @return int
+     */
+    int createFavorite(Long engineerId,AddFavoritesReq addFavoritesReq);
 }

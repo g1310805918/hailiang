@@ -1,5 +1,6 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,11 +10,13 @@ import com.yunduan.entity.KnowledgeDocument;
 import com.yunduan.mapper.CollectionAccountDocumentMapper;
 import com.yunduan.mapper.CollectionFavoritesMapper;
 import com.yunduan.mapper.KnowledgeDocumentMapper;
+import com.yunduan.request.front.center.AddFavoritesReq;
 import com.yunduan.request.front.center.FavoritesReq;
 import com.yunduan.service.CollectionFavoritesService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.ExtractRichTextUtil;
+import com.yunduan.utils.SnowFlakeUtil;
 import com.yunduan.vo.KnowledgeListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,6 +137,20 @@ public class CollectionFavoritesServiceImpl extends ServiceImpl<CollectionFavori
             return collectionFavoritesMapper.update(favorites, new QueryWrapper<CollectionFavorites>().eq("id", favorites.getId()));
         }
         return 0;
+    }
+
+
+    /**
+     * 添加收藏夹
+     * @param engineerId 工程师id
+     * @param addFavoritesReq 收藏夹对象
+     * @return int
+     */
+    @Override
+    public int createFavorite(Long engineerId, AddFavoritesReq addFavoritesReq) {
+        CollectionFavorites favorites = new CollectionFavorites();
+        favorites.setId(SnowFlakeUtil.getPrimaryKeyId()).setAccountId(engineerId).setFavoritesName(addFavoritesReq.getFavoritesName()).setCreateTime(DateUtil.now());
+        return collectionFavoritesMapper.insert(favorites);
     }
 
 

@@ -1,5 +1,8 @@
 package com.yunduan.utils;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,6 +15,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpClientUtil {
+
+    private static Logger log = LoggerFactory.getLogger(HttpClientUtil.class);
+
 
     public static String doGet(String url, Map<String, String> param) {
 
@@ -130,4 +138,5 @@ public class HttpClientUtil {
 
         return resultString;
     }
+
 }

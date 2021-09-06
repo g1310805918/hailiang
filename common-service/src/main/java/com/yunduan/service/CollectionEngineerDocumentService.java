@@ -2,6 +2,9 @@ package com.yunduan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.CollectionEngineerDocument;
+import com.yunduan.request.front.center.FavoritesReq;
+
+import java.util.Map;
 
 public interface CollectionEngineerDocumentService extends IService<CollectionEngineerDocument> {
 
@@ -14,4 +17,12 @@ public interface CollectionEngineerDocumentService extends IService<CollectionEn
      * @return int
      */
     int engineerCollectionDocument(String engineerId,String documentId,String favoritesId);
+
+
+    /**
+     * 查询收藏夹下的知识文档列表
+     * @param favoritesReq 筛选对象
+     * @return map
+     */
+    Map<String,Object> queryFavoritesInitPage(FavoritesReq favoritesReq);
 }

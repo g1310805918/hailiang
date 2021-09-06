@@ -115,27 +115,10 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     public Account queryAccountBaseInfo() {
         Account account = accountMapper.selectOne(new QueryWrapper<Account>().eq("id", ContextUtil.getUserId()));
         if (account != null) {
-            //查询用户所有收藏夹
-            List<CollectionFavorites> favoritesList = collectionFavoritesMapper.selectList(new QueryWrapper<CollectionFavorites>().eq("account_id", account.getId()));
-            //收藏夹集合
-            List<FavoritesVo> favoritesVoList = new ArrayList<>();
-            if (favoritesList.size() > 0 && favoritesList != null) {
-                //添加默认收藏夹
-                FavoritesVo vo = new FavoritesVo();
-                vo.setId(null).setCount(collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("account_id", account.getId()).eq("favorites_id", null))).setFavoritesName("默认收藏夹");
-                favoritesVoList.add(vo);
-                //得到用户创建收藏夹
-                for (CollectionFavorites collectionFavorites : favoritesList) {
-                    vo = new FavoritesVo();
-                    vo.setId(collectionFavorites.getId().toString()).setFavoritesName(collectionFavorites.getFavoritesName());
-                    //收藏夹下的文档总数
-                    Integer total = collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("account_id", account.getId()).eq("favorites_id", collectionFavorites.getId()).orderByDesc("create_time"));
-                    vo.setCount(total);
-                    favoritesVoList.add(vo);
-                }
-            }
+            //获取用户收藏夹
+            List<FavoritesVo> favorites = getFavorites(account);
             //设置收藏夹
-            account.setFavoritesVoList(favoritesVoList);
+            account.setFavoritesVoList(favorites);
             //设置用户绑定CSI记录列表
             List<AccountBindingCSI> bindingCSIS = bindingAccountCSIMapper.selectAccountBindingRecord(account.getId().toString());
             account.setBindingCSIList(bindingCSIS);
@@ -143,6 +126,36 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         return null;
     }
+
+    /**
+     * 获取用户收藏夹列表
+     * @param account 当前用户
+     * @return list
+     */
+    public List<FavoritesVo> getFavorites(Account account) {
+        //收藏夹集合
+        List<FavoritesVo> favoritesVoList = new ArrayList<>();
+        //添加默认收藏夹
+        FavoritesVo vo = new FavoritesVo();
+        vo.setId(null).setCount(collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("account_id", account.getId()).eq("favorites_id", null))).setFavoritesName("默认收藏夹");
+        favoritesVoList.add(vo);
+        //查询用户所有收藏夹
+        List<CollectionFavorites> favoritesList = collectionFavoritesMapper.selectList(new QueryWrapper<CollectionFavorites>().eq("account_id", account.getId()));
+        if (favoritesList.size() > 0 && favoritesList != null) {
+            //得到用户创建收藏夹
+            for (CollectionFavorites collectionFavorites : favoritesList) {
+                vo = new FavoritesVo();
+                vo.setId(collectionFavorites.getId().toString()).setFavoritesName(collectionFavorites.getFavoritesName());
+                //收藏夹下的文档总数
+                Integer total = collectionAccountDocumentMapper.selectCount(new QueryWrapper<CollectionAccountDocument>().eq("account_id", account.getId()).eq("favorites_id", collectionFavorites.getId()).orderByDesc("create_time"));
+                vo.setCount(total);
+                favoritesVoList.add(vo);
+            }
+        }
+        return favoritesVoList;
+    }
+
+
 
 
     /**

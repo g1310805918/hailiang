@@ -15,9 +15,10 @@ public interface KnowledgeDocumentMapper extends BaseMapper<KnowledgeDocument> {
     /**
      * 模糊搜所知识文档以及文档分类
      * @param searchContent 搜索内容
+     * @param nullStr 搜索标志
      * @return list
      */
-    List<KnowledgeLazySearchVo> selectKnowledgeLazySearch(@Param("searchContent") String searchContent);
+    List<KnowledgeLazySearchVo> selectKnowledgeLazySearch(@Param("searchContent") String searchContent, @Param("nullStr") String nullStr);
 
 
     /**

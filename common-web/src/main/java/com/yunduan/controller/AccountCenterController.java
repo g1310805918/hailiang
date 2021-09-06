@@ -192,7 +192,7 @@ public class AccountCenterController {
 
 
     @GetMapping("/get-account-favorites")
-    @ApiOperation(httpMethod = "GET",value = "用户收藏夹列表")
+    @ApiOperation(httpMethod = "GET",value = "获取用户可操作的收藏夹列表")
     public ResultUtil<List<CollectionFavorites>> getAccountFavorites() {
         //用户收藏夹列表
         List<CollectionFavorites> favorites = collectionFavoritesService.list(new QueryWrapper<CollectionFavorites>().eq("account_id", ContextUtil.getUserId()));

@@ -105,7 +105,7 @@ public class KnowledgeController {
     @ApiOperation(httpMethod = "GET",value = "搜索【模糊推荐】知识文档")
     public ResultUtil<List<KnowledgeLazySearchVo>> searchKnowledgeLazyRecommended(KnowledgeLazySearchReq knowledgeLazySearchReq) {
         knowledgeLazySearchReq = AESUtil.decryptToObj(knowledgeLazySearchReq.getData(),KnowledgeLazySearchReq.class);
-        List<KnowledgeLazySearchVo> searchVos = knowledgeDocumentService.queryKnowledgeLazySearch(knowledgeLazySearchReq.getSearchContent());
+        List<KnowledgeLazySearchVo> searchVos = knowledgeDocumentService.queryKnowledgeLazySearch(knowledgeLazySearchReq.getSearchContent(),knowledgeLazySearchReq.getNullStr());
         return resultUtil.AesJSONSuccess("SUCCESS",searchVos);
     }
 
@@ -126,5 +126,6 @@ public class KnowledgeController {
         List<KnowledgeLevel3CategoryList> resultList = knowledgeDocumentService.querySearchContentInCategoryList(knowledgeLazySearchReq.getSearchContent());
         return resultUtil.AesJSONSuccess("SUCCESS",resultList);
     }
+
 
 }

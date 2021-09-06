@@ -10,9 +10,17 @@
         UNION ALL
         SELECT id,category_title, 3 AS type  FROM tb_knowledge_document_three_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
         UNION ALL
-        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document WHERE del_flag = 0 AND  doc_title LIKE concat ('%',#{searchContent},'%')
+        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document
+        WHERE del_flag = 0 AND  doc_title LIKE concat ('%',#{searchContent},'%')
+        <if test="nullStr == null or nullStr == ''">
+            AND is_show = 1
+        </if>
         UNION ALL
-        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document WHERE del_flag = 0 AND  doc_content LIKE concat ('%',#{searchContent},'%')
+        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document
+        WHERE del_flag = 0 AND  doc_content LIKE concat ('%',#{searchContent},'%')
+        <if test="nullStr == null or nullStr == ''">
+            AND is_show = 1
+        </if>
     </select>
 
     <!-- 某搜索包含xxx的id集合 -->
