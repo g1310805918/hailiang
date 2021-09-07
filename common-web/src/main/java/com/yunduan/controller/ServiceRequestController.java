@@ -19,6 +19,8 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.quartz.LocalTaskExecutorThreadPool;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PublicKey;
@@ -54,6 +56,11 @@ public class ServiceRequestController {
     private EngineerService engineerService;
     @Autowired
     private CollectionEngineerService collectionEngineerService;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Autowired
+    private KnowledgeDocumentService knowledgeDocumentService;
+
 
     @GetMapping("/company-work-order-statistical")
     @ApiOperation(httpMethod = "GET", value = "用户-首页公司订单统计")
@@ -325,6 +332,147 @@ public class ServiceRequestController {
         return row > 0 ? resultUtil.AesJSONSuccess("修改成功","") : resultUtil.AesFAILError("修改失败");
     }
 
-    
+
+    @PostMapping("/engineer-add-knowledge-document")
+    @ApiOperation(httpMethod = "GET",value = "工程师关联工单【知识文档、bug文档】")
+    public ResultUtil<String> engineerAddKnowledgeDocument(AddKnowledgeDocReq addKnowledgeDocReq) {
+        addKnowledgeDocReq = AESUtil.decryptToObj(addKnowledgeDocReq.getData(),AddKnowledgeDocReq.class);
+        int row = workOrderService.joinWorkOrderDocumentInfo(addKnowledgeDocReq);
+        if (row == StatusCodeUtil.DOCUMENT_NOT_EXIST) {
+            return resultUtil.AesFAILError("文档不存在，请检查编号是否正确！");
+        }
+        return row > 0 ? resultUtil.AesJSONSuccess("添加成功","") : resultUtil.AesFAILError("添加失败");
+    }
+
+
+    @PostMapping("/engineer-add-attachment-path")
+    @ApiOperation(httpMethod = "POST",value = "工程师关联【相关资料链接、相关资料附件】")
+    public ResultUtil<String> engineerAddAttachmentPath(AddRelatedLinksReq addRelatedLinksReq) {
+        addRelatedLinksReq = AESUtil.decryptToObj(addRelatedLinksReq.getData(),AddRelatedLinksReq.class);
+        int row = workOrderService.relatedLinks(addRelatedLinksReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("添加成功","") : resultUtil.AesFAILError("添加失败");
+    }
+
+
+    @PostMapping("/engineer-change-model")
+    @ApiOperation(httpMethod = "POST",value = "工程师模块更改")
+    public ResultUtil<String> changeModel(ChangeModelReq changeModelReq) {
+        changeModelReq = AESUtil.decryptToObj(changeModelReq.getData(),ChangeModelReq.class);
+        WorkOrder one = workOrderService.getById(changeModelReq.getWorkOrderId());
+        boolean flag = false;
+        if (one != null) {
+            one.setProductNameVersion(changeModelReq.getProductNameVersion()).setProblemType(changeModelReq.getProductType());
+            flag = workOrderService.updateById(one);
+        }
+        return flag ? resultUtil.AesJSONSuccess("更改成功","") : resultUtil.AesFAILError("更改失败");
+    }
+
+
+    @PostMapping("/engineer-add-order-feedback-normal")
+    @ApiOperation(httpMethod = "POST",value = "添加普通工单反馈")
+    public ResultUtil<String> engineerAddOrderFeedbackNormal(AddNormalFeedbackReq addNormalFeedbackReq) {
+        addNormalFeedbackReq = AESUtil.decryptToObj(addNormalFeedbackReq.getData(),AddNormalFeedbackReq.class);
+        int row = communicationRecordService.createCommunicationRecord(addNormalFeedbackReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("反馈成功","") : resultUtil.AesFAILError("反馈失败");
+    }
+
+
+    @PostMapping("/engineer-add-order-feedback-vdm")
+    @ApiOperation(httpMethod = "POST",value = "添加VDM流程反馈")
+    public ResultUtil<String> engineerAddOrderFeedbackVDM(AddVDMFeedbackReq addVDMFeedbackReq) {
+        addVDMFeedbackReq = AESUtil.decryptToObj(addVDMFeedbackReq.getData(),AddVDMFeedbackReq.class);
+        int row = communicationRecordService.createCommunicationRecordVDM(addVDMFeedbackReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("反馈成功","") : resultUtil.AesFAILError("反馈失败");
+    }
+
+
+
+    @PostMapping("/engineer-transfer-order")
+    @ApiOperation(httpMethod = "POST",value = "工程师-工单转单")
+    public ResultUtil<String> engineerTransferOrder(TransferOrderReq transferOrderReq) {
+        transferOrderReq = AESUtil.decryptToObj(transferOrderReq.getData(),TransferOrderReq.class);
+        WorkOrder workOrder = workOrderService.getById(transferOrderReq.getWorkOrderId());
+        if (workOrder == null) {
+            return resultUtil.AesFAILError("非法请求");
+        }
+        workOrder.setEngineerId(StrUtil.hasEmpty(transferOrderReq.getEngineerId()) ? workOrder.getEngineerId() : Convert.toLong(transferOrderReq.getEngineerId()));
+        boolean flag = workOrderService.updateById(workOrder);
+        if (flag) {
+            //更新该工单沟通记录的工程师id为转单后的工程师id
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    communicationRecordService.changeCommunicationRecordEngineerID(workOrder.getId().toString(),workOrder.getEngineerId().toString());
+                }
+            });
+        }
+        return flag ? resultUtil.AesJSONSuccess("转单成功","") : resultUtil.AesFAILError("转单失败");
+    }
+
+
+    @PostMapping("/engineer-close-work-order")
+    @ApiOperation(httpMethod = "POST",value = "工程师关闭工单")
+    public ResultUtil<String> engineerCloseWorkOrder(CloseWorkOrderReq closeWorkOrderReq) {
+        closeWorkOrderReq = AESUtil.decryptToObj(closeWorkOrderReq.getData(),CloseWorkOrderReq.class);
+        int row = workOrderService.closeWorkOrder(closeWorkOrderReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("关闭成功","") : resultUtil.AesFAILError("关闭失败");
+    }
+
+
+    @PostMapping("/open-again")
+    @ApiOperation(httpMethod = "POST",value = "用户重开工单")
+    public ResultUtil<String> openAgain(OpenAgainReq openAgainReq) {
+        openAgainReq = AESUtil.decryptToObj(openAgainReq.getData(),OpenAgainReq.class);
+        WorkOrder workOrder = workOrderService.getById(openAgainReq.getWorkOrderId());
+        boolean flag = false;
+        if (workOrder != null) {
+            //重开原因、重开描述、工单处理中状态
+            workOrder.setOpenAgainReason(openAgainReq.getOpenAgainReason()).setOpenAgainDesc(openAgainReq.getOpenAgainDesc()).setStatus(StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS);
+            flag = workOrderService.updateById(workOrder);
+        }
+        return flag ? resultUtil.AesJSONSuccess("重开成功","") : resultUtil.AesFAILError("重开失败");
+    }
+
+    @PostMapping("/engineer-open-again")
+    @ApiOperation(httpMethod = "POST",value = "工程师重开工单")
+    public ResultUtil<String> engineerOpenAgain(OpenAgainReq openAgainReq) {
+        openAgainReq = AESUtil.decryptToObj(openAgainReq.getData(),OpenAgainReq.class);
+        WorkOrder workOrder = workOrderService.getById(openAgainReq.getWorkOrderId());
+        boolean flag = false;
+        if (workOrder != null) {
+            //重开原因、重开描述、工单处理中状态
+            workOrder.setEngineerOpenAgainReason(openAgainReq.getOpenAgainReason()).setEngineerOpenAgainDesc(openAgainReq.getOpenAgainDesc()).setStatus(StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS);
+            flag = workOrderService.updateById(workOrder);
+        }
+        return flag ? resultUtil.AesJSONSuccess("重开成功","") : resultUtil.AesFAILError("重开失败");
+    }
+
+
+    @PostMapping("/engineer-remove-related-document")
+    @ApiOperation(httpMethod = "POST",value = "工程师删除相关【知识文档、bug文档】")
+    public ResultUtil<String> engineerRemoveRelatedDocument(EngineerRemoveRelatedDocumentReq engineerRemoveRelatedDocumentReq) {
+        engineerRemoveRelatedDocumentReq = AESUtil.decryptToObj(engineerRemoveRelatedDocumentReq.getData(),EngineerRemoveRelatedDocumentReq.class);
+        int row = workOrderService.engineerRemoveRelated(engineerRemoveRelatedDocumentReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("删除成功","") : resultUtil.AesFAILError("删除失败");
+    }
+
+
+    @GetMapping("/engineer-dynamic-search-document")
+    @ApiOperation(httpMethod = "GET",value = "KM文档管理动态搜索文档")
+    public ResultUtil<List<DocumentListVo>> engineerDynamicSearchDocument(DynamicSearchDocumentReq dynamicSearchDocumentReq) {
+        dynamicSearchDocumentReq = AESUtil.decryptToObj(dynamicSearchDocumentReq.getData(),DynamicSearchDocumentReq.class);
+        List<DocumentListVo> voList = knowledgeDocumentService.dynamicDocumentList(dynamicSearchDocumentReq);
+        return resultUtil.AesJSONSuccess("SUCCESS",voList);
+    }
+
+
+    @PostMapping("/engineer-related-document")
+    @ApiOperation(httpMethod = "POST",value = "工程师提交文档管理")
+    public ResultUtil engineerRelatedDocument(SubmitKMDocumentReq submitKMDocumentReq) {
+        submitKMDocumentReq = AESUtil.decryptToObj(submitKMDocumentReq.getData(),SubmitKMDocumentReq.class);
+        int row = workOrderService.submitKMDocument(submitKMDocumentReq);
+        return row > 0 ? resultUtil.AesJSONSuccess("提交成功","") : resultUtil.AesFAILError("提交失败");
+    }
+
 
 }

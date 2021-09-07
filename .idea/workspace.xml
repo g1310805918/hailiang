@@ -5,13 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentNoPassService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentNoPassService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentNoPassServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentNoPassServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/BugManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/BugManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Engineer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/Engineer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/WorkOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/WorkOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/request/front/servicerequest/CreateWorkOrderReq.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/request/front/servicerequest/CreateWorkOrderReq.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/BugManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/BugManagerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CommunicationRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CommunicationRecordService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/BugManagerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/BugManagerServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CommunicationRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CommunicationRecordServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentNoPassService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentNoPassService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentNoPassServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentNoPassServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/EngineerCenterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/EngineerCenterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/KnowledgeListVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/KnowledgeListVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/WorkOrderDetailBaseInfoVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/WorkOrderDetailBaseInfoVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/WebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/WebApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/BugController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/BugController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/ServiceRequestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/WebApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/BugController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/BugController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-web/target/test-classes/com/yunduan/WebApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/test-classes/com/yunduan/WebApplicationTests.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +109,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../java-common-lieyin" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.19153675" />
@@ -114,6 +130,7 @@
       <recent name="D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\resources\mapper" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.yunduan.request.front.servicerequest" />
       <recent name="com.yunduan.entity" />
       <recent name="com.yunduan.controller" />
       <recent name="com.yunduan.config.interceptor" />
@@ -127,7 +144,20 @@
       </set>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.EngineerRemoveRelatedDocumentReq">
+    <configuration name="EngineerRemoveRelatedDocumentReq" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.request.front.servicerequest.EngineerRemoveRelatedDocumentReq" />
+      <module name="common-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.request.front.servicerequest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="BackApplicationTests.contextLoads" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="common-back" />
       <extension name="coverage">
@@ -144,7 +174,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WebApplicationTests.testSendEmail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="WebApplicationTests.testDateUtil" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="common-web" />
       <extension name="coverage">
         <pattern>
@@ -154,13 +184,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.yunduan" />
       <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
-      <option name="METHOD_NAME" value="testSendEmail" />
+      <option name="METHOD_NAME" value="testDateUtil" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WebApplicationTests.testUploadImage" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="WebApplicationTests.testDateUtil1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="common-web" />
       <extension name="coverage">
         <pattern>
@@ -170,7 +200,23 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.yunduan" />
       <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
-      <option name="METHOD_NAME" value="testUploadImage" />
+      <option name="METHOD_NAME" value="testDateUtil1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebApplicationTests.testDateUtil2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="common-web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yunduan.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yunduan" />
+      <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
+      <option name="METHOD_NAME" value="testDateUtil2" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -195,17 +241,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.WebApplicationTests.testSendEmail" />
-      <item itemvalue="JUnit.WebApplicationTests.testUploadImage" />
       <item itemvalue="JUnit.BackApplicationTests.contextLoads" />
       <item itemvalue="Spring Boot.BackApplication" />
       <item itemvalue="Spring Boot.WebApplication" />
+      <item itemvalue="JUnit.WebApplicationTests.testDateUtil" />
+      <item itemvalue="JUnit.WebApplicationTests.testDateUtil2" />
+      <item itemvalue="JUnit.WebApplicationTests.testDateUtil1" />
+      <item itemvalue="Application.EngineerRemoveRelatedDocumentReq" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.EngineerRemoveRelatedDocumentReq" />
+        <item itemvalue="JUnit.WebApplicationTests.testDateUtil1" />
+        <item itemvalue="JUnit.WebApplicationTests.testDateUtil2" />
+        <item itemvalue="JUnit.WebApplicationTests.testDateUtil" />
         <item itemvalue="JUnit.BackApplicationTests.contextLoads" />
-        <item itemvalue="JUnit.WebApplicationTests.testUploadImage" />
-        <item itemvalue="JUnit.WebApplicationTests.testSendEmail" />
       </list>
     </recent_temporary>
   </component>
@@ -229,7 +279,9 @@
       <workItem from="1630832476590" duration="8758000" />
       <workItem from="1630845681012" duration="15000" />
       <workItem from="1630887812613" duration="18832000" />
-      <workItem from="1630913049255" duration="9415000" />
+      <workItem from="1630913049255" duration="9446000" />
+      <workItem from="1630973919436" duration="1915000" />
+      <workItem from="1630982185749" duration="22808000" />
     </task>
     <servers />
   </component>

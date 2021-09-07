@@ -17,6 +17,9 @@ public class KnowledgeListVo implements Serializable {
     @ApiModelProperty("文档id")
     private String id;
 
+    @ApiModelProperty("文档编号")
+    private String documentNumber;
+
     @ApiModelProperty("文档标题")
     private String docTitle;
 

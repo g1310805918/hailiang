@@ -9,6 +9,7 @@ import com.yunduan.mapper.*;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
 import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
+import com.yunduan.request.front.servicerequest.DynamicSearchDocumentReq;
 import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
@@ -341,6 +342,39 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
             row += noPassMapper.updateById(document2);
         }
         return row;
+    }
+
+
+    /**
+     * 动态搜索文档列表
+     * @param dynamicSearchDocumentReq 搜索条件
+     * @return list
+     */
+    @Override
+    public List<DocumentListVo> dynamicDocumentList(DynamicSearchDocumentReq dynamicSearchDocumentReq) {
+        List<DocumentListVo> voList = new ArrayList<>();
+        //搜索类型【1文档编号、2文档标题】
+        Integer type = dynamicSearchDocumentReq.getType();
+        if (type == null) {
+            type = 1;
+        }
+        //搜索内容
+        String searchContent = dynamicSearchDocumentReq.getSearchContent();
+        //条件构造器
+        QueryWrapper<KnowledgeDocument> queryWrapper = new QueryWrapper<KnowledgeDocument>()
+                .eq("is_show",1)  //对外可见的
+                .like(type == 1 && StrUtil.isNotEmpty(searchContent), "doc_number", searchContent)
+                .like(type == 2 && StrUtil.isNotEmpty(searchContent), "doc_title", searchContent);
+        //筛选出的文档列表
+        List<KnowledgeDocument> documentList = knowledgeDocumentMapper.selectList(queryWrapper);
+        if (documentList.size() > 0 && documentList != null) {
+            DocumentListVo vo = null;
+            for (KnowledgeDocument document : documentList) {
+                vo = new DocumentListVo().setId(document.getId().toString()).setTitle(document.getDocTitle());
+                voList.add(vo);
+            }
+        }
+        return voList;
     }
 
 

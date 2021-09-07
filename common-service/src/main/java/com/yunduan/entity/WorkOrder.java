@@ -159,4 +159,26 @@ public class WorkOrder implements Serializable {
     @ApiModelProperty("工程师关闭工单时所关联的结单文档")
     private Long closeAssDocument;
 
+    @ApiModelProperty("工程师关闭工单理由")
+    private String engineerCloseReason;
+
+    @ApiModelProperty("工程师关闭工单反馈")
+    private String engineerCloseFeedback;
+
+    @ApiModelProperty("用户重开工单原因")
+    private String openAgainReason;
+
+    @ApiModelProperty("用户重开工单描述")
+    private String openAgainDesc;
+
+    @ApiModelProperty("工程师重开工单原因")
+    private String engineerOpenAgainReason;
+
+    @ApiModelProperty("工程师重开工单描述")
+    private String engineerOpenAgainDesc;
+
+    @ApiModelProperty("三级分类id")
+    private String categoryId;
+
+
 }

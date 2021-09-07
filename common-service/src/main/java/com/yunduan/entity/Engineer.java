@@ -87,6 +87,9 @@ public class Engineer implements Serializable {
     @ApiModelProperty("最后登录时间")
     private String lastLoginTime;
 
+    @ApiModelProperty("历史被分配的工单总数")
+    private Integer orderNumber;
+
 
     @Transient
     @TableField(exist = false)

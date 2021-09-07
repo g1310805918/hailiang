@@ -5,6 +5,8 @@ import com.yunduan.entity.KnowledgeDocument;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
 import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
+import com.yunduan.request.front.servicerequest.DynamicSearchDocumentReq;
+import com.yunduan.vo.DocumentListVo;
 import com.yunduan.vo.KnowledgeDetailVo;
 import com.yunduan.vo.KnowledgeLazySearchVo;
 import com.yunduan.vo.KnowledgeLevel3CategoryList;
@@ -71,4 +73,12 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
      * @return int
      */
     int engineerRemoveDocument(String documentId);
+
+
+    /**
+     * 动态搜索文档列表
+     * @param dynamicSearchDocumentReq 搜索条件
+     * @return list
+     */
+    List<DocumentListVo> dynamicDocumentList(DynamicSearchDocumentReq dynamicSearchDocumentReq);
 }

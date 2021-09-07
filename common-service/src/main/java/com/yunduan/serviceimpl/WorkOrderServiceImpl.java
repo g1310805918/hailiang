@@ -1,5 +1,8 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -41,7 +44,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     @Autowired
     private CollectionAccountMapper collectionAccountMapper;
     @Autowired
-    private EngineerMapper engineerMapper;
+    private KnowledgeDocumentMapper knowledgeDocumentMapper;
     @Autowired
     private CollectionEngineerMapper collectionEngineerMapper;
     @Autowired
@@ -185,8 +188,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         workOrder.setMainContact(createWorkOrderReq.getMainContact()).setMainMobile(createWorkOrderReq.getMainMobile()).setMainEmail(createWorkOrderReq.getMainEmail()).setContactWay(createWorkOrderReq.getContactWay()).setStandbyContact(createWorkOrderReq.getStandbyContact()).setStandbyMobile(createWorkOrderReq.getStandbyMobile()).setStandbyEmail(createWorkOrderReq.getStandbyEmail());
         //订单类型、硬件平台、操作系统、版本、系统语言、部署方式、产品名称版本、问题类型、客户服务号
         workOrder.setType(createWorkOrderReq.getWorkOrderType()).setHardwarePlatform(createWorkOrderReq.getHardware()).setOperatingSystem(createWorkOrderReq.getOperationSystem()).setOperatingSystemVersion(createWorkOrderReq.getOperationSystemVersion()).setOperatingSystemLanguage(createWorkOrderReq.getOperationSystemVersionLanguage()).setDeploymentWay(createWorkOrderReq.getDeploymentType()).setProductNameVersion(createWorkOrderReq.getProductNameVersion()).setProblemType(createWorkOrderReq.getProblemType()).setCsiNumber(createWorkOrderReq.getCsiNumber());
-        //工单状态、最后更新时间
-        workOrder.setStatus(StatusCodeUtil.WORK_ORDER_PROCESS_STATUS).setLastUpdateTime(DateUtil.now());
+        //工单状态、最后更新时间、工单所属三级分类id
+        workOrder.setStatus(StatusCodeUtil.WORK_ORDER_PROCESS_STATUS).setLastUpdateTime(DateUtil.now()).setCategoryId(createWorkOrderReq.getCategoryId());
         //提交
         return workOrderMapper.insert(workOrder);
     }
@@ -247,6 +250,9 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         vo.setKnowledgeDocId(getKnowledgeList(workOrder.getRelatedDoc(),1));
         //相关bug文档
         vo.setKnowLedgeBugDocId(getKnowledgeList(workOrder.getRelatedBugDoc(),2));
+        //用户是否可以重开工单(大于一个月就不可以重开、否则可以)
+        long between = DateUtil.between(DateUtil.parseDate(workOrder.getLastUpdateTime()), DateUtil.parse(DateUtil.now()), DateUnit.DAY);
+        vo.setIsCanOpenAgain(between > 31 ? 0 : 1);
         return vo;
     }
 
@@ -267,7 +273,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         if (documents != null && documents.size() > 0) {
             KnowledgeListVo doc = null;
             for (KnowledgeDocument document : documents) {
-                doc = new KnowledgeListVo().setId(document.getId().toString()).setDocTitle(document.getDocTitle());
+                doc = new KnowledgeListVo().setId(document.getId().toString()).setDocumentNumber(document.getDocNumber()).setDocTitle(document.getDocTitle());
                 voList.add(doc);
             }
         }
@@ -492,7 +498,121 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     }
 
 
+    /**
+     * 关联工单文档信息
+     * @param addKnowledgeDocReq 关联对象
+     * @return int
+     */
+    @Override
+    public int joinWorkOrderDocumentInfo(AddKnowledgeDocReq addKnowledgeDocReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(addKnowledgeDocReq.getWorkOrderId());
+        if (workOrder != null) {
+            KnowledgeDocument document = knowledgeDocumentMapper.selectOne(new QueryWrapper<KnowledgeDocument>().eq("doc_number", addKnowledgeDocReq.getDocumentNumber()));
+            if (document == null) {
+                return StatusCodeUtil.DOCUMENT_NOT_EXIST;
+            }
+            //文档类型【1知识、2bug】
+            Integer type = addKnowledgeDocReq.getDocumentType();
 
+            String resultStr = "";
+            if (type == 1) {
+                //相关知识文档
+                resultStr = StrUtil.hasEmpty(workOrder.getRelatedDoc()) ? document.getId().toString() : workOrder.getRelatedDoc() + "," + document.getId();
+                workOrder.setRelatedDoc(resultStr);
+            }else {
+                //相关bug文档
+                resultStr = StrUtil.hasEmpty(workOrder.getRelatedBugDoc()) ? document.getId().toString() : workOrder.getRelatedBugDoc() + "," + document.getId();
+                workOrder.setRelatedBugDoc(resultStr);
+            }
+            return workOrderMapper.updateById(workOrder);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 添加相关资料
+     * @param addRelatedLinksReq 资料
+     * @return int
+     */
+    @Override
+    public int relatedLinks(AddRelatedLinksReq addRelatedLinksReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(addRelatedLinksReq.getWorkOrderId());
+        if (workOrder != null) {
+            //链接类型【1 资料链接、2 相关附件】
+            Integer linkType = addRelatedLinksReq.getLinkType();
+            String str = "";
+            if (linkType == 1) {
+                str = StrUtil.hasEmpty(workOrder.getRelatedLinks()) ? addRelatedLinksReq.getPath() : workOrder.getRelatedLinks() + "," + addRelatedLinksReq.getPath();
+                workOrder.setRelatedLinks(str);
+            }else {
+                str = StrUtil.hasEmpty(workOrder.getAttachmentPath()) ? addRelatedLinksReq.getPath() : workOrder.getAttachmentPath() + "," + addRelatedLinksReq.getPath();
+                workOrder.setAttachmentPath(str);
+            }
+            return workOrderMapper.updateById(workOrder);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 工程师关闭工单
+     * @param closeWorkOrderReq 参数
+     * @return int
+     */
+    @Override
+    public int closeWorkOrder(CloseWorkOrderReq closeWorkOrderReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(closeWorkOrderReq.getWorkOrderId());
+        if (workOrder != null) {
+            workOrder.setEngineerCloseReason(closeWorkOrderReq.getReason()).setEngineerCloseFeedback(closeWorkOrderReq.getFeedback()).setStatus(StatusCodeUtil.WORK_ORDER_CLOSE_STATUS).setLastUpdateTime(DateUtil.now());
+            return workOrderMapper.updateById(workOrder);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 工程师删除关联的文档
+     * @param engineerRemoveRelatedDocumentReq 删除的对象
+     * @return int
+     */
+    @Override
+    public int engineerRemoveRelated(EngineerRemoveRelatedDocumentReq engineerRemoveRelatedDocumentReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(engineerRemoveRelatedDocumentReq.getWorkOrderId());
+        if (workOrder != null) {
+            //类型
+            Integer type = engineerRemoveRelatedDocumentReq.getDocumentType();
+            if (type == 1) {
+                //知识文档
+                String relatedDoc = workOrder.getRelatedDoc();
+                relatedDoc = relatedDoc.replaceAll(engineerRemoveRelatedDocumentReq.getDocumentId() + ",","");
+                workOrder.setRelatedDoc(relatedDoc);
+            }else {
+                //bug文档
+                String relatedBugDoc = workOrder.getRelatedBugDoc();
+                relatedBugDoc = relatedBugDoc.replaceAll(engineerRemoveRelatedDocumentReq.getDocumentId() + ",","");
+                workOrder.setRelatedBugDoc(relatedBugDoc);
+            }
+            return workOrderMapper.updateById(workOrder);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 提交文档管理
+     * @param submitKMDocumentReq 文档
+     * @return int
+     */
+    @Override
+    public int submitKMDocument(SubmitKMDocumentReq submitKMDocumentReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(submitKMDocumentReq.getWorkOrderId());
+        if (workOrder != null) {
+            workOrder.setCloseAssDocument(Convert.toLong(submitKMDocumentReq.getDocumentId())).setCurrentProcess(submitKMDocumentReq.getCurrentProcess()).setLastUpdateTime(DateUtil.now());
+            return workOrderMapper.updateById(workOrder);
+        }
+        return 0;
+    }
 
 
 }

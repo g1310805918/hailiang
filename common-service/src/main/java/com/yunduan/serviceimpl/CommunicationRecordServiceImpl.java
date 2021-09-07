@@ -1,5 +1,7 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,15 +11,15 @@ import com.yunduan.entity.WorkOrder;
 import com.yunduan.mapper.AccountMapper;
 import com.yunduan.mapper.CommunicationRecordMapper;
 import com.yunduan.mapper.WorkOrderMapper;
-import com.yunduan.request.front.servicerequest.ChangeCommunicationRecordContentReq;
-import com.yunduan.request.front.servicerequest.ChangeCommunicationRecordShowStatusReq;
-import com.yunduan.request.front.servicerequest.WorkOrderCommunicationReq;
+import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.service.CommunicationRecordService;
 import com.yunduan.utils.ContextUtil;
+import com.yunduan.utils.SnowFlakeUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.CommunicationResult;
 import com.yunduan.vo.WorkOrderProblemProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +37,9 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
     private WorkOrderMapper workOrderMapper;
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
 
 
     /**
@@ -191,6 +196,71 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
             return communicationRecordMapper.updateById(record);
         }
         return 0;
+    }
+
+
+    /**
+     * 添加反馈-普通反馈
+     * @param addNormalFeedbackReq 反馈结果
+     * @return int
+     */
+    @Override
+    public int createCommunicationRecord(AddNormalFeedbackReq addNormalFeedbackReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(addNormalFeedbackReq.getWorkOrderId());
+        if (workOrder != null) {
+            //更新工单最后更新时间
+            workOrder.setLastUpdateTime(DateUtil.now());
+            workOrderMapper.updateById(workOrder);
+            //添加反馈
+            CommunicationRecord record = new CommunicationRecord();
+            record.setWorkOrderId(workOrder.getId()).setEngineerId(workOrder.getEngineerId()).setCodeFlag(null).setIsShow(1).setContent(addNormalFeedbackReq.getContent()).setDescImage(addNormalFeedbackReq.getDescImage());
+            return communicationRecordMapper.insert(record);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 添加VDM流程反馈
+     * @param addVDMFeedbackReq 添加对象
+     * @return int
+     */
+    @Override
+    public int createCommunicationRecordVDM(AddVDMFeedbackReq addVDMFeedbackReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(addVDMFeedbackReq.getWorkOrderId());
+        if (workOrder != null) {
+            CommunicationRecord record = new CommunicationRecord();
+            record.setWorkOrderId(workOrder.getId()).setEngineerId(workOrder.getEngineerId()).setCodeFlag(addVDMFeedbackReq.getVDMCode()).setIsShow(1).setContent(addVDMFeedbackReq.getContent()).setDescImage(addVDMFeedbackReq.getDescImage());
+            int row = communicationRecordMapper.insert(record);
+            if (row > 0) {
+                //更新工单处理流程
+                workOrder.setCurrentProcess(addVDMFeedbackReq.getCurrentProcess()).setLastUpdateTime(DateUtil.now());
+                workOrderMapper.updateById(workOrder);
+            }
+            return row;
+        }
+        return 0;
+    }
+
+
+    /**
+     * 修改转单后的工程师id到沟通记录
+     * @param workOrderId 工单id
+     * @param engineerId 转单后的工程师id
+     * @return int
+     */
+    @Override
+    public void changeCommunicationRecordEngineerID(String workOrderId, String engineerId) {
+        //当前工单的沟通记录
+        List<CommunicationRecord> communicationRecordList = communicationRecordMapper.selectList(new QueryWrapper<CommunicationRecord>().eq("work_order_id", workOrderId));
+        if (communicationRecordList.size() > 0 && communicationRecordList != null) {
+            for (CommunicationRecord record : communicationRecordList) {
+                if (record.getEngineerId() != null) {
+                    record.setEngineerId(Convert.toLong(engineerId));
+                    communicationRecordMapper.updateById(record);
+                }
+            }
+        }
     }
 
 

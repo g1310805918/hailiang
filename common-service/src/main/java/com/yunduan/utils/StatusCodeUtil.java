@@ -133,5 +133,9 @@ public class StatusCodeUtil {
     public static final Integer BUG_DOC_NO_PASS_REVIEW_STATUS = 3;
 
 
+    //文档不存在
+    public static final Integer DOCUMENT_NOT_EXIST = 8003;
+
+
 
 }

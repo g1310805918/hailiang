@@ -98,4 +98,43 @@ public interface WorkOrderService extends IService<WorkOrder> {
      */
     EngineerWorkOrderBaseInfoVo engineerQueryWorkOrderBaseInfo(String workOrderId);
 
+
+    /**
+     * 关联工单文档信息
+     * @param addKnowledgeDocReq 关联对象
+     * @return int
+     */
+    int joinWorkOrderDocumentInfo(AddKnowledgeDocReq addKnowledgeDocReq);
+
+
+    /**
+     * 添加相关资料
+     * @param addRelatedLinksReq 资料
+     * @return int
+     */
+    int relatedLinks(AddRelatedLinksReq addRelatedLinksReq);
+
+
+    /**
+     * 工程师关闭工单
+     * @param closeWorkOrderReq 参数
+     * @return int
+     */
+    int closeWorkOrder(CloseWorkOrderReq closeWorkOrderReq);
+
+
+    /**
+     * 工程师删除关联的文档
+     * @param engineerRemoveRelatedDocumentReq 删除的对象
+     * @return int
+     */
+    int engineerRemoveRelated(EngineerRemoveRelatedDocumentReq engineerRemoveRelatedDocumentReq);
+
+
+    /**
+     * 提交文档管理
+     * @param submitKMDocumentReq 文档
+     * @return int
+     */
+    int submitKMDocument(SubmitKMDocumentReq submitKMDocumentReq);
 }

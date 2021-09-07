@@ -23,6 +23,9 @@ public class WorkOrderDetailBaseInfoVo implements Serializable {
     @ApiModelProperty("是否收藏工单【0否、1是】")
     private Integer isCollection;
 
+    @ApiModelProperty("是否可以重开工单")
+    private Integer isCanOpenAgain;
+
     @ApiModelProperty("问题概要")
     private String problemProfile;
 

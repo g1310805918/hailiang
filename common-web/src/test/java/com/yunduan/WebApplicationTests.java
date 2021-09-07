@@ -1,6 +1,8 @@
 package com.yunduan;
 
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Month;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -150,6 +152,28 @@ class WebApplicationTests {
     public void testUploadImage() {
         String path = QNiuUtil.uploadLocalImg("D:\\Desktop\\topImage.png");
         System.out.println("path = " + path);
+    }
+
+
+    @Test
+    public void testDateUtil1() {
+        //星座
+        String zodiac = DateUtil.getZodiac(Month.DECEMBER.getValue(), 14);
+        //生肖
+        String chineseZodiac = DateUtil.getChineseZodiac(1994);
+    }
+
+    @Test
+    public void testDateUtil2() {
+        String dateStr1 = "2021-03-01 00:00:00";
+        Date date1 = DateUtil.parse(dateStr1);
+
+        String dateStr2 = "2020-04-01 00:00:00";
+        Date date2 = DateUtil.parse(dateStr2);
+
+        //相差一个月，31天
+        long betweenDay = DateUtil.between(date1, date2, DateUnit.DAY);
+        System.out.println("betweenDay = " + betweenDay);
     }
 
 }

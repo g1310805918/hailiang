@@ -75,4 +75,13 @@ public class BugManager implements Serializable {
     @ApiModelProperty("拒绝原因")
     private String refusedReason;
 
+    @ApiModelProperty("附件地址")
+    private String attachmentPath;
+
+    @ApiModelProperty("附件描述")
+    private String attachmentDescription;
+
+    @ApiModelProperty("tabd反馈结果")
+    private String tabdFeedback;
+
 }

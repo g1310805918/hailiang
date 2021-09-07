@@ -48,6 +48,9 @@ public class CreateWorkOrderReq extends RequestBodyReq {
     @ApiModelProperty("问题类型")
     private String problemType;
 
+    @ApiModelProperty("三级分类id == 问题类型的id")
+    private String categoryId;
+
     @ApiModelProperty("客户服务号")
     private String csiNumber;
 
