@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.LocalTaskExecutorThreadPool;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PublicKey;
@@ -59,6 +60,8 @@ public class ServiceRequestController {
     private KnowledgeDocumentService knowledgeDocumentService;
     @Autowired
     private SendMessageUtil sendMessageUtil;
+    @Autowired
+    private DistributionUtil distributionUtil;
 
 
     @GetMapping("/company-work-order-statistical")
@@ -476,6 +479,57 @@ public class ServiceRequestController {
         int row = workOrderService.submitKMDocument(submitKMDocumentReq);
         return row > 0 ? resultUtil.AesJSONSuccess("提交成功","") : resultUtil.AesFAILError("提交失败");
     }
+
+
+    @PostMapping("/engineer-sys-auto/{workOrderId}")
+    @ApiOperation(httpMethod = "POST",value = "工程师重新分配工单【放回系统自动分配】")
+    public ResultUtil<String> engineerSysAuto(@PathVariable String workOrderId) {
+        if (StrUtil.hasEmpty(workOrderId)) {
+            log.error("工程师重新分配工单【放回系统自动分配】工单id为空");
+            return resultUtil.AesFAILError("非法请求");
+        }
+        //以防万一、更新这个工单状态为待处理状态。这样就会被系统定时任务扫描到
+        WorkOrder workOrder = workOrderService.getById(workOrderId);
+        if (workOrder == null) {
+            return resultUtil.AesFAILError("非法请求");
+        }
+        workOrder.setStatus(StatusCodeUtil.WORK_ORDER_PROCESS_STATUS);
+        workOrderService.updateById(workOrder);
+        //另起线程执行分配任务，直接返回结果
+        threadPoolTaskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                //直接调用分配，如果没有分配成功、那么后续会由定时任务来分配
+                distributionUtil.autoDistributionWorkOrderToEngineer(workOrderId);
+            }
+        });
+        return resultUtil.AesJSONSuccess("已将工单放回系统，等待分配。","");
+    }
+
+
+    @PostMapping("/engineer-split-work-order")
+    @ApiOperation(httpMethod = "POST",value = "工程师分裂工单")
+    public ResultUtil<String> engineerSplitWorkOrder(EngineerCreateWorkOrderReq engineerCreateWorkOrderReq) {
+        engineerCreateWorkOrderReq = AESUtil.decryptToObj(engineerCreateWorkOrderReq.getData(),EngineerCreateWorkOrderReq.class);
+        int row = workOrderService.engineerSplitWorkOrder(engineerCreateWorkOrderReq);
+        if (row == StatusCodeUtil.NOT_FOUND_FLAG) {
+            return resultUtil.AesFAILError("工单不存在，无法分裂！");
+        }
+        return row > 0 ? resultUtil.AesJSONSuccess("分裂成功","") : resultUtil.AesFAILError("分裂失败");
+    }
+
+
+    @PostMapping("/engineer-upgrade-work-order")
+    @ApiOperation(httpMethod = "POST",value = "工程师升级工单")
+    public ResultUtil<String> engineerUpgradeWorkOrder(EngineerUpgradeWorkOrderReq engineerUpgradeWorkOrderReq) {
+        engineerUpgradeWorkOrderReq = AESUtil.decryptToObj(engineerUpgradeWorkOrderReq.getData(),EngineerUpgradeWorkOrderReq.class);
+        int row = workOrderService.engineerUpgradeWorkOrder(engineerUpgradeWorkOrderReq);
+        if (row == StatusCodeUtil.NOT_FOUND_FLAG) {
+            return resultUtil.AesFAILError("非法请求");
+        }
+        return row > 0 ? resultUtil.AesJSONSuccess("提交成功","") : resultUtil.AesFAILError("提交失败");
+    }
+
 
 
 }

@@ -74,6 +74,9 @@ public class StatusCodeUtil {
     //已关闭工单
     public static final Integer WORK_ORDER_CLOSE_STATUS = 4;
 
+    //工单已升级状态
+    public static final Integer WORK_ORDER_UPGRADE_STATUS = 1;
+
     //用户提交申请关闭工单状态
     public static final Integer WORK_ORDER_ACCOUNT_CLOSE_APPLY_STATUS = 5;
 

@@ -137,4 +137,20 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return int
      */
     int submitKMDocument(SubmitKMDocumentReq submitKMDocumentReq);
+
+
+    /**
+     * 工程师分裂工单
+     * @param engineerCreateWorkOrderReq 分裂参数
+     * @return int
+     */
+    int engineerSplitWorkOrder(EngineerCreateWorkOrderReq engineerCreateWorkOrderReq);
+
+
+    /**
+     * 工程师升级工单
+     * @param engineerUpgradeWorkOrderReq 升级参数
+     * @return int
+     */
+    int engineerUpgradeWorkOrder(EngineerUpgradeWorkOrderReq engineerUpgradeWorkOrderReq);
 }

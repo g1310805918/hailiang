@@ -631,4 +631,62 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     }
 
 
+    /**
+     * 工程师分裂工单
+     * @param engineerCreateWorkOrderReq 分裂参数
+     * @return int
+     */
+    @Override
+    public int engineerSplitWorkOrder(EngineerCreateWorkOrderReq engineerCreateWorkOrderReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(engineerCreateWorkOrderReq.getWorkOrderId());
+        if (workOrder == null) {
+            return StatusCodeUtil.NOT_FOUND_FLAG;
+        }
+        WorkOrder order = new WorkOrder();
+        //用户id、工单编号、严重等级、问题概要
+        order.setAccountId(workOrder.getAccountId()).setOutTradeNo("HL-" + RandomUtil.randomNumbers(11)).setProblemSeverity(workOrder.getProblemSeverity()).setProblemProfile(engineerCreateWorkOrderReq.getProblemProfile());
+        //问题描述、问题描述图片、错误代码、问题附件、附件描述
+        order.setProblemDescription(engineerCreateWorkOrderReq.getProblemDescription()).setProblemDesImage(engineerCreateWorkOrderReq.getProblemDesImagePath()).setErrorCode(engineerCreateWorkOrderReq.getErrorCode()).setAttachmentPath(engineerCreateWorkOrderReq.getAttachmentPath());
+        //主要联系人、手机号、邮箱、备用联系人、手机、邮箱
+        order.setMainContact(workOrder.getMainContact()).setMainMobile(workOrder.getMainMobile()).setMainEmail(workOrder.getMainEmail()).setContactWay(workOrder.getContactWay()).setStandbyContact(workOrder.getStandbyContact()).setStandbyMobile(workOrder.getStandbyMobile()).setStandbyEmail(workOrder.getStandbyEmail());
+        //工单类型、硬件平台、操作系统、版本、系统语言、部署方式、产品名称版本、问题类型、客户服务号
+        order.setType(workOrder.getType()).setHardwarePlatform(workOrder.getHardwarePlatform()).setOperatingSystem(workOrder.getOperatingSystem()).setOperatingSystemVersion(workOrder.getOperatingSystemVersion()).setOperatingSystemLanguage(workOrder.getOperatingSystemLanguage()).setDeploymentWay(workOrder.getDeploymentWay()).setProductNameVersion(workOrder.getProductNameVersion()).setProblemType(workOrder.getProblemType()).setCsiNumber(workOrder.getCsiNumber());
+        //工单状态、最后更新时间、工单所属三级分类id
+        order.setStatus(StatusCodeUtil.WORK_ORDER_PROCESS_STATUS).setLastUpdateTime(DateUtil.now()).setCategoryId(engineerCreateWorkOrderReq.getCategoryId());
+        //提交分裂工单
+        int row = workOrderMapper.insert(order);
+        if (row > 0) {
+            //异步处理工单分配
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    distributionUtil.autoDistributionWorkOrderToEngineer(order.getId().toString());
+                }
+            });
+        }
+        return row;
+    }
+
+
+    /**
+     * 工程师升级工单
+     * @param engineerUpgradeWorkOrderReq 升级参数
+     * @return int
+     */
+    @Override
+    public int engineerUpgradeWorkOrder(EngineerUpgradeWorkOrderReq engineerUpgradeWorkOrderReq) {
+        WorkOrder workOrder = workOrderMapper.selectById(engineerUpgradeWorkOrderReq.getWorkOrderId());
+        if (workOrder == null) {
+            return StatusCodeUtil.NOT_FOUND_FLAG;
+        }
+        workOrder.setUpgradeStatus(StatusCodeUtil.WORK_ORDER_UPGRADE_STATUS).setUpgradeReason(engineerUpgradeWorkOrderReq.getUpgradeReason());
+        int row = workOrderMapper.updateById(workOrder);
+        if (row > 0) {
+            //todo 发送告警信息到 manager
+
+        }
+        return row;
+    }
+
+
 }

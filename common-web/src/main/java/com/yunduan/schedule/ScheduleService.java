@@ -34,7 +34,7 @@ public class ScheduleService {
     @Scheduled(fixedDelay = 1000 * 60 * 10)
     public void sysAutoDistributionWorkOrder() {
         //所有等待处理中的工单列表
-        List<WorkOrder> workOrderList = workOrderService.list(new QueryWrapper<WorkOrder>().eq("status", StatusCodeUtil.WORK_ORDER_COLLECTION_STATUS));
+        List<WorkOrder> workOrderList = workOrderService.list(new QueryWrapper<WorkOrder>().eq("status", StatusCodeUtil.WORK_ORDER_PROCESS_STATUS));
         if (workOrderList.size() > 0 && workOrderList != null) {
             for (WorkOrder workOrder : workOrderList) {
                 //自动分配工单
