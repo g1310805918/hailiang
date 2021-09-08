@@ -31,7 +31,6 @@ captcha:
   # 图片验证码验证
   image:
     - /highset/login # 登录接口
-    - /highset/social/relate # 绑定第三方账号
 
 # 忽略鉴权url
 ignored:
