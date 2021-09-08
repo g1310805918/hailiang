@@ -16,9 +16,11 @@ import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.WorkOrderService;
 import com.yunduan.utils.ContextUtil;
+import com.yunduan.utils.DistributionUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -49,6 +51,10 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     private CollectionEngineerMapper collectionEngineerMapper;
     @Autowired
     private KnowledgeDocumentThreeCategoryMapper threeCategoryMapper;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Autowired
+    private DistributionUtil distributionUtil;
 
 
     /**
@@ -191,7 +197,17 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         //工单状态、最后更新时间、工单所属三级分类id
         workOrder.setStatus(StatusCodeUtil.WORK_ORDER_PROCESS_STATUS).setLastUpdateTime(DateUtil.now()).setCategoryId(createWorkOrderReq.getCategoryId());
         //提交
-        return workOrderMapper.insert(workOrder);
+        int row = workOrderMapper.insert(workOrder);
+        if (row > 0) {
+            //异步处理工单分配
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    distributionUtil.autoDistributionWorkOrderToEngineer(workOrder.getId().toString());
+                }
+            });
+        }
+        return row;
     }
 
 

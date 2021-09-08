@@ -176,4 +176,11 @@ class WebApplicationTests {
         System.out.println("betweenDay = " + betweenDay);
     }
 
+
+    @Test
+    public void testEngineerCategoryIdEQNull() {
+        List<Engineer> engineerList = engineerService.list(new QueryWrapper<Engineer>().ne("product_category_id", null));
+        System.out.println("engineerList = " + JSONObject.toJSONString(engineerList));
+    }
+
 }

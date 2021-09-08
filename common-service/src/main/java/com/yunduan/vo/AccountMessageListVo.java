@@ -25,4 +25,7 @@ public class AccountMessageListVo implements Serializable {
     @ApiModelProperty("消息类型【1系统消息、2验证消息】")
     private Integer messageType;
 
+    @ApiModelProperty("是否已读【0否、1是】")
+    private Integer isRead;
+
 }

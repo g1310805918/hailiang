@@ -71,6 +71,11 @@ public class Account implements Serializable {
 
     @Transient
     @TableField(exist = false)
+    @ApiModelProperty("用户id，字符串形式")
+    private String accountId;
+
+    @Transient
+    @TableField(exist = false)
     @ApiModelProperty("添加时间yyyy-MM-dd HH:mm:ss")
     private String createDateTime;
 

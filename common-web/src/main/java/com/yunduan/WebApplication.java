@@ -52,36 +52,24 @@ public class WebApplication {
         return executor;
     }
 
-    //创建交换机
-    @Bean
-    public TopicExchange topicExchange() {
-        return new TopicExchange("topic_exchange");
-    }
-
-
-    //创建队列
-    @Bean
-    public Queue queue() {
-        return new Queue("topic");
-    }
-
-
-    //绑定交换机队列以及路由key
-    @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(queue()).to(topicExchange()).with("*.orange.#");
-    }
-
-
-//
-//    /**
-//     * 自动注册 @serverEndpoint 的bean对象
-//     * @return ServerEndpointExporter
-//     */
+//    //创建交换机
 //    @Bean
-//    public ServerEndpointExporter serverEndpointExporter() {
-//        return new ServerEndpointExporter();
+//    public TopicExchange topicExchange() {
+//        return new TopicExchange("topic_exchange");
 //    }
-
+//
+//
+//    //创建队列
+//    @Bean
+//    public Queue queue() {
+//        return new Queue("topic");
+//    }
+//
+//
+//    //绑定交换机队列以及路由key
+//    @Bean
+//    public Binding binding() {
+//        return BindingBuilder.bind(queue()).to(topicExchange()).with("*.orange.#");
+//    }
 
 }

@@ -137,5 +137,20 @@ public class StatusCodeUtil {
     public static final Integer DOCUMENT_NOT_EXIST = 8003;
 
 
+    //消息未读标志
+    public static final Integer MESSAGE_NO_READ_FLAG = 0;
+    //消息已读标志
+    public static final Integer MESSAGE_HAS_READ_FLAG = 0;
+
+
+    //工程师工单消息
+    public static final Integer ENGINEER_MESSAGE_TYPE_WORK_ORDER = 1;
+    //工程师文档消息
+    public static final Integer ENGINEER_MESSAGE_TYPE_DOCUMENT = 2;
+    //工程师bug消息
+    public static final Integer ENGINEER_MESSAGE_TYPE_BUG = 3;
+    //工程师系统消息
+    public static final Integer ENGINEER_MESSAGE_TYPE_SYSTEM = 4;
+
 
 }

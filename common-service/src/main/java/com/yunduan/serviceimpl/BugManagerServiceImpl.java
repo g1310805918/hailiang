@@ -18,10 +18,12 @@ import com.yunduan.service.BugManagerService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.ExtractRichTextUtil;
+import com.yunduan.utils.SendMessageUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.BudDetailVo;
 import com.yunduan.vo.BugInitPageVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -44,6 +46,10 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
     private WorkOrderMapper workOrderMapper;
     @Autowired
     private KnowledgeDocumentThreeCategoryService threeCategoryService;
+    @Autowired
+    private SendMessageUtil sendMessageUtil;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
     /**
@@ -188,8 +194,13 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
         entity.setBugTitle(createBugFeedbackReq.getBugTitle()).setBugContent(createBugFeedbackReq.getContent());
         int row = bugManagerMapper.insert(entity);
         if (row > 0) {
-            // todo 发送BUG审核文档消息给BDE工程师
-
+            //发送bug申请到BDE工程师
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessageUtil.sendBUGApplyToBDE(entity.getId().toString());
+                }
+            });
         }
         return row;
     }

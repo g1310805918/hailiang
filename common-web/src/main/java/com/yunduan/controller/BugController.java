@@ -10,6 +10,7 @@ import com.yunduan.request.front.review.PassReviewReq;
 import com.yunduan.service.BugManagerService;
 import com.yunduan.utils.AESUtil;
 import com.yunduan.utils.ResultUtil;
+import com.yunduan.utils.SendMessageUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.BudDetailVo;
 import io.swagger.annotations.Api;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -32,6 +34,11 @@ public class BugController {
     private ResultUtil resultUtil;
     @Autowired
     private BugManagerService bugManagerService;
+    @Autowired
+    private SendMessageUtil sendMessageUtil;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
 
 
     @GetMapping("/base-info")
@@ -63,6 +70,15 @@ public class BugController {
         if (bugManager != null) {
             bugManager.setBugStatus(StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS);
             flag = bugManagerService.updateById(bugManager);
+            if (flag) {
+                //BDE异步发送bug审核结果消息给工程师
+                threadPoolTaskExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendMessageUtil.sendBUGReviewPassMessage(id);
+                    }
+                });
+            }
         }
         return flag ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
     }
@@ -77,6 +93,15 @@ public class BugController {
         if (bugManager != null) {
             bugManager.setBugStatus(StatusCodeUtil.BUG_DOC_NO_PASS_REVIEW_STATUS).setRefusedReason(passReviewReq.getReason());
             flag = bugManagerService.updateById(bugManager);
+            if (flag) {
+                //BDE异步发送bug审核结果消息给工程师
+                threadPoolTaskExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendMessageUtil.sendBUGReviewRefusedMessage(bugManager.getId().toString());
+                    }
+                });
+            }
         }
         return flag ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
     }
@@ -142,6 +167,8 @@ public class BugController {
         BugManager one = bugManagerService.getById(id);
         return resultUtil.AesJSONSuccess("SUCCESS",StrUtil.hasEmpty(one.getTabdFeedback()) ? "" : one.getTabdFeedback());
     }
+
+
 
 
 

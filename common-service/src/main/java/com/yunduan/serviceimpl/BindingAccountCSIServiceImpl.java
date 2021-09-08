@@ -22,6 +22,7 @@ import com.yunduan.vo.CustomerServiceNoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,8 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
     private CompanyCSIMapper companyCSIMapper;
     @Autowired
     private AccountMsgMapper accountMsgMapper;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
     /**
@@ -76,12 +79,20 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
             normalBinding.setId(SnowFlakeUtil.getPrimaryKeyId()).setAccountId(account.getId()).setCsiId(companyCSI.getId()).setIdentity(1).setStatus(1).setCreateTime(DateUtil.now());
             int row = bindingAccountCSIMapper.insert(normalBinding);
             if (row > 0) {
-                //用户信息JSON字符串
-                String accountJson = JSONObject.toJSONString(account);
-                //向CAU管理员发送一条待审核消息
-                AccountMsg msg = new AccountMsg().setAccountId(SnowFlakeUtil.getPrimaryKeyId()).setMsgTitle(StatusCodeUtil.SYS_MATH_MSG).setMsgContent(accountJson).setMsgType(2).setAccountId(CAUBindingRecord.getAccountId()).setIsRead(0).setDelFlag(0).setCreateTime(DateUtil.now());
-                return accountMsgMapper.insert(msg);
+                //异步发送验证信息到CAU用户信息
+                threadPoolTaskExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        account.setAccountId(account.getId().toString());  //将用户id转换为字符串
+                        //用户信息JSON字符串
+                        String accountJson = JSONObject.toJSONString(account);
+                        //向CAU管理员发送一条待审核消息
+                        AccountMsg msg = new AccountMsg().setAccountId(SnowFlakeUtil.getPrimaryKeyId()).setMsgTitle(StatusCodeUtil.SYS_MATH_MSG).setMsgContent(accountJson).setMsgType(2).setAccountId(CAUBindingRecord.getAccountId()).setIsRead(0).setDelFlag(0).setCreateTime(DateUtil.now());
+                        accountMsgMapper.insert(msg);
+                    }
+                });
             }
+            return row;
         }
         return 0;
     }

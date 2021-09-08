@@ -9,10 +9,7 @@ import com.yunduan.entity.SysDictionary;
 import com.yunduan.entity.WorkOrder;
 import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.service.*;
-import com.yunduan.utils.AESUtil;
-import com.yunduan.utils.ContextUtil;
-import com.yunduan.utils.ResultUtil;
-import com.yunduan.utils.StatusCodeUtil;
+import com.yunduan.utils.*;
 import com.yunduan.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,6 +57,8 @@ public class ServiceRequestController {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Autowired
     private KnowledgeDocumentService knowledgeDocumentService;
+    @Autowired
+    private SendMessageUtil sendMessageUtil;
 
 
     @GetMapping("/company-work-order-statistical")
@@ -93,6 +92,7 @@ public class ServiceRequestController {
         List<ProductNameVersionVo> voList = knowledgeDocumentOneCategoryService.queryBeginOneTwoLevelCategoryList();
         return resultUtil.AesJSONSuccess("SUCCESS", voList);
     }
+
 
     @GetMapping("/get-product-name-version-problem-category/{twoCategoryId}")
     @ApiOperation(httpMethod = "GET", value = "获取问题类型")
@@ -392,7 +392,8 @@ public class ServiceRequestController {
     public ResultUtil<String> engineerTransferOrder(TransferOrderReq transferOrderReq) {
         transferOrderReq = AESUtil.decryptToObj(transferOrderReq.getData(),TransferOrderReq.class);
         WorkOrder workOrder = workOrderService.getById(transferOrderReq.getWorkOrderId());
-        if (workOrder == null) {
+        if (workOrder == null || StrUtil.hasEmpty(transferOrderReq.getEngineerId())) {
+            log.error("【工程师-工单转单】工单不存在 或者 接收工单的工程师id为空");
             return resultUtil.AesFAILError("非法请求");
         }
         workOrder.setEngineerId(StrUtil.hasEmpty(transferOrderReq.getEngineerId()) ? workOrder.getEngineerId() : Convert.toLong(transferOrderReq.getEngineerId()));
@@ -403,6 +404,8 @@ public class ServiceRequestController {
                 @Override
                 public void run() {
                     communicationRecordService.changeCommunicationRecordEngineerID(workOrder.getId().toString(),workOrder.getEngineerId().toString());
+                    //发送消息通知接受工单的工程师
+                    sendMessageUtil.sendWorkOrderMessage(workOrder);
                 }
             });
         }

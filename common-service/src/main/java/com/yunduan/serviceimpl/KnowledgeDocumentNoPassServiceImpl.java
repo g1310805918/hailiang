@@ -19,11 +19,13 @@ import com.yunduan.request.front.review.ReviewInitReq;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
+import com.yunduan.utils.SendMessageUtil;
 import com.yunduan.utils.SnowFlakeUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.DocumentDetailVo;
 import com.yunduan.vo.InitDocumentListVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,10 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
     private KnowledgeDocumentThreeCategoryService knowledgeDocumentThreeCategoryService;
     @Autowired
     private CollectionEngineerDocumentMapper engineerDocumentMapper;
+    @Autowired
+    private SendMessageUtil sendMessageUtil;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
     /**
@@ -95,8 +101,12 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
         noPass.setDocStatus(1);
         int row = knowledgeDocumentNoPassMapper.insert(noPass);
         if (row > 0) {
-            //todo 异步执行剩余任务（1、发送文档审核消息至COE工程师。）
-
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessageUtil.engineerSendNormalDocumentReviewApplyToCOE(noPass.getId().toString());
+                }
+            });
         }
         return row;
     }

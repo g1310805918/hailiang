@@ -50,7 +50,7 @@ public class AccountMsgServiceImpl extends ServiceImpl<AccountMsgMapper, Account
             AccountMessageListVo vo = null;
             for (AccountMsg msg : accountMsgList) {
                 vo = new AccountMessageListVo();
-                vo.setId(msg.getId().toString()).setCreateTime(msg.getCreateTime()).setMessageTitle(msg.getMsgTitle()).setMessageType(msg.getMsgType());
+                vo.setId(msg.getId().toString()).setCreateTime(msg.getCreateTime()).setMessageTitle(msg.getMsgTitle()).setMessageType(msg.getMsgType()).setIsRead(msg.getIsRead());
                 voList.add(vo);
             }
         }

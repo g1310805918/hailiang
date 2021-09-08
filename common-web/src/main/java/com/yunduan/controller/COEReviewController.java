@@ -6,12 +6,14 @@ import com.yunduan.request.front.review.ReviewInitReq;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
 import com.yunduan.utils.AESUtil;
 import com.yunduan.utils.ResultUtil;
+import com.yunduan.utils.SendMessageUtil;
 import com.yunduan.vo.DocumentDetailVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -27,6 +29,10 @@ public class COEReviewController {
     private ResultUtil resultUtil;
     @Autowired
     private KnowledgeDocumentNoPassService knowledgeDocumentNoPassService;
+    @Autowired
+    private SendMessageUtil sendMessageUtil;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
     @GetMapping("/base-info")
@@ -54,6 +60,15 @@ public class COEReviewController {
             return resultUtil.AesFAILError("非法请求");
         }
         int row = knowledgeDocumentNoPassService.changeDocumentStatus(documentId, 2);
+        if (row > 0) {
+            //异步发送文档审核通过消息
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessageUtil.sendDocumentPassMessage(documentId);
+                }
+            });
+        }
         return row > 0 ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
     }
 
@@ -66,6 +81,15 @@ public class COEReviewController {
             return resultUtil.AesFAILError("非法请求");
         }
         int row = knowledgeDocumentNoPassService.changeDocumentStatus(documentId, 3);
+        if (row > 0) {
+            //异步发送文档审核已拒绝消息
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    sendMessageUtil.sendDocumentRefusedMessage(documentId);
+                }
+            });
+        }
         return row > 0 ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
     }
 

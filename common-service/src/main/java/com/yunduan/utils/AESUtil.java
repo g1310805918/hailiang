@@ -200,8 +200,7 @@ public class AESUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(decrypt("6JDu9o85OCoNpEbdj2V83IkITXrlTVj4s8qzoiiefNtgu+7QL0E4XP8NSTAxw3GcySMVxG7ijqgAzn1X/y/P53i8mRVtMZpNMU6JTm2l8GotnYQXpWT4li9jCk3UCL0uAb8QuMC+5solaF11QjNyvg=="));
-//        System.out.println(encrypt("123"));
+
     }
 
 }
