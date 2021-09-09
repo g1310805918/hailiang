@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.SysDictionary;
 import com.yunduan.mapper.SysDictionaryMapper;
 import com.yunduan.service.SysDictionaryService;
+import com.yunduan.utils.StatusCodeUtil;
+import com.yunduan.vo.DicInitListV;
 import com.yunduan.vo.SysDictionaryListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,51 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         return voList;
     }
 
+
+    /**
+     * 获取标签列表
+     * @return list
+     */
+    @Override
+    public List<DicInitListV> queryDictionaryInit() {
+        List<DicInitListV> voList = new ArrayList<>();
+        //添加死数据
+        voList.add(new DicInitListV().setCodeName("硬件平台"));
+        voList.add(new DicInitListV().setCodeName("操作系统"));
+        voList.add(new DicInitListV().setCodeName("部署方式"));
+        for (DicInitListV dicInitListV : voList) {
+            String content = "";
+            List<SysDictionary> codeName = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("code_name", dicInitListV.getCodeName()));
+            if (codeName.size() > 0 && codeName != null) {
+                int index = codeName.size();
+                for (int i = 0; i < index; i++) {
+                    content += codeName.get(i).getContent();
+                    if (i != index - 1) {
+                        content += "、";
+                    }
+                }
+            }
+            dicInitListV.setContent(content);
+        }
+        return voList;
+    }
+
+
+    /**
+     * 添加属性值
+     * @param codeName 标签名
+     * @param content 内容
+     * @return int
+     */
+    @Override
+    public int createSysDictionary(String codeName, String content) {
+        SysDictionary sysDictionary = sysDictionaryMapper.selectOne(new QueryWrapper<SysDictionary>().eq("code_name", codeName).eq("content", content));
+        if (sysDictionary != null) {
+            return StatusCodeUtil.HAS_EXIST;
+        }
+        sysDictionary = new SysDictionary().setCodeName(codeName).setContent(content);
+        return sysDictionaryMapper.insert(sysDictionary);
+    }
 
 
 }

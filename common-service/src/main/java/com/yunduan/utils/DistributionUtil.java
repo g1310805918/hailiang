@@ -1,5 +1,6 @@
 package com.yunduan.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.entity.Engineer;
 import com.yunduan.entity.WorkOrder;
@@ -43,7 +44,6 @@ public class DistributionUtil {
         //条件构造器
         QueryWrapper<Engineer> queryWrapper = new QueryWrapper<Engineer>()
                 .ne("identity", 1)
-                .ne("product_category_id", null)
                 //账号状态为正常的账号
                 .eq("account_status", StatusCodeUtil.ENGINEER_ACCOUNT_NORMAL_STATUS)
                 //在线的工程师
@@ -58,6 +58,9 @@ public class DistributionUtil {
             List<Engineer> engineerList = engineerService.list(queryWrapper);
             if (engineerList.size() > 0 && engineerList != null) {
                 for (Engineer engineer : engineerList) {
+                    if (StrUtil.hasEmpty(engineer.getProductCategoryId())) {
+                        continue;
+                    }
                     //如果当前工单是非技术工单，那么随机分配给一位工程师
                     if (workOrder.getType() == 1) {
                         //直接分配给某位工程师

@@ -1,6 +1,7 @@
 package com.yunduan.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
@@ -15,6 +16,8 @@ import com.yunduan.entity.Permission;
 import com.yunduan.entity.RolePermission;
 import com.yunduan.service.PermissionService;
 import com.yunduan.service.RolePermissionService;
+import com.yunduan.utils.SnowFlakeUtil;
+import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.back.MenuVo;
 import com.yunduan.vo.back.VoUtil;
 import io.swagger.annotations.Api;
@@ -162,6 +165,8 @@ public class PermissionController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "添加")
     public Result<Permission> add(@ModelAttribute Permission permission) {
+        //当前用户
+        AdminAccount currUser = securityUtil.getCurrUser();
 
         // 判断拦截请求的操作权限按钮名是否已存在
         if (CommonConstant.PERMISSION_OPERATION.equals(permission.getType())) {
@@ -170,6 +175,8 @@ public class PermissionController {
                 return new ResultUtil<Permission>().setErrorMsg("名称已存在");
             }
         }
+        //设置id、删除标志、创建人、创建时间
+        permission.setId(SnowFlakeUtil.getPrimaryKeyId().toString()).setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setCreateBy(currUser.getId()).setCreateTime(DateUtil.now());
         Permission u = permissionService.createPermission(permission);
         //重新加载权限
         mySecurityMetadataSource.loadResourceDefine();

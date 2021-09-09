@@ -1,10 +1,7 @@
 package com.yunduan.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.yunduan.config.LongJsonDeserializer;
@@ -18,6 +15,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 
@@ -47,5 +45,11 @@ public class KnowledgeDocumentOneCategory implements Serializable {
 
     @ApiModelProperty("添加时间")
     private String createTime;
+
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("级别")
+    private String level;
 
 }

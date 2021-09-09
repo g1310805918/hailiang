@@ -18,7 +18,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 
   redis:
     host: 127.0.0.1
@@ -31,6 +31,7 @@ captcha:
   # 图片验证码验证
   image:
     - /highset/login # 登录接口
+    - /highset/social/relate # 绑定第三方账号
 
 # 忽略鉴权url
 ignored:
@@ -77,7 +78,7 @@ mybatis-plus:
     db-config:
       # 删除标志
       logic-delete-field: flag
-      # 逻辑未删除值
+      # 逻辑删除值
       logic-delete-value: 1
       # 逻辑未删除值
       logic-not-delete-value: 0

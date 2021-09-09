@@ -7,6 +7,7 @@ import com.yunduan.entity.KnowledgeDocumentTwoCategory;
 import com.yunduan.mapper.KnowledgeDocumentThreeCategoryMapper;
 import com.yunduan.mapper.KnowledgeDocumentTwoCategoryMapper;
 import com.yunduan.service.KnowledgeDocumentTwoCategoryService;
+import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.KnowledgeOneCategoryVo;
 import com.yunduan.vo.KnowledgeTwoThreeCategoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class KnowledgeDocumentTwoCategoryServiceImpl extends ServiceImpl<Knowled
     public List<KnowledgeOneCategoryVo> queryTwoCategoryList(String oneCategoryId) {
         List<KnowledgeOneCategoryVo> voList = new ArrayList<>();
         //二级分裂列表
-        List<KnowledgeDocumentTwoCategory> twoCategoryList = knowledgeDocumentTwoCategoryMapper.selectList(new QueryWrapper<KnowledgeDocumentTwoCategory>().eq("one_category_id", oneCategoryId));
+        List<KnowledgeDocumentTwoCategory> twoCategoryList = knowledgeDocumentTwoCategoryMapper.selectList(new QueryWrapper<KnowledgeDocumentTwoCategory>().eq("one_category_id", oneCategoryId).eq("del_flag", StatusCodeUtil.NOT_DELETE_FLAG));
         if (!CollectionUtils.isEmpty(twoCategoryList)) {
             twoCategoryList.forEach(twoCategory -> {
                 KnowledgeOneCategoryVo vo = new KnowledgeOneCategoryVo();

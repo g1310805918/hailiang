@@ -68,7 +68,7 @@ public class KnowledgeDocumentThreeCategoryServiceImpl extends ServiceImpl<Knowl
             ProductNameVersionThreeVo vo = null;
             for (KnowledgeDocumentThreeCategory threeCategory : threeCategories) {
                 vo = new ProductNameVersionThreeVo();
-                vo.setCategoryName(threeCategory.getCategoryTitle());
+                vo.setCategoryName(threeCategory.getCategoryTitle()).setId(threeCategory.getId().toString());
                 voList.add(vo);
             }
         }

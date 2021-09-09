@@ -7,6 +7,7 @@ import com.yunduan.config.properties.CaptchaProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
@@ -31,7 +32,7 @@ public class ImageValidateFilter extends OncePerRequestFilter {
     private CaptchaProperties captchaProperties;
 
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -53,7 +54,7 @@ public class ImageValidateFilter extends OncePerRequestFilter {
                 ResponseUtil.out(response, ResponseUtil.resultMap(false, 500, "请传入图形验证码所需参数captchaId或code"));
                 return;
             }
-            String redisCode = redisTemplate.opsForValue().get(captchaId);
+            String redisCode = (String) redisTemplate.opsForValue().get(captchaId);
             if (StrUtil.isBlank(redisCode)) {
                 ResponseUtil.out(response, ResponseUtil.resultMap(false, 500, "验证码已过期，请重新获取"));
                 return;

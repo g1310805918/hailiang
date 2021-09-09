@@ -6,14 +6,8 @@ import cn.hutool.core.date.Month;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yunduan.entity.Account;
-import com.yunduan.entity.CompanyCSI;
-import com.yunduan.entity.Engineer;
-import com.yunduan.entity.Setting;
-import com.yunduan.service.AccountService;
-import com.yunduan.service.CompanyCSIService;
-import com.yunduan.service.EngineerService;
-import com.yunduan.service.SettingService;
+import com.yunduan.entity.*;
+import com.yunduan.service.*;
 import com.yunduan.utils.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -41,6 +35,8 @@ class WebApplicationTests {
     private SettingService settingService;
     @Autowired
     private SendEmailUtil sendEmailUtil;
+    @Autowired
+    private SysDictionaryService sysDictionaryService;
 
 
     @Test
@@ -176,11 +172,5 @@ class WebApplicationTests {
         System.out.println("betweenDay = " + betweenDay);
     }
 
-
-    @Test
-    public void testEngineerCategoryIdEQNull() {
-        List<Engineer> engineerList = engineerService.list(new QueryWrapper<Engineer>().ne("product_category_id", null));
-        System.out.println("engineerList = " + JSONObject.toJSONString(engineerList));
-    }
 
 }
