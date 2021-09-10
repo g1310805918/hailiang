@@ -94,16 +94,11 @@ public class CategoryController {
         }
         //id集合
         List<String> idList = Arrays.asList(id.split(","));
-        boolean flag = false;
-        KnowledgeDocumentOneCategory oneCategory = oneCategoryService.getById(id);
-        if (oneCategory != null) {
-            int rows = twoCategoryService.count(new QueryWrapper<KnowledgeDocumentTwoCategory>().in("one_category_id", idList));
-            if (rows > 0) {
-                return ResultUtil.error(StatusCodeUtil.SYSTEM_ERROR, "分类下存在下级，删除失败！");
-            }
-            oneCategory.setDelFlag(StatusCodeUtil.DELETE_FLAG);
-            flag = oneCategoryService.removeByIds(idList);
+        int rows = twoCategoryService.count(new QueryWrapper<KnowledgeDocumentTwoCategory>().in("one_category_id", idList));
+        if (rows > 0) {
+            return ResultUtil.error(StatusCodeUtil.SYSTEM_ERROR, "分类下存在下级，删除失败！");
         }
+        boolean flag = oneCategoryService.removeByIds(idList);
         return flag ? ResultUtil.data("", "操作成功") : ResultUtil.error("操作失败");
     }
 

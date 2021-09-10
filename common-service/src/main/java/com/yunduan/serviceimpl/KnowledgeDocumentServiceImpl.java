@@ -333,14 +333,8 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
     @Override
     public int engineerRemoveDocument(String documentId) {
         int row = 0;
-        KnowledgeDocument document1 = knowledgeDocumentMapper.selectById(documentId);
-        KnowledgeDocumentNoPass document2 = noPassMapper.selectById(documentId);
-        if (document1 != null && document2 != null) {
-            document1.setDelFlag(StatusCodeUtil.DELETE_FLAG);
-            document2.setDelFlag(StatusCodeUtil.DELETE_FLAG);
-            row += knowledgeDocumentMapper.updateById(document1);
-            row += noPassMapper.updateById(document2);
-        }
+        row += knowledgeDocumentMapper.deleteById(documentId);
+        row += noPassMapper.deleteById(documentId);
         return row;
     }
 

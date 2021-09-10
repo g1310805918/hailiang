@@ -4,40 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/config/security/validate/ImageValidateFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/config/security/validate/ImageValidateFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/PermissionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/PermissionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/config/security/validate/ImageValidateFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/config/security/validate/ImageValidateFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/PermissionController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/PermissionController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/PermissionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/PermissionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentOneCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/entity/KnowledgeDocumentOneCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentOneCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/KnowledgeDocumentOneCategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/SysDictionaryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/SysDictionaryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/PermissionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/PermissionServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/SysDictionaryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/SysDictionaryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/DistributionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/DistributionUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/ProductNameVersionThreeVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/vo/ProductNameVersionThreeVo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentOneCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/entity/KnowledgeDocumentOneCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentOneCategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/KnowledgeDocumentOneCategoryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/SysDictionaryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/SysDictionaryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentOneCategoryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentThreeCategoryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/KnowledgeDocumentTwoCategoryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/PermissionServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/PermissionServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/SysDictionaryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/SysDictionaryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/DistributionUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/DistributionUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/vo/ProductNameVersionThreeVo.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/vo/ProductNameVersionThreeVo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/test/java/com/yunduan/WebApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/WebApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/WebApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/ServiceRequestController.class" afterDir="false" />
-    </list>
+    <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -223,9 +190,9 @@
     <list>
       <item itemvalue="JUnit.WebApplicationTests.testDateUtil1" />
       <item itemvalue="JUnit.WebApplicationTests.testEngineerCategoryIdEQNull" />
+      <item itemvalue="JUnit.WebApplicationTests.testDic" />
       <item itemvalue="Spring Boot.BackApplication" />
       <item itemvalue="Spring Boot.WebApplication" />
-      <item itemvalue="JUnit.WebApplicationTests.testDic" />
     </list>
     <recent_temporary>
       <list>

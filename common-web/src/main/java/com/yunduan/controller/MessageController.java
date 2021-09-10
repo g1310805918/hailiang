@@ -80,8 +80,7 @@ public class MessageController {
         if (accountMsg == null) {
             return resultUtil.AesFAILError("消息不存在");
         }
-        accountMsg.setDelFlag(StatusCodeUtil.DELETE_FLAG).setUpdateTime(DateUtil.now());
-        boolean flag = accountMsgService.update(accountMsg, new QueryWrapper<AccountMsg>().eq("id", id));
+        boolean flag = accountMsgService.removeById(id);
         return flag ? resultUtil.AesJSONSuccess("删除成功","") : resultUtil.AesFAILError("删除失败");
     }
 
@@ -114,12 +113,7 @@ public class MessageController {
             log.error("工程师端消息详情【id】为空");
             return resultUtil.AesFAILError("非法请求");
         }
-        boolean flag = false;
-        EngineerMsg msg = engineerMsgService.getById(id);
-        if (msg != null) {
-            msg.setDelFlag(StatusCodeUtil.DELETE_FLAG);
-            flag = engineerMsgService.updateById(msg);
-        }
+        boolean flag = engineerMsgService.removeById(id);
         return flag ? resultUtil.AesJSONSuccess("删除成功","") : resultUtil.AesFAILError("删除失败");
     }
 
