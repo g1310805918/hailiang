@@ -33,4 +33,29 @@ public interface SysDictionaryService extends IService<SysDictionary> {
      */
     int createSysDictionary(String codeName,String content);
 
+
+    /**
+     * 查询操作系统下的一级子集
+     * @param codeName 标签名称
+     * @return list
+     */
+    List<DicInitListV> querySysOperationOneLevelList(String codeName);
+
+
+    /**
+     * 添加版本
+     * @param parentId 父id
+     * @param codeName 标签名称
+     * @param content 内容
+     * @return int
+     */
+    int createBanBen(String parentId,String codeName,String content);
+
+
+    /**
+     * 获取版本信息
+     * @param parentId 父id
+     * @return list
+     */
+    List<DicInitListV> querySysBanBenList(String parentId);
 }

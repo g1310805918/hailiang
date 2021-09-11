@@ -2,10 +2,12 @@ package com.yunduan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.Engineer;
+import com.yunduan.request.back.EngineerInit;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.vo.OtherEngineerListVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EngineerService extends IService<Engineer> {
 
@@ -67,4 +69,12 @@ public interface EngineerService extends IService<Engineer> {
      * @return int
      */
     int changeMobile(String engineerId, String mobile);
+
+
+    /**
+     * 初始化工程师列表
+     * @param engineerInit 初始化对象
+     * @return map
+     */
+    Map<String,Object> engineerListInit(EngineerInit engineerInit);
 }

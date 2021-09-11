@@ -1,5 +1,6 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.SysDictionary;
@@ -88,6 +89,85 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         }
         sysDictionary = new SysDictionary().setCodeName(codeName).setContent(content);
         return sysDictionaryMapper.insert(sysDictionary);
+    }
+
+
+    /**
+     * 查询操作系统下的一级子集
+     * @param codeName 标签名称
+     * @return list
+     */
+    @Override
+    public List<DicInitListV> querySysOperationOneLevelList(String codeName) {
+        //操作系统下的子集
+        List<SysDictionary> sysDictionaryList = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("code_name", codeName).orderByDesc("create_time"));
+        //封装结果集合
+        List<DicInitListV> resultList = getResultList(sysDictionaryList);
+        return resultList;
+    }
+
+
+    /**
+     * 获取封装结果
+     * @param sysDictionaryList 数据集合
+     * @return list
+     */
+    private List<DicInitListV> getResultList(List<SysDictionary> sysDictionaryList) {
+        List<DicInitListV> voList = new ArrayList<>();
+        if (sysDictionaryList.size() > 0 && sysDictionaryList != null) {
+            DicInitListV vo = null;
+            for (SysDictionary sysDictionary : sysDictionaryList) {
+                vo = new DicInitListV().setId(sysDictionary.getId().toString()).setCodeName(sysDictionary.getContent());
+                List<SysDictionary> twoLevelList = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("parent_id", sysDictionary.getId()).orderByDesc("create_time"));
+                if (twoLevelList.size() > 0 && twoLevelList != null) {
+                    int index = twoLevelList.size();
+                    String content = "";
+                    for (int i = 0; i < index; i++) {
+                        content += twoLevelList.get(i).getContent();
+                        if (i != index - 1) {
+                            content += "、";
+                        }
+                    }
+                    vo.setContent(content);
+                }
+                voList.add(vo);
+            }
+        }
+        return voList;
+    }
+
+
+
+    /**
+     * 添加版本
+     * @param parentId 父id
+     * @param codeName 标签名称
+     * @param content 内容
+     * @return int
+     */
+    @Override
+    public int createBanBen(String parentId, String codeName, String content) {
+        SysDictionary sysDictionary = sysDictionaryMapper.selectOne(new QueryWrapper<SysDictionary>().eq("parent_id", parentId).eq("code_name", codeName).eq("content", content));
+        if (sysDictionary != null) {
+            return StatusCodeUtil.HAS_EXIST;
+        }
+        sysDictionary = new SysDictionary().setCodeName(codeName).setContent(content).setParentId(Convert.toLong(parentId));
+        return sysDictionaryMapper.insert(sysDictionary);
+    }
+
+
+    /**
+     * 获取版本信息
+     * @param parentId 父id
+     * @return list
+     */
+    @Override
+    public List<DicInitListV> querySysBanBenList(String parentId) {
+        //版本集合
+        List<SysDictionary> banBenList = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("parent_id", parentId).orderByDesc("create_time"));
+        //封装结果
+        List<DicInitListV> resultList = getResultList(banBenList);
+        return resultList;
     }
 
 

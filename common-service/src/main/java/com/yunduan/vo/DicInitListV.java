@@ -13,6 +13,9 @@ public class DicInitListV implements Serializable {
     private static final long serialVersionUID = 8725003160028166575L;
 
 
+    @ApiModelProperty("id")
+    private String id;
+
     @ApiModelProperty("标签名")
     private String codeName;
 

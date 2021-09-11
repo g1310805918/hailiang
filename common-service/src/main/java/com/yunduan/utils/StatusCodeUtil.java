@@ -30,7 +30,7 @@ public class StatusCodeUtil {
     public static final String SYS_MATH_MSG = "请求加入公司CSI验证";
 
     //默认头像
-    public static final String HEAD_PIC = "http://qxedhpf35.hb-bkt.clouddn.com/head.png";
+    public static final String HEAD_PIC = "http://mvs.vastdata.com.cn/e1fe9925b.jpeg";
 
     //用户token前缀
     public static final String ACCOUNT_TOKEN = "account:token:";

@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.CollectionAccountDocument;
 import com.yunduan.entity.CollectionEngineerDocument;
@@ -13,6 +14,7 @@ import com.yunduan.mapper.CollectionEngineerDocumentMapper;
 import com.yunduan.mapper.CollectionFavoritesMapper;
 import com.yunduan.mapper.EngineerMapper;
 import com.yunduan.mapper.dao.EngineerDao;
+import com.yunduan.request.back.EngineerInit;
 import com.yunduan.service.EngineerService;
 import com.yunduan.utils.RedisUtil;
 import com.yunduan.utils.StatusCodeUtil;
@@ -24,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -174,6 +178,32 @@ public class EngineerServiceImpl extends ServiceImpl<EngineerMapper, Engineer> i
             return engineerMapper.updateById(engineer);
         }
         return 0;
+    }
+
+
+    /**
+     * 初始化工程师列表
+     * @param engineerInit 初始化对象
+     * @return map
+     */
+    @Override
+    public Map<String,Object> engineerListInit(EngineerInit engineerInit) {
+        Map<String,Object> map = new HashMap<>();
+        //条件构造器
+        QueryWrapper<Engineer> queryWrapper = new QueryWrapper<Engineer>()
+                .eq(engineerInit.getIdentity() != null, "identity", engineerInit.getIdentity())
+                .eq(engineerInit.getAccountStatus() != null, "account_status", engineerInit.getAccountStatus())
+                .like(StrUtil.isNotEmpty(engineerInit.getUsername()), "username", engineerInit.getUsername())
+                .like(StrUtil.isNotEmpty(engineerInit.getMobile()), "mobile", engineerInit.getMobile())
+                .like(StrUtil.isNotEmpty(engineerInit.getEmail()), "email", engineerInit.getEmail())
+                .orderByDesc("create_time");
+        //工程师列表
+        List<Engineer> engineerList = engineerMapper.selectPage(new Page<>(engineerInit.getPageNo(), engineerInit.getPageSize()), queryWrapper).getRecords();
+        //总数
+        Integer total = engineerMapper.selectCount(queryWrapper);
+        map.put("voList",engineerList);
+        map.put("total",total);
+        return map;
     }
 
 
