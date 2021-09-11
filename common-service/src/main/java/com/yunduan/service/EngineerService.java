@@ -2,8 +2,10 @@ package com.yunduan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.Engineer;
+import com.yunduan.entity.KnowledgeDocumentThreeCategory;
 import com.yunduan.request.back.EngineerInit;
 import com.yunduan.utils.ContextUtil;
+import com.yunduan.vo.EngineerCategoryListVo;
 import com.yunduan.vo.OtherEngineerListVo;
 
 import java.util.List;
@@ -77,4 +79,54 @@ public interface EngineerService extends IService<Engineer> {
      * @return map
      */
     Map<String,Object> engineerListInit(EngineerInit engineerInit);
+
+
+    /**
+     * 添加工程师
+     * @param engineer 工程师
+     * @return int
+     */
+    int createEngineer(Engineer engineer);
+
+
+    /**
+     * 编辑工程师基本信息
+     * @param engineer 工程师对象
+     * @return int
+     */
+    int editEngineerBaseInfo(Engineer engineer);
+
+
+    /**
+     * 加载工程师技术模块集合
+     * @param engineerId 工程师id
+     * @return list
+     */
+    List<EngineerCategoryListVo> loadEngineerCategoryList(String engineerId);
+
+
+    /**
+     * 批量删除工程师技术模块
+     * @param engineerId 工程师id
+     * @param batchId 技术模块id
+     * @return int
+     */
+    int removeBatchEngineerCategory(String engineerId,String batchId);
+
+
+    /**
+     * 获取工程师所没有的技术模块列表
+     * @param engineerId 工程师id
+     * @return list
+     */
+    List<KnowledgeDocumentThreeCategory> getEngineerHaveNotCategoryList(String engineerId);
+
+
+    /**
+     * 添加工程师技术模块
+     * @param engineerId 工程师id
+     * @param categoryIdList 技术模块id集合
+     * @return int
+     */
+    int addEngineerHasNotCategory(String engineerId,String[] categoryIdList);
 }

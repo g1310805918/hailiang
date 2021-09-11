@@ -45,7 +45,7 @@ public class Engineer implements Serializable {
     private String username;
 
     @ApiModelProperty("头像")
-    private String headPic;
+    private String headPic = StatusCodeUtil.HEAD_PIC;
 
     @ApiModelProperty("电话")
     private String mobile;
@@ -95,5 +95,11 @@ public class Engineer implements Serializable {
     @TableField(exist = false)
     @ApiModelProperty("用户收藏夹列表")
     private List<FavoritesVo> favoritesVoList;
+
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("后台需要,工程师技术模块数组")
+    private List<String> categoryId;
 
 }

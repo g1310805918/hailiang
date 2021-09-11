@@ -6,18 +6,19 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yunduan.entity.CollectionAccountDocument;
-import com.yunduan.entity.CollectionEngineerDocument;
-import com.yunduan.entity.CollectionFavorites;
-import com.yunduan.entity.Engineer;
+import com.yunduan.entity.*;
 import com.yunduan.mapper.CollectionEngineerDocumentMapper;
 import com.yunduan.mapper.CollectionFavoritesMapper;
 import com.yunduan.mapper.EngineerMapper;
+import com.yunduan.mapper.KnowledgeDocumentThreeCategoryMapper;
 import com.yunduan.mapper.dao.EngineerDao;
 import com.yunduan.request.back.EngineerInit;
 import com.yunduan.service.EngineerService;
+import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
+import com.yunduan.utils.AESUtil;
 import com.yunduan.utils.RedisUtil;
 import com.yunduan.utils.StatusCodeUtil;
+import com.yunduan.vo.EngineerCategoryListVo;
 import com.yunduan.vo.FavoritesVo;
 import com.yunduan.vo.OtherEngineerListVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -45,6 +43,10 @@ public class EngineerServiceImpl extends ServiceImpl<EngineerMapper, Engineer> i
     private CollectionEngineerDocumentMapper collectionEngineerDocumentMapper;
     @Autowired
     private CollectionFavoritesMapper collectionFavoritesMapper;
+    @Autowired
+    private KnowledgeDocumentThreeCategoryMapper threeCategoryMapper;
+    @Autowired
+    private KnowledgeDocumentThreeCategoryService threeCategoryService;
 
 
 
@@ -204,6 +206,178 @@ public class EngineerServiceImpl extends ServiceImpl<EngineerMapper, Engineer> i
         map.put("voList",engineerList);
         map.put("total",total);
         return map;
+    }
+
+
+    /**
+     * 添加工程师
+     * @param engineer 工程师
+     * @return int
+     */
+    @Override
+    public int createEngineer(Engineer engineer) {
+        String idStr = "";
+        String categoryName = "";
+        List<String> categoryId = engineer.getCategoryId();
+        for (String id : categoryId) {
+            idStr = idStr + id + ",";
+            //获取三级分类名称
+            KnowledgeDocumentThreeCategory threeCategory = threeCategoryMapper.selectById(id);
+            if (threeCategory != null) {
+                categoryName += threeCategory.getCategoryTitle() + "/";
+            }
+        }
+        engineer.setPassword(AESUtil.encrypt(engineer.getPassword()));  //加密密码
+        engineer.setIdentityName(engineer.getIdentity() == 1 ? "海量员工" : engineer.getIdentity() == 2 ? "技术支持工程师" : engineer.getIdentity() == 3 ? "COE工程师" : engineer.getIdentity() == 4 ? "BDE工程师" : "Manager");
+        engineer.setProductCategoryId(idStr).setProductCategoryName(categoryName).setOrderNumber(0);
+        return engineerMapper.insert(engineer);
+    }
+
+
+
+    /**
+     * 编辑工程师基本信息
+     * @param engineer 工程师对象
+     * @return int
+     */
+    @Override
+    public int editEngineerBaseInfo(Engineer engineer) {
+        Engineer oldEngineer = engineerMapper.selectById(engineer.getId());
+        if (oldEngineer != null) {
+            oldEngineer.setUsername(engineer.getUsername()).setMobile(engineer.getMobile()).setEmail(engineer.getEmail()).setIdentity(engineer.getIdentity()).setIdentityName(engineer.getIdentity() == 1 ? "海量员工" : engineer.getIdentity() == 2 ? "技术支持工程师" : engineer.getIdentity() == 3 ? "COE工程师" : engineer.getIdentity() == 4 ? "BDE工程师" : "Manager");
+            return engineerMapper.updateById(oldEngineer);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 加载工程师技术模块集合
+     * @param engineerId 工程师id
+     * @return list
+     */
+    @Override
+    public List<EngineerCategoryListVo> loadEngineerCategoryList(String engineerId) {
+        List<EngineerCategoryListVo> voList = new ArrayList<>();
+        Engineer engineer = engineerMapper.selectById(engineerId);
+        if (engineer != null) {
+            if (StrUtil.hasEmpty(engineer.getProductCategoryId())) {
+                return voList;
+            }
+            //工程师技术模块id集合
+            List<String> categoryIdList = Arrays.asList(engineer.getProductCategoryId().split(","));
+            if (categoryIdList.size() > 0 && categoryIdList != null ){
+                EngineerCategoryListVo vo = null;
+                for (String categoryId : categoryIdList) {
+                    vo = new EngineerCategoryListVo().setCategoryId(categoryId).setCategoryName(threeCategoryService.getKnowledgeCategoryName(categoryId));
+                    voList.add(vo);
+                }
+            }
+        }
+        return voList;
+    }
+
+
+    /**
+     * 批量删除工程师技术模块
+     * @param engineerId 工程师id
+     * @param batchId 技术模块id
+     * @return int
+     */
+    @Override
+    public int removeBatchEngineerCategory(String engineerId, String batchId) {
+        int rows = 0;
+        Engineer engineer = engineerMapper.selectById(engineerId);
+        if (engineer != null) {
+            if (StrUtil.hasEmpty(engineer.getProductCategoryId())) {
+                return StatusCodeUtil.NOT_FOUND_FLAG;
+            }
+            List<String> list = Arrays.asList(batchId.split(","));
+
+            String productCategoryId = engineer.getProductCategoryId();
+
+            for (String s : list) {
+                if (productCategoryId.contains(s)) {
+                    productCategoryId = productCategoryId.replaceAll(s, "");
+                }
+            }
+
+            engineer.setProductCategoryId(productCategoryId);
+
+            List<String> productIdList = Arrays.asList(productCategoryId.split(","));
+            if (productIdList != null && productIdList.size() > 0) {
+                String productCategoryName = "";
+                for (String s : productIdList) {
+                    KnowledgeDocumentThreeCategory threeCategory = threeCategoryMapper.selectById(s);
+                    if (threeCategory != null) {
+                        productCategoryName += threeCategory.getCategoryTitle() + "/";
+                    }
+                }
+                engineer.setProductCategoryName(productCategoryName);
+            }else {
+                engineer.setProductCategoryName("");
+            }
+            return engineerMapper.updateById(engineer);
+        }
+        return rows;
+    }
+
+
+
+    /**
+     * 获取工程师所没有的技术模块列表
+     * @param engineerId 工程师id
+     * @return list
+     */
+    @Override
+    public List<KnowledgeDocumentThreeCategory> getEngineerHaveNotCategoryList(String engineerId) {
+        //工程师已有技术模块集合
+        List<String> hasCategoryIdList = new ArrayList<>();
+        Engineer engineer = engineerMapper.selectById(engineerId);
+        if (engineer == null) {
+            return null;
+        }
+        if (StrUtil.isNotEmpty(engineer.getProductCategoryId())) {
+            hasCategoryIdList = Arrays.asList(engineer.getProductCategoryId().split(","));
+        }
+        //工程师没有的技术模块集合
+        List<KnowledgeDocumentThreeCategory> threeCategories = threeCategoryMapper.selectList(new QueryWrapper<KnowledgeDocumentThreeCategory>().notIn(hasCategoryIdList.size() > 0 && hasCategoryIdList != null, "id", hasCategoryIdList).orderByDesc("create_time"));
+        return threeCategories;
+    }
+
+
+    /**
+     * 添加工程师技术模块
+     * @param engineerId 工程师id
+     * @param categoryIdList 技术模块id集合
+     * @return int
+     */
+    @Override
+    public int addEngineerHasNotCategory(String engineerId,String[] categoryIdList) {
+        Engineer engineer = engineerMapper.selectById(engineerId);
+        if (engineer != null) {
+            List<String> result = new ArrayList<>();
+            //已有的技术模块
+            String hasCategoryId = engineer.getProductCategoryId();
+            if (StrUtil.isNotEmpty(hasCategoryId)) {
+                //合并已有模块 、 需要添加模块
+                result.addAll(Arrays.asList(categoryIdList));
+                result.addAll(Arrays.asList(hasCategoryId.split(",")));
+            }
+            String str = "";
+            String categoryName = "";
+            for (String s : result) {
+                str += s + ",";
+                KnowledgeDocumentThreeCategory threeCategory = threeCategoryMapper.selectById(s);
+                if (threeCategory != null) {
+                    categoryName += threeCategory.getCategoryTitle() + "/";
+                }
+            }
+            engineer.setProductCategoryId(str).setProductCategoryName(categoryName);
+
+            return engineerMapper.updateById(engineer);
+        }
+        return 0;
     }
 
 
