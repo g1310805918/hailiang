@@ -1,5 +1,6 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +80,33 @@ public class CompanyCSIServiceImpl extends ServiceImpl<CompanyCSIMapper, Company
         if (isExist != null) {
             return StatusCodeUtil.HAS_EXIST;
         }
-        companyCSI.setCreateTime(DateUtil.now()).setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setId(SnowFlakeUtil.getPrimaryKeyId());
+        companyCSI.setCreateTime(DateUtil.now()).setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setId(SnowFlakeUtil.getPrimaryKeyId()).setUpdateTime(DateUtil.now());
         return companyCSIMapper.insert(companyCSI);
+    }
+
+
+    /**
+     * 批量添加客户服务号
+     * @param companyCSIList 客户服务号列表
+     * @return list
+     */
+    @Override
+    public List<CompanyCSI> createBatch(List<CompanyCSI> companyCSIList) {
+        //最终返回结果
+        List<CompanyCSI> resultList = new ArrayList<>();
+
+        if (CollectionUtil.isNotEmpty(companyCSIList)) {
+            for (CompanyCSI companyCSI : companyCSIList) {
+                CompanyCSI isExist = companyCSIMapper.selectOne(new QueryWrapper<CompanyCSI>().eq("csi_number", companyCSI.getCsiNumber()));
+                if (isExist != null) {
+                    continue;
+                }
+                companyCSI.setId(SnowFlakeUtil.getPrimaryKeyId()).setCreateTime(DateUtil.now()).setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setUpdateTime(DateUtil.now());
+                //保存不存在的CSI信息
+                resultList.add(companyCSI);
+            }
+        }
+        return resultList;
     }
 
 

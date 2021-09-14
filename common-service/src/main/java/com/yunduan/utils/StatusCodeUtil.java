@@ -155,5 +155,8 @@ public class StatusCodeUtil {
     //工程师系统消息
     public static final Integer ENGINEER_MESSAGE_TYPE_SYSTEM = 4;
 
+    //用户放弃解决
+    public static final String ACCOUNT_GIVE_UP_WORK_ORDER = "放弃解决";
+
 
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.CompanyCSI;
 import com.yunduan.request.back.CompanyCSIInit;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CompanyCSIService extends IService<CompanyCSI> {
@@ -31,4 +32,12 @@ public interface CompanyCSIService extends IService<CompanyCSI> {
      * @return int
      */
     int createCompanyCSI(CompanyCSI companyCSI);
+
+
+    /**
+     * 批量添加客户服务号
+     * @param companyCSIList 客户服务号列表
+     * @return list
+     */
+    List<CompanyCSI> createBatch(List<CompanyCSI> companyCSIList);
 }

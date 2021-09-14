@@ -1,9 +1,11 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -686,6 +688,92 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
 
         }
         return row;
+    }
+
+
+    /**
+     * 统计顶部infoCard数据
+     * @return map
+     */
+    @Override
+    public Map<String, Integer> statisticalInitInfoCardCount() {
+        Map<String,Integer> map = new HashMap<>();
+        //历史工单数
+        Integer total = workOrderMapper.selectCount(new QueryWrapper<>());
+        map.put("total",total);
+        //客户放弃数
+        Integer giveUpCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS).eq("engineer_close_reason", StatusCodeUtil.ACCOUNT_GIVE_UP_WORK_ORDER));
+        map.put("giveUp",giveUpCount);
+        //问题解决数
+        map.put("solve",total - giveUpCount);
+        return map;
+    }
+
+
+    /**
+     * 获取统计表数据
+     * @return list
+     */
+    @Override
+    public List<String> queryInitTableInfo() {
+        return getDayArr();
+    }
+
+
+    /**
+     * 获取日期数组
+     * @return list
+     */
+    public List<String> getDayArr() {
+        ArrayList<String> list = CollectionUtil.newArrayList();
+        //第十二天（今天）  yyyy-MM-dd
+        String today = DateUtil.today();
+        //第十一天（昨天）
+        String eleventhDay = getDateTime(today,1);
+        //第十天
+        String tenDay = getDateTime(today,2);
+        //第九天
+        String nineDay = getDateTime(today,3);
+        //第八天
+        String eightDay =  getDateTime(today,4);
+        //第七天
+        String sevenDay = getDateTime(today,5);
+        //第六天
+        String sixDay = getDateTime(today,6);
+        //第五天
+        String fiveDay = getDateTime(today,7);
+        //第四天
+        String fourDay = getDateTime(today,8);
+        //第三天
+        String threeDay = getDateTime(today,9);
+        //第二天
+        String twoDay = getDateTime(today,10);
+        //第一天
+        String oneDay = getDateTime(today,11);
+        list.add(oneDay);
+        list.add(twoDay);
+        list.add(threeDay);
+        list.add(fourDay);
+        list.add(fiveDay);
+        list.add(sixDay);
+        list.add(sevenDay);
+        list.add(eightDay);
+        list.add(nineDay);
+        list.add(tenDay);
+        list.add(eleventhDay);
+        list.add(today);
+        return list;
+    }
+
+    /**
+     * 获取之前时间年月日
+     * @param currentDay 当前天
+     * @param offset 向前偏移几天
+     * @return string
+     */
+    public String getDateTime(String currentDay, int offset) {
+        DateTime dateTime = DateUtil.offsetDay(DateUtil.parse(currentDay), -offset);
+        return dateTime.toString().substring(0,10);
     }
 
 

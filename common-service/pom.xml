@@ -62,12 +62,6 @@
             <artifactId>gson</artifactId>
         </dependency>
 
-        <!-- security -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
         <!--rabbitmq-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -218,7 +212,7 @@
             <version>${fastjson.version}</version>
         </dependency>
 
-        <!-- Hutool工具包 -->
+        <!-- Hutool -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

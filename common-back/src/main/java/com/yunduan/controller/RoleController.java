@@ -19,7 +19,6 @@ import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.back.PageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

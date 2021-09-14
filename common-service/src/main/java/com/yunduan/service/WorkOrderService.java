@@ -6,6 +6,7 @@ import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.vo.EngineerWorkOrderBaseInfoVo;
 import com.yunduan.vo.WorkOrderDetailBaseInfoVo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface WorkOrderService extends IService<WorkOrder> {
@@ -153,4 +154,18 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return int
      */
     int engineerUpgradeWorkOrder(EngineerUpgradeWorkOrderReq engineerUpgradeWorkOrderReq);
+
+
+    /**
+     * 统计顶部infoCard数据
+     * @return map
+     */
+    Map<String,Integer> statisticalInitInfoCardCount();
+
+
+    /**
+     * 获取统计表数据
+     * @return list
+     */
+    List<String> queryInitTableInfo();
 }

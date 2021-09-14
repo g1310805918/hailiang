@@ -2,10 +2,13 @@ package com.yunduan.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.common.utils.Result;
 import com.yunduan.common.utils.ResultUtil;
+import com.yunduan.entity.BindingAccountCSI;
 import com.yunduan.entity.CompanyCSI;
 import com.yunduan.request.back.CompanyCSIInit;
+import com.yunduan.service.BindingAccountCSIService;
 import com.yunduan.service.CompanyCSIService;
 import com.yunduan.utils.StatusCodeUtil;
 import io.swagger.annotations.Api;
@@ -13,10 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +31,8 @@ public class CompanyCSIController {
 
     @Autowired
     private CompanyCSIService companyCSIService;
+    @Autowired
+    private BindingAccountCSIService bindingAccountCSIService;
 
 
     @PostMapping("/init-page-data")
@@ -49,6 +51,10 @@ public class CompanyCSIController {
             return ResultUtil.error("非法请求");
         }
         List<String> list = Arrays.asList(batchIds.split(","));
+        List<BindingAccountCSI> count = bindingAccountCSIService.list(new QueryWrapper<BindingAccountCSI>().in("csi_id", list));
+        if (count != null && count.size() > 0) {
+            return ResultUtil.error("存在绑定用户，删除失败");
+        }
         boolean flag = companyCSIService.removeByIds(list);
         return flag ? ResultUtil.success("删除成功") : ResultUtil.error("删除失败");
     }
@@ -71,6 +77,18 @@ public class CompanyCSIController {
         }
         return rows > 0 ? ResultUtil.success("添加成功") : ResultUtil.error("添加失败");
     }
+
+
+    @PostMapping("/commit-batch-company-csi")
+    @ApiOperation(httpMethod = "POST",value = "批量导入CSI编号信息")
+    public Result<String> commitBatchCompanyCSI(@RequestBody List<CompanyCSI> companyCSIS) {
+        //得到可以导入的数据集合
+        List<CompanyCSI> batch = companyCSIService.createBatch(companyCSIS);
+        //导入
+        boolean flag = companyCSIService.saveBatch(batch);
+        return flag ? ResultUtil.success("导入成功") : ResultUtil.error("导入失败");
+    }
+
 
 
 }
