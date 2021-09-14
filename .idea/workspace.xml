@@ -5,26 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="985a983c-856a-48cc-ae39-f6e7f09eca16" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/common-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/CompanyCSIController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/CompanyCSIController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/CompanyCSIController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/CompanyCSIController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CompanyCSIService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/CompanyCSIService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/StatisticalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/java/com/yunduan/controller/StatisticalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-back/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-back/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/StatisticalController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-back/target/classes/com/yunduan/controller/StatisticalController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/service/WorkOrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CompanyCSIServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/CompanyCSIServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/serviceimpl/WorkOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/StatusCodeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CompanyCSIService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/CompanyCSIService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/QNiuUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/src/main/java/com/yunduan/utils/QNiuUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/WorkOrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/service/WorkOrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CompanyCSIServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/CompanyCSIServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/serviceimpl/WorkOrderServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/StatusCodeUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountCenterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/java/com/yunduan/controller/AccountCenterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/QNiuUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-service/target/classes/com/yunduan/utils/QNiuUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-web/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/AccountCenterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-web/target/classes/com/yunduan/controller/AccountCenterController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +97,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../VueProjects/java-common-back-manager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../VueProjects/java-common" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.19153675" />
@@ -142,32 +133,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Spring Boot.BackApplication">
-    <configuration name="AccountCenterController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.yunduan.controller.AccountCenterController" />
-      <module name="common-web" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.yunduan.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="WorkOrderServiceImpl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.yunduan.serviceimpl.WorkOrderServiceImpl" />
-      <module name="common-service" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.yunduan.serviceimpl.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="WebApplicationTests.testDateUtil1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="common-web" />
       <extension name="coverage">
@@ -179,38 +144,6 @@
       <option name="PACKAGE_NAME" value="com.yunduan" />
       <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
       <option name="METHOD_NAME" value="testDateUtil1" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="WebApplicationTests.testDic" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="common-web" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.yunduan.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.yunduan" />
-      <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
-      <option name="METHOD_NAME" value="testDic" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="WebApplicationTests.testEngineerCategoryIdEQNull" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="common-web" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.yunduan.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.yunduan" />
-      <option name="MAIN_CLASS_NAME" value="com.yunduan.WebApplicationTests" />
-      <option name="METHOD_NAME" value="testEngineerCategoryIdEQNull" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -235,20 +168,12 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.WorkOrderServiceImpl" />
-      <item itemvalue="Application.AccountCenterController" />
       <item itemvalue="JUnit.WebApplicationTests.testDateUtil1" />
-      <item itemvalue="JUnit.WebApplicationTests.testEngineerCategoryIdEQNull" />
-      <item itemvalue="JUnit.WebApplicationTests.testDic" />
       <item itemvalue="Spring Boot.BackApplication" />
       <item itemvalue="Spring Boot.WebApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.AccountCenterController" />
-        <item itemvalue="Application.WorkOrderServiceImpl" />
-        <item itemvalue="JUnit.WebApplicationTests.testDic" />
-        <item itemvalue="JUnit.WebApplicationTests.testEngineerCategoryIdEQNull" />
         <item itemvalue="JUnit.WebApplicationTests.testDateUtil1" />
       </list>
     </recent_temporary>
@@ -284,7 +209,7 @@
       <workItem from="1631495146368" duration="11238000" />
       <workItem from="1631533976803" duration="235000" />
       <workItem from="1631534761879" duration="368000" />
-      <workItem from="1631580564360" duration="53000" />
+      <workItem from="1631580564360" duration="8659000" />
     </task>
     <servers />
   </component>

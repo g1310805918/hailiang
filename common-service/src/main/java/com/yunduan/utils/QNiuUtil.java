@@ -60,7 +60,7 @@ public class QNiuUtil {
         //...其他参数参考类注释
         UploadManager uploadManager = new UploadManager(cfg);
         //获取文件名(随机数 + 文件名)
-        String fileName = RandomUtil.randomNumbers(16) + extName;
+        String fileName = RandomUtil.randomNumbers(16) + "." + extName;
         //把文件转化为字节数组
         InputStream is = null;
         ByteArrayOutputStream bos = null;

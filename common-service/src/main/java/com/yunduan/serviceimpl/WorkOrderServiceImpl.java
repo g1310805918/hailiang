@@ -712,11 +712,29 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
 
     /**
      * 获取统计表数据
-     * @return list
+     * @return map
      */
     @Override
-    public List<String> queryInitTableInfo() {
-        return getDayArr();
+    public Map<String,Object> queryInitTableInfo() {
+        HashMap<String, Object> map = CollectionUtil.newHashMap();
+        List<String> dayArr = getDayArr();
+        //X轴日期信息
+        map.put("dayInfo",dayArr);
+        //获取当天数据量
+        //当天提交工单数量集合
+        ArrayList<Integer> arrayList = CollectionUtil.newArrayList();
+        ArrayList<Integer> daySolveCount = CollectionUtil.newArrayList();
+        for (String s : dayArr) {
+            Integer count = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().like("create_time", s));
+            arrayList.add(count);
+            //某天解决数量
+            Integer integer = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS).like("last_update_time", s));
+            daySolveCount.add(integer);
+        }
+        map.put("dayCreateCount",arrayList);
+        //获取当天已解决数量
+        map.put("daySolveCount",daySolveCount);
+        return map;
     }
 
 
@@ -750,18 +768,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         String twoDay = getDateTime(today,10);
         //第一天
         String oneDay = getDateTime(today,11);
-        list.add(oneDay);
-        list.add(twoDay);
-        list.add(threeDay);
-        list.add(fourDay);
-        list.add(fiveDay);
-        list.add(sixDay);
-        list.add(sevenDay);
-        list.add(eightDay);
-        list.add(nineDay);
-        list.add(tenDay);
-        list.add(eleventhDay);
-        list.add(today);
+        list.add(oneDay);list.add(twoDay);list.add(threeDay);list.add(fourDay);list.add(fiveDay);list.add(sixDay);list.add(sevenDay);list.add(eightDay);list.add(nineDay);list.add(tenDay);list.add(eleventhDay);list.add(today);
         return list;
     }
 
@@ -775,6 +782,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         DateTime dateTime = DateUtil.offsetDay(DateUtil.parse(currentDay), -offset);
         return dateTime.toString().substring(0,10);
     }
+
 
 
 }

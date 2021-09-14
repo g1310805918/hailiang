@@ -165,7 +165,7 @@ public interface WorkOrderService extends IService<WorkOrder> {
 
     /**
      * 获取统计表数据
-     * @return list
+     * @return map
      */
-    List<String> queryInitTableInfo();
+    Map<String,Object> queryInitTableInfo();
 }

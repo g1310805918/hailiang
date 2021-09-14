@@ -36,8 +36,8 @@ public class StatisticalController {
 
 
     @RequestMapping(value = "/init-table-count",method = RequestMethod.GET)
-    @ApiOperation(httpMethod = "GET",value = "统计图标信息")
-    public Result<List<String>> initTableCount() {
+    @ApiOperation(httpMethod = "GET",value = "统计图表信息")
+    public Result<Map<String,Object>> initTableCount() {
         return ResultUtil.data(workOrderService.queryInitTableInfo());
     }
 
