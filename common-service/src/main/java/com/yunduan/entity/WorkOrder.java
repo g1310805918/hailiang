@@ -1,10 +1,7 @@
 package com.yunduan.entity;
 
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.yunduan.config.LongJsonDeserializer;
@@ -19,6 +16,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 @Data
@@ -179,6 +177,13 @@ public class WorkOrder implements Serializable {
 
     @ApiModelProperty("三级分类id")
     private String categoryId;
+
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("封装后的工单状态")
+    private String workOrderStatus;
+
 
 
 }

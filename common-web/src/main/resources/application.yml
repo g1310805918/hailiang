@@ -25,7 +25,7 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 0
-#    password: 1qaz4321
+    password: gzh990813
 #  rabbitmq:
 #    host: 127.0.0.1
 #    port: 5672

@@ -1,8 +1,11 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.Account;
 import com.yunduan.entity.BindingAccountCSI;
@@ -221,6 +224,40 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return accountMapper.update(account,new QueryWrapper<Account>().eq("id",account.getId()));
         }
         return 0;
+    }
+
+
+    /**
+     * 获取所有已经注册的用户列表
+     * @param username 用户名
+     * @param mobile 手机号
+     * @param email 邮箱
+     * @param pageNo 页号
+     * @param pageSize 页面大小
+     * @return map
+     */
+    @Override
+    public Map<String,Object> queryAllRegisteredAccountList(String username, String mobile, String email, Integer pageNo, Integer pageSize) {
+        Map<String,Object> map = new HashMap<>();
+        //条件构造器
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<Account>()
+                .like(StrUtil.isNotEmpty(username), "username", username)
+                .like(StrUtil.isNotEmpty(mobile), "mobile", mobile)
+                .like(StrUtil.isNotEmpty(email), "email", email).orderByDesc("create_time");
+        //用户列表
+        List<Account> accountList = accountMapper.selectPage(new Page<>(pageNo, pageSize), queryWrapper).getRecords();
+        if (CollectionUtil.isNotEmpty(accountList)) {
+            for (Account account : accountList) {
+                account.setCreateDateTime(DateUtil.formatDateTime(account.getCreateTime()));
+            }
+        }
+
+        //总记录条数
+        Integer total = accountMapper.selectCount(queryWrapper);
+
+        map.put("voList",accountList);
+        map.put("total",total);
+        return map;
     }
 
 }

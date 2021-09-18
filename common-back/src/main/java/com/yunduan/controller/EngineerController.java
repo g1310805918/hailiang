@@ -8,9 +8,11 @@ import com.yunduan.common.utils.Result;
 import com.yunduan.common.utils.ResultUtil;
 import com.yunduan.entity.Engineer;
 import com.yunduan.entity.KnowledgeDocumentThreeCategory;
+import com.yunduan.entity.WorkOrder;
 import com.yunduan.request.back.EngineerInit;
 import com.yunduan.service.EngineerService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
+import com.yunduan.service.WorkOrderService;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.EngineerCategoryListVo;
 import io.swagger.annotations.Api;
@@ -35,6 +37,8 @@ public class EngineerController {
     private EngineerService engineerService;
     @Autowired
     private KnowledgeDocumentThreeCategoryService threeCategoryService;
+    @Autowired
+    private WorkOrderService workOrderService;
 
 
     @PostMapping("/init-list")
@@ -152,6 +156,13 @@ public class EngineerController {
         return row > 0 ? ResultUtil.success("添加成功") : ResultUtil.error("添加失败");
     }
 
+
+    @RequestMapping(value = "/get-engineer-type-work-order",method = RequestMethod.POST)
+    @ApiOperation(httpMethod = "POST",value = "获取工程师类型工单")
+    public Result<List<WorkOrder>> getEngineerTypeWorkOrder(String engineerId,String tagName) {
+        List<WorkOrder> workOrder = workOrderService.getEngineerTypeWorkOrder(engineerId, tagName);
+        return ResultUtil.data(workOrder);
+    }
 
 
 }

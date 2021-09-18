@@ -4,19 +4,23 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.CollectionEngineerDocument;
 import com.yunduan.entity.Engineer;
+import com.yunduan.entity.KnowledgeDocument;
 import com.yunduan.entity.KnowledgeDocumentNoPass;
 import com.yunduan.mapper.CollectionEngineerDocumentMapper;
 import com.yunduan.mapper.EngineerMapper;
+import com.yunduan.mapper.KnowledgeDocumentMapper;
 import com.yunduan.mapper.KnowledgeDocumentNoPassMapper;
 import com.yunduan.request.front.document.CreateDocumentReq;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.request.front.review.ReviewInitReq;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
+import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.SendMessageUtil;
@@ -38,7 +42,8 @@ import java.util.Map;
 @Transactional
 public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDocumentNoPassMapper, KnowledgeDocumentNoPass> implements KnowledgeDocumentNoPassService {
 
-
+    @Autowired
+    private KnowledgeDocumentMapper knowledgeDocumentMapper;
     @Autowired
     private KnowledgeDocumentNoPassMapper knowledgeDocumentNoPassMapper;
     @Autowired
@@ -53,6 +58,8 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
     private SendMessageUtil sendMessageUtil;
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+
 
 
     /**
@@ -204,7 +211,13 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
         KnowledgeDocumentNoPass noPass = knowledgeDocumentNoPassMapper.selectById(documentId);
         if (noPass != null) {
             noPass.setDocStatus(docStatus);
-            return knowledgeDocumentNoPassMapper.updateById(noPass);
+            int row = knowledgeDocumentNoPassMapper.updateById(noPass);
+            if (row > 0) {
+                //将此文档同步到 通过的 表中
+                KnowledgeDocument document = JSONObject.parseObject(JSONObject.toJSONString(noPass), KnowledgeDocument.class);
+                knowledgeDocumentMapper.insert(document);
+            }
+            return row;
         }
         return 0;
     }

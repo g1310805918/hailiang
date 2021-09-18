@@ -168,4 +168,21 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return map
      */
     Map<String,Object> queryInitTableInfo();
+
+
+    /**
+     * 获取工程师类型工单列表
+     * @param engineerId 工程师id
+     * @param tagName 标签名
+     * @return list
+     */
+    List<WorkOrder> getEngineerTypeWorkOrder(String engineerId,String tagName);
+
+
+    /**
+     * 获取用户历史提交的工单记录
+     * @param accountId 用户id
+     * @return list
+     */
+    List<WorkOrder> getAccountHistoryWorkOrderList(String accountId);
 }

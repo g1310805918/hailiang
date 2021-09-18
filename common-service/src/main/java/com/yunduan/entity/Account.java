@@ -69,6 +69,7 @@ public class Account implements Serializable {
     @ApiModelProperty("微信openId")
     private String openId;
 
+
     @Transient
     @TableField(exist = false)
     @ApiModelProperty("用户id，字符串形式")

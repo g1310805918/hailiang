@@ -244,7 +244,7 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
             if (companyCSIList.size() > 0 && companyCSIList != null) {
                 CustomerServiceNoVo vo = null;
                 for (CompanyCSI companyCSI : companyCSIList) {
-                    vo = new CustomerServiceNoVo().setCsiNumber(companyCSI.getCsiNumber());
+                    vo = new CustomerServiceNoVo().setCsiNumber(companyCSI.getCsiNumber()).setCompanyName(companyCSI.getCompanyName());
                     voList.add(vo);
                 }
             }

@@ -784,5 +784,40 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     }
 
 
+    /**
+     * 获取工程师类型工单列表
+     * @param engineerId 工程师id
+     * @param tagName 标签名
+     * @return list
+     */
+    @Override
+    public List<WorkOrder> getEngineerTypeWorkOrder(String engineerId, String tagName) {
+        Integer workOrderStatus = Objects.equals("inWork",tagName) ? StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS : StatusCodeUtil.WORK_ORDER_CLOSE_STATUS;
+        QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>().eq("engineer_id", engineerId).eq("status", workOrderStatus).orderByDesc("create_time");
+        //工单列表
+        List<WorkOrder> workOrderList = workOrderMapper.selectList(queryWrapper);
+        return workOrderList;
+    }
+
+
+    /**
+     * 获取用户历史提交的工单记录
+     * @param accountId 用户id
+     * @return list
+     */
+    @Override
+    public List<WorkOrder> getAccountHistoryWorkOrderList(String accountId) {
+        QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>().eq("account_id", accountId).orderByDesc("create_time");
+        //工单列表
+        List<WorkOrder> workOrderList = workOrderMapper.selectList(queryWrapper);
+        if (CollectionUtil.isNotEmpty(workOrderList)) {
+            for (WorkOrder workOrder : workOrderList) {
+                Integer status = workOrder.getStatus();
+                workOrder.setWorkOrderStatus(status == 1 ? "待处理" : status == 2 ? "处理中" : status == 3 ? "" : status == 4 ? "已关闭" : "提交结单申请");
+            }
+        }
+        return workOrderList;
+    }
+
 
 }

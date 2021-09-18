@@ -75,4 +75,16 @@ public interface AccountService extends IService<Account> {
      * @return int
      */
     int changeHeadPic(String accountId,String headPic);
+
+
+    /**
+     * 获取所有已经注册的用户列表
+     * @param username 用户名
+     * @param mobile 手机号
+     * @param email 邮箱
+     * @param pageNo 页号
+     * @param pageSize 页面大小
+     * @return map
+     */
+    Map<String,Object> queryAllRegisteredAccountList(String username, String mobile, String email, Integer pageNo, Integer pageSize);
 }

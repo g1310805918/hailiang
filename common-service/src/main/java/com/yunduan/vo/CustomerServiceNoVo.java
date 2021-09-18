@@ -16,4 +16,7 @@ public class CustomerServiceNoVo implements Serializable {
     @ApiModelProperty("客户服务号")
     private String csiNumber;
 
+    @ApiModelProperty("公司名称")
+    private String companyName;
+
 }

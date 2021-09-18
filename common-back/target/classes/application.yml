@@ -22,7 +22,7 @@ spring:
 
   redis:
     host: 127.0.0.1
-    #    password: 123456
+#    password: 1qaz4321
     database: 0
     port: 6379
 
@@ -37,6 +37,7 @@ captcha:
 ignored:
   urls:
     - /login
+    - /permission/edit
     - /common/needLogin
     - /common/captcha/init
     - /common/captcha/draw/**
@@ -82,7 +83,7 @@ mybatis-plus:
       logic-delete-value: 1
       # 逻辑未删除值
       logic-not-delete-value: 0
-  #mybatis-plus  配置控制打印日志
+  #mybatis-plus
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:mapper/*.xml
