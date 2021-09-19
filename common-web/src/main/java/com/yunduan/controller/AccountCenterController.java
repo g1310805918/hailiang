@@ -223,9 +223,9 @@ public class AccountCenterController {
             return resultUtil.AesFAILError("非法请求");
         }
         //删除收藏夹下的收藏知识文档
-        boolean a = collectionAccountDocumentService.remove(new QueryWrapper<CollectionAccountDocument>().eq("account_id", ContextUtil.getUserId()).eq("favorites_id", id));
+        collectionAccountDocumentService.remove(new QueryWrapper<CollectionAccountDocument>().eq("account_id", ContextUtil.getUserId()).eq("favorites_id", id));
         //删除收藏夹
-        boolean b = collectionFavoritesService.removeById(id);
+        collectionFavoritesService.removeById(id);
         return resultUtil.AesJSONSuccess("删除成功","");
     }
 

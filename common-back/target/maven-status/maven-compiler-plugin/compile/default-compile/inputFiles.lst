@@ -17,6 +17,7 @@ D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\y
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\CompanyCSIController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\BackApplication.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\UserController.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\TheTextController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\CaptchaController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\common\vo\EmailValidate.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\StatisticalController.java
@@ -30,13 +31,16 @@ D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\y
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\common\constant\SecurityConstant.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\config\security\permission\MySecurityMetadataSource.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\common\utils\SecurityUtil.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\service\AsyncTasks.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\common\utils\CreateVerifyCode.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\UploadController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\config\security\WebSecurityConfig.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\AccountController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\RoleController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\config\properties\IgnoredUrlsProperties.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\CategoryController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\config\interceptor\BackWebMvcConfig.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\AnnouncementController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\config\properties\HighsetIpLimitProperties.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\controller\EngineerController.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-back\src\main\java\com\yunduan\config\properties\HighsetLimitProperties.java

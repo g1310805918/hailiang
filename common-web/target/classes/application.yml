@@ -23,9 +23,9 @@ spring:
   #redis
   redis:
     host: 127.0.0.1
-    port: 6379
+    port: 6333
     database: 0
-    password: gzh990813
+    password: 1qaz4321
 #  rabbitmq:
 #    host: 127.0.0.1
 #    port: 5672

@@ -1,10 +1,12 @@
 package com.yunduan.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.common.utils.Result;
 import com.yunduan.common.utils.ResultUtil;
+import com.yunduan.entity.Account;
 import com.yunduan.entity.BindingAccountCSI;
 import com.yunduan.entity.CompanyCSI;
 import com.yunduan.request.back.CompanyCSIInit;
@@ -90,5 +92,18 @@ public class CompanyCSIController {
     }
 
 
+    @RequestMapping(value = "/drop-account-list/{companyCSIId}",method = RequestMethod.GET)
+    @ApiOperation(httpMethod = "GET",value = "获取CSI编号下绑定的用户列表")
+    public Result<List<Account>> dropAccountList(@PathVariable String companyCSIId) {
+        if (StrUtil.hasEmpty(companyCSIId)) {
+            log.error("获取CSI编号下绑定的用户列表【companyCSIId】为空");
+            return ResultUtil.error("非法请求");
+        }
+        List<Account> accountList = companyCSIService.queryCompanyDropCSIBindingRecord(companyCSIId);
+        if (CollectionUtil.isEmpty(accountList)) {
+            return ResultUtil.data(CollectionUtil.newArrayList());
+        }
+        return ResultUtil.data(accountList);
+    }
 
 }

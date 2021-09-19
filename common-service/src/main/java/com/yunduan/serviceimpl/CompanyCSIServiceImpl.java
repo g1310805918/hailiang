@@ -6,7 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yunduan.entity.Account;
+import com.yunduan.entity.BindingAccountCSI;
 import com.yunduan.entity.CompanyCSI;
+import com.yunduan.mapper.AccountMapper;
+import com.yunduan.mapper.BindingAccountCSIMapper;
 import com.yunduan.mapper.CompanyCSIMapper;
 import com.yunduan.request.back.CompanyCSIInit;
 import com.yunduan.service.CompanyCSIService;
@@ -28,6 +32,10 @@ public class CompanyCSIServiceImpl extends ServiceImpl<CompanyCSIMapper, Company
 
     @Autowired
     private CompanyCSIMapper companyCSIMapper;
+    @Autowired
+    private BindingAccountCSIMapper bindingAccountCSIMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
 
     /**
@@ -107,6 +115,41 @@ public class CompanyCSIServiceImpl extends ServiceImpl<CompanyCSIMapper, Company
             }
         }
         return resultList;
+    }
+
+
+    /**
+     * 获取公司CSI编号下绑定的用户列表
+     * @param companyId 公司id
+     * @return list
+     */
+    @Override
+    public List<Account> queryCompanyDropCSIBindingRecord(String companyId) {
+        CompanyCSI companyCSI = companyCSIMapper.selectById(companyId);
+        if (companyCSI != null) {
+            List<Long> accountId = CollectionUtil.newArrayList();
+            //CSI下的绑定记录
+            List<BindingAccountCSI> bindingAccountCSIS = bindingAccountCSIMapper.selectList(new QueryWrapper<BindingAccountCSI>().eq("csi_id", companyCSI.getId()).orderByDesc("create_time"));
+            if (CollectionUtil.isNotEmpty(bindingAccountCSIS)) {
+                for (BindingAccountCSI bindingAccountCSI : bindingAccountCSIS) {
+                    if (bindingAccountCSI == null) {
+                        continue;
+                    }
+                    accountId.add(bindingAccountCSI.getAccountId());
+                }
+            }
+            //封装结果
+            if (CollectionUtil.isNotEmpty(accountId)) {
+                List<Account> accountList = accountMapper.selectList(new QueryWrapper<Account>().in("id", accountId).orderByDesc("create_time"));
+                if (CollectionUtil.isNotEmpty(accountList)) {
+                    for (Account account : accountList) {
+                        account.setCompanyName(companyCSI.getCompanyName()).setCsiNumber(companyCSI.getCsiNumber()).setCreateDateTime(DateUtil.formatDateTime(account.getCreateTime()));
+                    }
+                }
+                return accountList;
+            }
+        }
+        return null;
     }
 
 

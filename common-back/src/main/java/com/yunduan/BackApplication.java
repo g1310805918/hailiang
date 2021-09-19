@@ -8,10 +8,12 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.scheduling.annotation.EnableAsync;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 
+@EnableAsync
 @SpringBootApplication
 @MapperScan("com.yunduan.mapper")
 public class BackApplication {

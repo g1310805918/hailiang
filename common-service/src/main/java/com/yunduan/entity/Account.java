@@ -72,6 +72,16 @@ public class Account implements Serializable {
 
     @Transient
     @TableField(exist = false)
+    @ApiModelProperty("公司名")
+    private String companyName;
+
+    @Transient
+    @TableField(exist = false)
+    @ApiModelProperty("CSI编号")
+    private String csiNumber;
+
+    @Transient
+    @TableField(exist = false)
     @ApiModelProperty("用户id，字符串形式")
     private String accountId;
 

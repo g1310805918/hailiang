@@ -1,6 +1,7 @@
 package com.yunduan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yunduan.entity.Account;
 import com.yunduan.entity.CompanyCSI;
 import com.yunduan.request.back.CompanyCSIInit;
 
@@ -40,4 +41,12 @@ public interface CompanyCSIService extends IService<CompanyCSI> {
      * @return list
      */
     List<CompanyCSI> createBatch(List<CompanyCSI> companyCSIList);
+
+
+    /**
+     * 获取公司CSI编号下绑定的用户列表
+     * @param companyId 公司id
+     * @return list
+     */
+    List<Account> queryCompanyDropCSIBindingRecord(String companyId);
 }

@@ -26,6 +26,7 @@ D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\co
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\EngineerMapper.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\serviceimpl\CommunicationRecordServiceImpl.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\back\RedisInfo.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\SysMessageService.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\MsgDetailVo.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\KnowledgeDocumentNoPassMapper.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\PermissionMapper.java
@@ -106,6 +107,7 @@ D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\co
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\utils\DistributionUtil.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\Permission.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\InitDocumentListVo.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\serviceimpl\SysMessageServiceImpl.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\AddRelatedLinksReq.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\KnowledgeDetailVo.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\CollectionAccountDocumentMapper.java
@@ -122,9 +124,11 @@ D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\co
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\TheTextMapper.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\ChangeCommunicationRecordContentReq.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\WorkOrderDetailBaseInfoVo.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\SysMessageMapper.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\BugManagerMapper.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\EngineerMsgService.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\account\SendEmailVerCodeReq.java
+D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\SysMessage.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\back\VoUtil.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\serviceimpl\KnowledgeDocumentServiceImpl.java
 D:\JavacodeProject\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\KnowledgeDocumentService.java
