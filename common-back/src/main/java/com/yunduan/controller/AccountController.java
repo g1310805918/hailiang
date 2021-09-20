@@ -1,9 +1,13 @@
 package com.yunduan.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yunduan.common.utils.Result;
 import com.yunduan.common.utils.ResultUtil;
+import com.yunduan.entity.Account;
 import com.yunduan.entity.WorkOrder;
 import com.yunduan.service.AccountService;
 import com.yunduan.service.BindingAccountCSIService;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,25 +47,40 @@ public class AccountController {
     }
 
 
-    @RequestMapping(value = "/binding-csi-list/{accountId}",method = RequestMethod.GET)
-    @ApiOperation(httpMethod = "GET",value = "获取用户绑定的CSI记录")
-    public Result<List<CustomerServiceNoVo>> bindingCSIList(@PathVariable String accountId) {
-        if (StrUtil.hasEmpty(accountId)) {
-            return ResultUtil.error("非法请求");
-        }
-        List<CustomerServiceNoVo> voList = bindingAccountCSIService.queryCustomerServiceList(accountId);
-        return ResultUtil.data(voList);
+    @RequestMapping(value = "/info/{accountId}", method = RequestMethod.GET)
+    @ApiOperation(httpMethod = "GET", value = "获取已经注册的用户列表")
+    public Result<List<Account>> info(@PathVariable String accountId) {
+        Account account = accountService.getById(accountId);
+        account.setCreateDateTime(DateUtil.formatDateTime(account.getCreateTime()));
+        ArrayList<Account> list = CollectionUtil.newArrayList();
+        list.add(account);
+        return ResultUtil.data(list);
     }
 
 
-    @RequestMapping(value = "/history-work-order-list/{accountId}",method = RequestMethod.GET)
-    @ApiOperation(httpMethod = "GET",value = "获取用户历史工单记录")
-    public Result<List<WorkOrder>> historyWorkOrderList(@PathVariable String accountId) {
+    @RequestMapping(value = "/binding-csi-list/{accountId}/{pageNo}/{pageSize}",method = RequestMethod.GET)
+    @ApiOperation(httpMethod = "GET",value = "获取用户绑定的CSI记录")
+    public Result<Map<String, Object>> bindingCSIList(@PathVariable("accountId") String accountId,
+                                                            @PathVariable("pageNo") String pageNo,
+                                                            @PathVariable("pageSize") String pageSize) {
         if (StrUtil.hasEmpty(accountId)) {
             return ResultUtil.error("非法请求");
         }
-        List<WorkOrder> workOrderList = workOrderService.getAccountHistoryWorkOrderList(accountId);
-        return ResultUtil.data(workOrderList);
+        Map<String, Object> map = bindingAccountCSIService.initUserAccountCSIRecord(accountId, Convert.toInt(pageNo), Convert.toInt(pageSize));
+        return ResultUtil.data(map);
+    }
+
+
+    @RequestMapping(value = "/history-work-order-list/{accountId}/{pageNo}/{pageSize}",method = RequestMethod.GET)
+    @ApiOperation(httpMethod = "GET",value = "获取用户历史工单记录")
+    public Result<Map<String, Object>> historyWorkOrderList(@PathVariable("accountId") String accountId,
+                                                        @PathVariable("pageNo") String pageNo,
+                                                        @PathVariable("pageSize") String pageSize) {
+        if (StrUtil.hasEmpty(accountId)) {
+            return ResultUtil.error("非法请求");
+        }
+        Map<String, Object> map = workOrderService.getAccountHistoryWorkOrderList(accountId, Convert.toInt(pageNo), Convert.toInt(pageSize));
+        return ResultUtil.data(map);
     }
 
 

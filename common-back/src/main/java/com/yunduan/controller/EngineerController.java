@@ -42,7 +42,7 @@ public class EngineerController {
 
 
     @PostMapping("/init-list")
-    @ApiOperation(httpMethod = "POST",value = "工程师管理页面初始化")
+    @ApiOperation(httpMethod = "POST", value = "工程师管理页面初始化")
     public Result<Map<String, Object>> initList(EngineerInit engineerInit) {
         Map<String, Object> map = engineerService.engineerListInit(engineerInit);
         return ResultUtil.data(map);
@@ -50,7 +50,7 @@ public class EngineerController {
 
 
     @PostMapping("/disable-engineer/{engineerId}/{accountStatus}")
-    @ApiOperation(httpMethod = "POST",value = "禁用工程师账号")
+    @ApiOperation(httpMethod = "POST", value = "禁用工程师账号")
     public Result<String> disableEngineer(@PathVariable("engineerId") String engineerId, @PathVariable("accountStatus") String accountStatus) {
         if (StrUtil.hasEmpty(engineerId) || StrUtil.hasEmpty(accountStatus)) {
             log.error("禁用工程师账号【engineerId、accountStatus】为空");
@@ -67,7 +67,7 @@ public class EngineerController {
 
 
     @PostMapping("/remove-engineer/{engineerId}")
-    @ApiOperation(httpMethod = "POST",value = "删除工程师")
+    @ApiOperation(httpMethod = "POST", value = "删除工程师")
     public Result<String> removeEngineer(@PathVariable String engineerId) {
         if (StrUtil.hasEmpty(engineerId)) {
             log.error("删除工程师【engineerId】为空");
@@ -80,7 +80,7 @@ public class EngineerController {
 
 
     @GetMapping("/get-all-three-category-list")
-    @ApiOperation(httpMethod = "GET",value = "获取所有技术模块集合")
+    @ApiOperation(httpMethod = "GET", value = "获取所有技术模块集合")
     public Result<List<KnowledgeDocumentThreeCategory>> getAllThreeCategoryList() {
         //三级技术模块集合
         List<KnowledgeDocumentThreeCategory> threeCategories = threeCategoryService.list(new QueryWrapper<KnowledgeDocumentThreeCategory>().orderByDesc("create_time"));
@@ -89,7 +89,7 @@ public class EngineerController {
 
 
     @PostMapping("/create-engineer")
-    @ApiOperation(httpMethod = "POST",value = "添加工程师")
+    @ApiOperation(httpMethod = "POST", value = "添加工程师")
     public Result<String> createEngineer(Engineer engineer) {
         if (engineer == null) {
             return ResultUtil.error("非法请求");
@@ -100,7 +100,7 @@ public class EngineerController {
 
 
     @PostMapping("/edit-engineer-base-info")
-    @ApiOperation(httpMethod = "POST",value = "修改工程师基本信息")
+    @ApiOperation(httpMethod = "POST", value = "修改工程师基本信息")
     public Result<String> editEngineerBaseInfo(Engineer engineer) {
         if (engineer == null) {
             return ResultUtil.error("非法请求");
@@ -111,7 +111,7 @@ public class EngineerController {
 
 
     @GetMapping("/get-engineer-category/{engineerId}")
-    @ApiOperation(httpMethod = "GET",value = "获取工程师技术模块列表")
+    @ApiOperation(httpMethod = "GET", value = "获取工程师技术模块列表")
     public Result<List<EngineerCategoryListVo>> getEngineerCategory(@PathVariable String engineerId) {
         if (StrUtil.hasEmpty(engineerId)) {
             log.error("获取工程师技术模块列表【engineerId】为空");
@@ -123,8 +123,8 @@ public class EngineerController {
 
 
     @PostMapping("/remove-engineer-category")
-    @ApiOperation(httpMethod = "POST",value = "批量删除工程师技术模块")
-    public Result<String> removeEngineerCategory(String engineerId,String batchId) {
+    @ApiOperation(httpMethod = "POST", value = "批量删除工程师技术模块")
+    public Result<String> removeEngineerCategory(String engineerId, String batchId) {
         if (StrUtil.hasEmpty(engineerId) || StrUtil.hasEmpty(batchId)) {
             log.error("批量删除工程师技术模块【engineerId、batchIds】为空");
             return ResultUtil.error("非法请求");
@@ -138,7 +138,7 @@ public class EngineerController {
 
 
     @GetMapping("/get-engineer-have-not-category")
-    @ApiOperation(httpMethod = "GET",value = "获取工程师没有的技术模块列表")
+    @ApiOperation(httpMethod = "GET", value = "获取工程师没有的技术模块列表")
     public Result<List<KnowledgeDocumentThreeCategory>> getEngineerHaveNotCategory(String engineerId) {
         List<KnowledgeDocumentThreeCategory> list = engineerService.getEngineerHaveNotCategoryList(engineerId);
         return ResultUtil.data(list);
@@ -146,8 +146,8 @@ public class EngineerController {
 
 
     @PostMapping("/submit-add-engineer-category")
-    @ApiOperation(httpMethod = "POST",value = "确定添加工程师技术模块")
-    public Result<String> submitAddEngineerCategory(String engineerId,String[] productCategoryId) {
+    @ApiOperation(httpMethod = "POST", value = "确定添加工程师技术模块")
+    public Result<String> submitAddEngineerCategory(String engineerId, String[] productCategoryId) {
         if (StrUtil.hasEmpty(engineerId) || productCategoryId == null || productCategoryId.length == 0) {
             log.error("确定添加工程师技术模块【engineerId、productCategoryId】为空");
             return ResultUtil.error("非法请求");
@@ -157,11 +157,22 @@ public class EngineerController {
     }
 
 
-    @RequestMapping(value = "/get-engineer-type-work-order",method = RequestMethod.POST)
-    @ApiOperation(httpMethod = "POST",value = "获取工程师类型工单")
-    public Result<List<WorkOrder>> getEngineerTypeWorkOrder(String engineerId,String tagName) {
-        List<WorkOrder> workOrder = workOrderService.getEngineerTypeWorkOrder(engineerId, tagName);
-        return ResultUtil.data(workOrder);
+    @RequestMapping(value = "/get-engineer-type-work-order/{pageNo}/{pageSize}", method = RequestMethod.POST)
+    @ApiOperation(httpMethod = "POST", value = "获取工程师类型工单")
+    public Result<Map<String, Object>> getEngineerTypeWorkOrder(@PathVariable("pageNo") String pageNo,
+                                                            @PathVariable("pageSize") String pageSize,
+                                                            String engineerId,
+                                                            String tagName) {
+        Map<String, Object> map = workOrderService.getEngineerTypeWorkOrder(engineerId, tagName, Convert.toInt(pageNo), Convert.toInt(pageSize));
+        return ResultUtil.data(map);
+    }
+
+
+    @RequestMapping(value = "/get-base-info/{engineerId}", method = RequestMethod.POST)
+    @ApiOperation(httpMethod = "POST", value = "获取工程师基本信息")
+    public Result<List<Engineer>> getBaseInfo(@PathVariable String engineerId) {
+        List<Engineer> list = engineerService.list(new QueryWrapper<Engineer>().eq("id", engineerId));
+        return ResultUtil.data(list);
     }
 
 

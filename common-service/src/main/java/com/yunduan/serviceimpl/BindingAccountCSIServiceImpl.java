@@ -1,8 +1,10 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.Account;
 import com.yunduan.entity.AccountMsg;
@@ -238,9 +240,14 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
                 CSIIdSet.add(bindingAccountCSI.getCsiId());
             }
         }
+        //条件构造器
+        QueryWrapper<CompanyCSI> queryWrapper = new QueryWrapper<CompanyCSI>()
+                .in("id", CSIIdSet)
+                .orderByDesc("create_time");
+
         if (CSIIdSet.size() > 0 && CSIIdSet != null) {
             //用户绑定的CSI公司信息
-            List<CompanyCSI> companyCSIList = companyCSIMapper.selectList(new QueryWrapper<CompanyCSI>().in("id", CSIIdSet));
+            List<CompanyCSI> companyCSIList = companyCSIMapper.selectList(queryWrapper);
             if (companyCSIList.size() > 0 && companyCSIList != null) {
                 CustomerServiceNoVo vo = null;
                 for (CompanyCSI companyCSI : companyCSIList) {
@@ -250,6 +257,47 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
             }
         }
         return voList;
+    }
+
+
+    /**
+     * 用户绑定页面初始化
+     * @param accountId 用户id
+     * @param pageNo 页号
+     * @param pageSize 页面大小
+     * @return map
+     */
+    @Override
+    public Map<String, Object> initUserAccountCSIRecord(String accountId, Integer pageNo, Integer pageSize) {
+        Map<String,Object> map = new HashMap<>();
+
+        Set<Long> CSIIdSet = new TreeSet<>();
+        //绑定列表
+        List<BindingAccountCSI> bindingList = bindingAccountCSIMapper.selectList(new QueryWrapper<BindingAccountCSI>().eq("account_id", accountId));
+        if (bindingList.size() > 0 && bindingList != null) {
+            for (BindingAccountCSI bindingAccountCSI : bindingList) {
+                //得到绑定的CSI列表id
+                CSIIdSet.add(bindingAccountCSI.getCsiId());
+            }
+        }
+        //条件构造器
+        QueryWrapper<CompanyCSI> queryWrapper = new QueryWrapper<CompanyCSI>().in(CSIIdSet != null && CSIIdSet.size() > 0,"id", CSIIdSet).orderByDesc("create_time");
+        //结果集合
+        List<CustomerServiceNoVo> voList = new ArrayList<>();
+        if (CSIIdSet.size() > 0 && CSIIdSet != null) {
+            //绑定记录
+            List<CompanyCSI> companyCSIS = companyCSIMapper.selectPage(new Page<>(pageNo, pageSize), queryWrapper).getRecords();
+            if (CollectionUtil.isNotEmpty(companyCSIS)) {
+                CustomerServiceNoVo vo = null;
+                for (CompanyCSI companyCSI : companyCSIS) {
+                    vo = new CustomerServiceNoVo().setCsiNumber(companyCSI.getCsiNumber()).setCompanyName(companyCSI.getCompanyName());
+                    voList.add(vo);
+                }
+            }
+        }
+        map.put("voList",voList);
+        map.put("total",companyCSIMapper.selectCount(queryWrapper));
+        return map;
     }
 
 }

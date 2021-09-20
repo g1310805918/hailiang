@@ -174,15 +174,19 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * 获取工程师类型工单列表
      * @param engineerId 工程师id
      * @param tagName 标签名
-     * @return list
+     * @param pageNo 页号
+     * @param pageSize 页面大小
+     * @return map
      */
-    List<WorkOrder> getEngineerTypeWorkOrder(String engineerId,String tagName);
+    Map<String,Object> getEngineerTypeWorkOrder(String engineerId,String tagName,Integer pageNo,Integer pageSize);
 
 
     /**
      * 获取用户历史提交的工单记录
      * @param accountId 用户id
-     * @return list
+     * @param pageNo 页号
+     * @param pageSize 页面大小
+     * @return map
      */
-    List<WorkOrder> getAccountHistoryWorkOrderList(String accountId);
+    Map<String,Object> getAccountHistoryWorkOrderList(String accountId,Integer pageNo,Integer pageSize);
 }
