@@ -157,20 +157,6 @@ public interface WorkOrderService extends IService<WorkOrder> {
 
 
     /**
-     * 统计顶部infoCard数据
-     * @return map
-     */
-    Map<String,Integer> statisticalInitInfoCardCount();
-
-
-    /**
-     * 获取统计表数据
-     * @return map
-     */
-    Map<String,Object> queryInitTableInfo();
-
-
-    /**
      * 获取工程师类型工单列表
      * @param engineerId 工程师id
      * @param tagName 标签名
@@ -189,4 +175,11 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return map
      */
     Map<String,Object> getAccountHistoryWorkOrderList(String accountId,Integer pageNo,Integer pageSize);
+
+
+    /**
+     * 获取工单概况统计信息
+     * @return map
+     */
+    Map<String,Integer> getWorkOrderSurvey();
 }

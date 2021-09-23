@@ -1,5 +1,6 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -378,6 +379,49 @@ public class EngineerServiceImpl extends ServiceImpl<EngineerMapper, Engineer> i
             return engineerMapper.updateById(engineer);
         }
         return 0;
+    }
+
+
+    /**
+     * 获取工程师概况统计数据
+     * @return List
+     */
+    @Override
+    public List<Integer> engineerBaseCountInfo() {
+        //总工程师数
+        Integer count = engineerMapper.selectCount(new QueryWrapper<Engineer>());
+        ArrayList<Integer> list = CollectionUtil.newArrayList();
+        list.add(1);
+        list.add(2);
+        //普通工程师总计
+        Integer normalEngineerCount = engineerMapper.selectCount(new QueryWrapper<Engineer>().in("identity", list));
+        //COE工程师数
+        Integer COEEngineerCount = engineerMapper.selectCount(new QueryWrapper<Engineer>().eq("identity", 3));
+        //BDE工程师数
+        Integer BDEEngineerCount = engineerMapper.selectCount(new QueryWrapper<Engineer>().eq("identity", 4));
+        //manager工程师数
+        Integer ManagerEngineerCount = engineerMapper.selectCount(new QueryWrapper<Engineer>().eq("identity", 5));
+        list = CollectionUtil.newArrayList();
+        list.add(count);
+        list.add(normalEngineerCount);
+        list.add(COEEngineerCount);
+        list.add(BDEEngineerCount);
+        list.add(ManagerEngineerCount);
+        return list;
+    }
+
+
+
+    /**
+     * 获取工程师排名
+     * @return List
+     */
+    @Override
+    public List<Engineer> engineerRankList() {
+        //条件构造器
+        QueryWrapper<Engineer> queryWrapper = new QueryWrapper<Engineer>().orderByDesc("order_number");
+        List<Engineer> engineerList = engineerMapper.selectPage(new Page<>(1, 4), queryWrapper).getRecords();
+        return engineerList;
     }
 
 

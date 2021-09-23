@@ -87,4 +87,18 @@ public interface AccountService extends IService<Account> {
      * @return map
      */
     Map<String,Object> queryAllRegisteredAccountList(String username, String mobile, String email, Integer pageNo, Integer pageSize);
+
+
+    /**
+     * 获取用户概况基本信息
+     * @return map
+     */
+    Map<String,Integer> getAccountSurveyBaseInfo();
+
+
+    /**
+     * 获取用户概况柱状图
+     * @return map
+     */
+    Map<String,Object> getAccountSurveyBarInfo();
 }

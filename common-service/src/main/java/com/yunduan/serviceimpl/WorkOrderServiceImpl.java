@@ -692,99 +692,6 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
 
 
     /**
-     * 统计顶部infoCard数据
-     * @return map
-     */
-    @Override
-    public Map<String, Integer> statisticalInitInfoCardCount() {
-        Map<String,Integer> map = new HashMap<>();
-        //历史工单数
-        Integer total = workOrderMapper.selectCount(new QueryWrapper<>());
-        map.put("total",total);
-        //客户放弃数
-        Integer giveUpCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS).eq("engineer_close_reason", StatusCodeUtil.ACCOUNT_GIVE_UP_WORK_ORDER));
-        map.put("giveUp",giveUpCount);
-        //问题解决数
-        map.put("solve",total - giveUpCount);
-        return map;
-    }
-
-
-    /**
-     * 获取统计表数据
-     * @return map
-     */
-    @Override
-    public Map<String,Object> queryInitTableInfo() {
-        HashMap<String, Object> map = CollectionUtil.newHashMap();
-        List<String> dayArr = getDayArr();
-        //X轴日期信息
-        map.put("dayInfo",dayArr);
-        //获取当天数据量
-        //当天提交工单数量集合
-        ArrayList<Integer> arrayList = CollectionUtil.newArrayList();
-        ArrayList<Integer> daySolveCount = CollectionUtil.newArrayList();
-        for (String s : dayArr) {
-            Integer count = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().like("create_time", s));
-            arrayList.add(count);
-            //某天解决数量
-            Integer integer = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS).like("last_update_time", s));
-            daySolveCount.add(integer);
-        }
-        map.put("dayCreateCount",arrayList);
-        //获取当天已解决数量
-        map.put("daySolveCount",daySolveCount);
-        return map;
-    }
-
-
-    /**
-     * 获取日期数组
-     * @return list
-     */
-    public List<String> getDayArr() {
-        ArrayList<String> list = CollectionUtil.newArrayList();
-        //第十二天（今天）  yyyy-MM-dd
-        String today = DateUtil.today();
-        //第十一天（昨天）
-        String eleventhDay = getDateTime(today,1);
-        //第十天
-        String tenDay = getDateTime(today,2);
-        //第九天
-        String nineDay = getDateTime(today,3);
-        //第八天
-        String eightDay =  getDateTime(today,4);
-        //第七天
-        String sevenDay = getDateTime(today,5);
-        //第六天
-        String sixDay = getDateTime(today,6);
-        //第五天
-        String fiveDay = getDateTime(today,7);
-        //第四天
-        String fourDay = getDateTime(today,8);
-        //第三天
-        String threeDay = getDateTime(today,9);
-        //第二天
-        String twoDay = getDateTime(today,10);
-        //第一天
-        String oneDay = getDateTime(today,11);
-        list.add(oneDay);list.add(twoDay);list.add(threeDay);list.add(fourDay);list.add(fiveDay);list.add(sixDay);list.add(sevenDay);list.add(eightDay);list.add(nineDay);list.add(tenDay);list.add(eleventhDay);list.add(today);
-        return list;
-    }
-
-    /**
-     * 获取之前时间年月日
-     * @param currentDay 当前天
-     * @param offset 向前偏移几天
-     * @return string
-     */
-    public String getDateTime(String currentDay, int offset) {
-        DateTime dateTime = DateUtil.offsetDay(DateUtil.parse(currentDay), -offset);
-        return dateTime.toString().substring(0,10);
-    }
-
-
-    /**
      * 获取工程师类型工单列表
      * @param engineerId 工程师id
      * @param tagName 标签名
@@ -829,5 +736,25 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         return map;
     }
 
+
+    /**
+     * 获取工单概况统计信息
+     * @return map
+     */
+    @Override
+    public Map<String, Integer> getWorkOrderSurvey() {
+        Map<String,Integer> map = CollectionUtil.newHashMap();
+        //今日新增工单、处理中的工单、已处理工单、待处理的工单
+        map.put("todayAddCount",workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().like("create_time",DateUtil.today())));
+        //处理中的工单
+        map.put("inApplyCount",workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status",StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)));
+        //已处理工单
+        map.put("hasDoCount",workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status",StatusCodeUtil.WORK_ORDER_CLOSE_STATUS)));
+        //昨天新增工单
+        map.put("yesterdayAddCount",workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().like("create_time",DateUtil.yesterday().toString().substring(0,10))));
+        //待处理工单
+        map.put("noApplyCount",workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status",StatusCodeUtil.WORK_ORDER_PROCESS_STATUS)));
+        return map;
+    }
 
 }

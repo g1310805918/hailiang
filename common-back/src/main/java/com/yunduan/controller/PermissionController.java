@@ -198,6 +198,8 @@ public class PermissionController {
                 }
             }
         }
+        //设置未删除标志、设置更新人、更新时间
+        permission.setDelFlag(StatusCodeUtil.NOT_DELETE_FLAG).setUpdateBy(permission.getUpdateBy()).setUpdateTime(DateUtil.now());
         Permission u = permissionService.createPermission(permission);
 
         //重新加载权限

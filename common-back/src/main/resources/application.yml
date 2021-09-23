@@ -22,9 +22,9 @@ spring:
 
   redis:
     host: 127.0.0.1
-#    password: 1qaz4321
+    password: 1qaz4321
     database: 0
-    port: 6379
+    port: 6333
 
 # 需要验证码校验的接口路径 支持通配符 自动过滤拦截校验 无需开发人员再次校验
 captcha:

@@ -129,4 +129,18 @@ public interface EngineerService extends IService<Engineer> {
      * @return int
      */
     int addEngineerHasNotCategory(String engineerId,String[] categoryIdList);
+
+
+    /**
+     * 获取工程师概况统计数据
+     * @return List
+     */
+    List<Integer> engineerBaseCountInfo();
+
+
+    /**
+     * 获取工程师排名
+     * @return List
+     */
+    List<Engineer> engineerRankList();
 }

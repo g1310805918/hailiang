@@ -1,7 +1,9 @@
 package com.yunduan.serviceimpl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -19,12 +21,16 @@ import com.yunduan.service.AccountService;
 import com.yunduan.utils.*;
 import com.yunduan.vo.AccountBindingCSI;
 import com.yunduan.vo.FavoritesVo;
+import org.aspectj.weaver.NewFieldTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Id;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -259,5 +265,179 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         map.put("total",total);
         return map;
     }
+
+
+    /**
+     * 获取用户概况基本信息
+     * @return map
+     */
+    @Override
+    public Map<String, Integer> getAccountSurveyBaseInfo() {
+        Map<String, Integer> map = CollectionUtil.newHashMap();
+        //今日新增用户数
+        Integer todayCount = accountMapper.selectCount(new QueryWrapper<Account>().like("create_time", DateUtil.today()));
+        //昨天新增用户数
+        Integer yesterdayCount = accountMapper.selectCount(new QueryWrapper<Account>().like("create_time", DateUtil.yesterday().toString().substring(0,10)));
+        //今日新增CSI用户数
+        Integer todayCSIAccount = getTodayCSIAccount(DateUtil.today());
+        //今日新增普通用户数
+        Integer todayAddNormalAccount = todayCount - todayCSIAccount;
+        //昨天新增CSI用户数
+        Integer yesterdayAddCSICount = getTodayCSIAccount(DateUtil.yesterday().toString().substring(0, 10));
+        //昨天新增普通用户数
+        Integer yesterdayAddNormalCount = yesterdayCount - yesterdayAddCSICount;
+        //本月新增用户数
+        Integer monthAccountCount = accountMapper.selectCount(new QueryWrapper<Account>().like("create_time",getThisYearMonth()));
+        //本月新增CSI用户数
+        Integer monthCSIAccountCount = getTodayCSIAccount(getThisYearMonth());
+        //本月新增普通用户数
+        Integer monthNormalAccountCount = monthAccountCount - monthCSIAccountCount;
+
+        map.put("todayCount",todayCount);
+        map.put("yesterdayCount",yesterdayCount);
+        map.put("todayCSIAccount",todayCSIAccount);
+        map.put("todayAddNormalAccount",todayAddNormalAccount);
+        map.put("yesterdayAddCSICount",yesterdayAddCSICount);
+        map.put("yesterdayAddNormalCount",yesterdayAddNormalCount);
+        map.put("monthAccountCount",monthAccountCount);
+        map.put("monthCSIAccountCount",monthCSIAccountCount);
+        map.put("monthNormalAccountCount",monthNormalAccountCount);
+        return map;
+    }
+
+
+    /**
+     * 获取当前年月
+     * @return String - 2021-09
+     */
+    protected String getThisYearMonth() {
+        StringBuilder builder = new StringBuilder();
+        int year = DateUtil.thisYear();  //当前年
+        int month = DateUtil.thisMonth() + 1;  //当前月
+        if (month < 10) {
+            builder.append(year).append("-0").append(month);
+        }else {
+            builder.append(year).append("-").append(month);
+        }
+        return builder.toString();
+    }
+
+
+    /**
+     * 今日新增CSI用户数
+     * @return Integer
+     */
+    protected Integer getTodayCSIAccount(String date) {
+        int total = bindingAccountCSIMapper.selectCount(new QueryWrapper<BindingAccountCSI>().eq("status",2).like("create_time",date));
+        return total;
+    }
+
+
+    /**
+     * 获取当前月的最后一天
+     * @return String
+     */
+    protected String getLastDayOfMonth() {
+        //当前月份
+        int month = DateUtil.thisMonth();
+        Calendar calendar = Calendar.getInstance();
+        // 设置月份
+        calendar.set(Calendar.MONTH, month);
+        // 获取某月最大天数
+        int lastDay=0;
+        //2月的平年瑞年天数
+        if(month==2) {
+            lastDay = calendar.getLeastMaximum(Calendar.DAY_OF_MONTH);
+        }else {
+            lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        }
+        // 设置日历中月份的最大天数
+        calendar.set(Calendar.DAY_OF_MONTH, lastDay);
+        // 格式化日期
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(calendar.getTime());
+    }
+
+
+    /**
+     * 获取当前月的每天
+     * @param length 当前月的最后一天
+     * @return Map
+     */
+    protected Map<String,ArrayList<String>> getMonthArr(int length) {
+        Map<String,ArrayList<String>> result = CollectionUtil.newHashMap();
+        ArrayList<String> arrayList = CollectionUtil.newArrayList();
+        ArrayList<String> dateList = CollectionUtil.newArrayList();
+        String thisYear = DateUtil.thisYear() + "";
+        String thisMonth = "";
+        int month = DateUtil.thisMonth() + 1;
+        if (month <= 9) {
+            thisMonth += "0" + month;
+        }else {
+            thisMonth += month;
+        }
+        for (int i = 1; i <= length; i++) {
+            //某天
+            String day = i < 10 ? "0" + i : "" + i;
+            //yyyy-MM-dd
+            String dateDay = thisYear + "-" + thisMonth + "-" + day;
+            //添加某天
+            arrayList.add(day);
+            //添加年月日
+            dateList.add(dateDay);
+        }
+        result.put("dayList",arrayList);
+        result.put("dateList",dateList);
+        return result;
+    }
+
+
+    /**
+     * 获取每天新增用户数据统计
+     * @param dayOfMonth 当前月的每一天
+     * @return Map
+     */
+    private Map<String,List<Integer>> getDayOfMonthAccountAddCount(List<String> dayOfMonth) {
+        Map<String,List<Integer>> result = CollectionUtil.newHashMap();
+        //封装结果
+        List<Integer> CSICountList = CollectionUtil.newArrayList();
+        List<Integer> NormalCountList = CollectionUtil.newArrayList();
+        dayOfMonth.forEach(item -> {
+            //今日新增所有用户
+            Integer todayAddCount = accountMapper.selectCount(new QueryWrapper<Account>().like("create_time", item));
+            //今日新增CSI用户数
+            Integer todayAddCSICount = bindingAccountCSIMapper.selectCount(new QueryWrapper<BindingAccountCSI>().eq("status", 2).like("create_time", item));
+            //今日新增普通用户数
+            Integer todayAddNormalCount = todayAddCount - todayAddCSICount;
+            CSICountList.add(todayAddCSICount);
+            NormalCountList.add(todayAddNormalCount);
+        });
+        result.put("CSICountList",CSICountList);
+        result.put("NormalCountList",NormalCountList);
+        return result;
+    }
+
+
+    /**
+     * 获取用户概况柱状图
+     * @return map
+     */
+    @Override
+    public Map<String, Object> getAccountSurveyBarInfo() {
+        HashMap<String, Object> hashMap = CollectionUtil.newHashMap();
+        //当前月的最后一天
+        int lastDayOfMonth = Convert.toInt(getLastDayOfMonth().substring(8,10));
+        //当前月的每一天
+        Map<String, ArrayList<String>> resultMap = getMonthArr(lastDayOfMonth);
+        List<String> monthArr = resultMap.get("dayList");
+        //当前月的每一天 2021-09-01  ~~  2021-09-30
+        Map<String, List<Integer>> dateList = getDayOfMonthAccountAddCount(resultMap.get("dateList"));
+        //返回结果
+        hashMap.put("monthArr",monthArr);
+        hashMap.put("CSICountList",dateList.get("CSICountList"));
+        hashMap.put("NormalCountList",dateList.get("NormalCountList"));
+        return hashMap;
+    }
+
 
 }

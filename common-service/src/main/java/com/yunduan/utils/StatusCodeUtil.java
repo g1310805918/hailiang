@@ -102,6 +102,9 @@ public class StatusCodeUtil {
     public static final String VDM_ANALYSE_RESEARCH = "VDM分析研究";
 
 
+    //首页用户概况柱状图数据统计
+    public static final String ACCOUNT_BAR_DATA = "account:bar:info";
+
     //工程师账号 正常状态
     public static final Integer ENGINEER_ACCOUNT_NORMAL_STATUS = 1;
 
