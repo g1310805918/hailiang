@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author Victor
+ * @author Guo
  */
 @Slf4j
 public class SecurityUserDetails extends AdminAccount implements UserDetails {
@@ -58,7 +58,6 @@ public class SecurityUserDetails extends AdminAccount implements UserDetails {
         // 添加角色
         List<Role> roles = this.getRoles();
         if (roles != null && roles.size() > 0) {
-            // lambda表达式
             roles.forEach(item -> {
                 if (StrUtil.isNotBlank(item.getName())) {
                     authorityList.add(new SimpleGrantedAuthority(item.getName()));

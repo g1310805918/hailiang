@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author Victor
+ * @author Guo
  */
 @Data
 public class EmailValidate implements Serializable {

@@ -6,7 +6,10 @@ import cn.hutool.core.date.Month;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yunduan.entity.*;
+import com.yunduan.entity.Account;
+import com.yunduan.entity.CompanyCSI;
+import com.yunduan.entity.Engineer;
+import com.yunduan.entity.Setting;
 import com.yunduan.service.*;
 import com.yunduan.utils.*;
 import org.junit.jupiter.api.Test;
@@ -17,7 +20,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 @SpringBootTest
@@ -59,7 +61,6 @@ class WebApplicationTests {
         List<CompanyCSI> list = companyCSIService.list(new QueryWrapper<CompanyCSI>().orderByDesc("create_time"));
         System.out.println("list ====== \n" + JSONObject.toJSONString(list));
     }
-
 
 
     //测试rabbitMQ 发送消息

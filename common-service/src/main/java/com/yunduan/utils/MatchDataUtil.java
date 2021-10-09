@@ -20,10 +20,4 @@ public class MatchDataUtil {
         return -1;
     }
 
-    public static void main(String[] args) {
-        int i = matchDataType("1310805918@qq.com");
-        System.out.println("i = " + i);
-    }
-
-
 }

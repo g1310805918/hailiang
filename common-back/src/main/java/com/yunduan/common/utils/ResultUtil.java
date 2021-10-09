@@ -2,9 +2,6 @@ package com.yunduan.common.utils;
 
 
 
-/**
- * @author Victor
- */
 public class ResultUtil<T> {
 
     private Result<T> result;

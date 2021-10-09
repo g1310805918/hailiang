@@ -37,7 +37,7 @@ public class ResultUtil<T> implements Serializable {
     /**
      * 返回加密后成功数据
      */
-    public ResultUtil AesJSONSuccess(String message,T data){
+    public ResultUtil<T> AesJSONSuccess(String message,T data){
         return new ResultUtil(StatusCodeUtil.SUCCESS_CODE,message, AESUtil.encrypt(JSONObject.toJSONString(data)));
     }
 
@@ -53,7 +53,7 @@ public class ResultUtil<T> implements Serializable {
     /**
      * 返回成功
      */
-    public ResultUtil success(T data){
+    public ResultUtil<T> success(T data){
         return new ResultUtil(StatusCodeUtil.SUCCESS_CODE,"SUCCESS",JSONObject.toJSONString(data));
     }
 

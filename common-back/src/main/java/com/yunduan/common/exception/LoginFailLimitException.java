@@ -4,7 +4,7 @@ package com.yunduan.common.exception;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 
 /**
- * @author Victor
+ * 登录失败限流
  */
 public class LoginFailLimitException extends InternalAuthenticationServiceException {
 

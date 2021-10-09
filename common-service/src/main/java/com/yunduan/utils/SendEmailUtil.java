@@ -17,11 +17,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Properties;
 
 @Component
 public class SendEmailUtil {
-
     public static final transient Logger log = LoggerFactory.getLogger(SendEmailUtil.class);
 
     @Autowired
@@ -41,6 +41,7 @@ public class SendEmailUtil {
     private String PROTOCOL = "";
 
 
+
     /**
      * 发送验证邮件
      * @param email 需要发送的邮件
@@ -48,7 +49,7 @@ public class SendEmailUtil {
      * @throws Exception
      */
     public String sendAuthEmail(String email) throws Exception {
-        //初始化邮件对象【account、password】
+        //初始化邮件对象【account、password、host、port、protocol】
         initEmailAccountInfo();
         if (StrUtil.hasEmpty(account) || StrUtil.hasEmpty(password)) {
             log.error("邮件对象不存在、账号密码为空！");
@@ -85,7 +86,7 @@ public class SendEmailUtil {
         //可以包装文本，图片，附件
         MimeBodyPart bodyPart = new MimeBodyPart();
         //设置内容
-        bodyPart.setContent(content,"text/html; charset=UTF-8");
+        bodyPart.setContent(content,"text/html;charset=UTF-8");
         mimeMultipart.addBodyPart(bodyPart);
         //添加图片&附件
 //            bodyPart = new MimeBodyPart();
@@ -123,7 +124,7 @@ public class SendEmailUtil {
             }
         });
         //设置发送邮件时  debug 调试模式，查看日志信息
-        session.setDebug(true);
+        session.setDebug(false);
         return session;
     }
 
@@ -135,15 +136,13 @@ public class SendEmailUtil {
     public void initEmailAccountInfo() {
         //获取发送对象
         Setting setting = settingService.getById(SEND_EMAIL_ID);
-        if (setting != null) {
-            account = setting.getEmailAddress();
-            password = AESUtil.decrypt(setting.getEmailPassword());
-            PORT = setting.getServicePort();
-            HOST = setting.getServiceHost();
-            PROTOCOL = setting.getServiceAgreement();
-        }else {
-            log.error("初始化邮件对象失败");
-        }
+        Optional.ofNullable(setting).ifPresent(item -> {
+            account = item.getEmailAddress();
+            password = AESUtil.decrypt(item.getEmailPassword());
+            PORT = item.getServicePort();
+            HOST = item.getServiceHost();
+            PROTOCOL = item.getServiceAgreement();
+        });
     }
 
 

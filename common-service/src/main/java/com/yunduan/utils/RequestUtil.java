@@ -22,7 +22,6 @@ public class RequestUtil {
                 sb.append(str);
             }
             br.close();
-//            System.out.println("sb = " + sb);
         }
         catch (IOException e) {
             e.printStackTrace();

@@ -2,11 +2,8 @@ package com.yunduan.utils;
 
 
 /**
- * @author ：qinchengnian
- * @date ：Created in 2020/7/27 11:46
- * @description：上下文
- * @modified By：
- * @version: $
+ * Created in 2020/7/27 11:46
+ * 上下文
  */
 public class ContextUtil {
 

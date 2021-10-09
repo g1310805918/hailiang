@@ -1,5 +1,6 @@
 package com.yunduan.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunduan.entity.Engineer;
@@ -21,7 +22,6 @@ import java.util.List;
  * 工单分配工具类
  */
 @Component
-@Transactional
 public class DistributionUtil {
 
     private static final transient Logger log = LoggerFactory.getLogger(DistributionUtil.class);
@@ -40,10 +40,11 @@ public class DistributionUtil {
      * 系统自动分配工单给工程师
      * @param workOrderId 工单id
      */
+    @Transactional(rollbackFor = Exception.class)
     public void autoDistributionWorkOrderToEngineer(String workOrderId) {
         //条件构造器
         QueryWrapper<Engineer> queryWrapper = new QueryWrapper<Engineer>()
-                .ne("identity", 1)
+                .ne("identity", StatusCodeUtil.ACCOUNT_IDENTITY_FOR_NORMAL)
                 //账号状态为正常的账号
                 .eq("account_status", StatusCodeUtil.ENGINEER_ACCOUNT_NORMAL_STATUS)
                 //在线的工程师
@@ -58,25 +59,32 @@ public class DistributionUtil {
             List<Engineer> engineerList = engineerService.list(queryWrapper);
             if (engineerList.size() > 0 && engineerList != null) {
                 for (Engineer engineer : engineerList) {
+                    //工程师没有可以处理的技术模块
                     if (StrUtil.hasEmpty(engineer.getProductCategoryId())) {
                         continue;
                     }
                     //如果当前工单是非技术工单，那么随机分配给一位工程师
                     if (workOrder.getType() == 1) {
                         //直接分配给某位工程师
-                        doSomethingForWorkOrder(workOrder,engineer);
-                    }else {  //表示当前工单为技术性工单
+                        boolean flag = doSomethingForWorkOrder(workOrder, engineer);
+                        if (flag) {
+                            break;
+                        }
+                    }else {
+                        //表示当前工单为技术性工单
                         //当前工程师可以处理的工单分类集合
                         List<String> categoryIds = Arrays.asList(engineer.getProductCategoryId().split(","));
-                        if (categoryIds == null || categoryIds.isEmpty()) {
+                        if (CollectionUtil.isEmpty(categoryIds)) {
                             continue;
                         }
                         //如果当前工程师可以处理的类别中包含当前工单的类别，那么将此工单分配给当前工程师
                         if (categoryIds.contains(categoryId)) {
                             //调用方法处理后续业务
-                            doSomethingForWorkOrder(workOrder,engineer);
-                            //分配后结束当前循环
-                            break;
+                            boolean flag = doSomethingForWorkOrder(workOrder,engineer);
+                            //分配后结束循环
+                            if (flag) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -84,7 +92,7 @@ public class DistributionUtil {
                 log.info("暂无可分配工单的在线工程师。正在等待中。。。。。。。。");
             }
         }else {
-            log.error("系统自动分配工单给工程师【当前工单不存在】，workOrderId === " + workOrderId);
+            log.error("系统自动分配工单给工程师【当前工单不存在】，workOrderId = " + workOrderId);
         }
     }
 
@@ -94,7 +102,8 @@ public class DistributionUtil {
      * @param workOrder 工单
      * @param engineer 工程师
      */
-    private void doSomethingForWorkOrder(WorkOrder workOrder,Engineer engineer) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean doSomethingForWorkOrder(WorkOrder workOrder,Engineer engineer) {
         //如果工程师不为空、那么表示之前已经有工程师处理过，但是又被工程师放回系统了
         if (workOrder.getEngineerId() != null) {
             //更新工单沟通记录为新分配的工程师
@@ -103,7 +112,6 @@ public class DistributionUtil {
         //更新工程师id、更新工单状态为受理中
         workOrder.setEngineerId(engineer.getId()).setStatus(StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS);
         boolean flag = workOrderService.updateById(workOrder);
-        //分配成功后结束循环
         if (flag) {
             //更新工程师历史被分配的工单数
             engineer.setOrderNumber(engineer.getOrderNumber() + 1);
@@ -113,6 +121,7 @@ public class DistributionUtil {
             //发送工单消息给工程师
             sendMessageUtil.sendWorkOrderMessage(workOrder);
         }
+        return flag;
     }
 
 

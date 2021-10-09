@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * 图形验证码过滤器
  *
- * @author Victor
+ * @author Guo
  */
 @Slf4j
 @Configuration

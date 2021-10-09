@@ -232,8 +232,11 @@ public class AccountRegisteredController {
     @ApiOperation(httpMethod = "POST",value = "工程师登录")
     public ResultUtil<Engineer> engineerLogin(AccountReq accountReq) {
         accountReq = AESUtil.decryptToObj(accountReq.getData(),AccountReq.class);
-        //工程师账号
-        Engineer engineer = engineerService.findByEmail(accountReq.getMobileOrEmail());
+        int type = MatchDataUtil.matchDataType(accountReq.getMobileOrEmail());
+        Engineer engineer = engineerService.getOne(new QueryWrapper<Engineer>().eq(type == 1, "mobile", accountReq.getMobileOrEmail()).eq(type == 2, "email", accountReq.getMobileOrEmail()));
+        if (engineer == null) {
+            return resultUtil.AesFAILError("用户不存在");
+        }
         if (!Objects.equals(engineer.getPassword(),AESUtil.encrypt(accountReq.getPassword()))) {
             return resultUtil.AesFAILError("您输入的账号或密码错误");
         }

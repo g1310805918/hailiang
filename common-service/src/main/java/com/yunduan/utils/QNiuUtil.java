@@ -144,44 +144,4 @@ public class QNiuUtil {
         return finalUrl;
     }
 
-
-
-    /**
-     * 私有空间返回文件URL
-     */
-    public static String privateFile(Auth auth,String fileName,String domainOfBucket,long expireInSeconds) {
-        String encodedFileName=null;
-        try {
-            encodedFileName = URLEncoder.encode(fileName, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String publicUrl = String.format("%s/%s", domainOfBucket, encodedFileName);
-        String finalUrl = auth.privateDownloadUrl(publicUrl, expireInSeconds);
-        System.out.println(finalUrl);
-        return finalUrl;
-    }
-
-
-
-    /**
-     * 获取文件下载地址
-     */
-    public static String getDownLoadUrl(String targetPath){
-        return Auth.create(accessKey,secretKey).privateDownloadUrl(targetPath);
-    }
-
-
-
-    //删除文件
-    public static int deleteFileFromQNiu(String fileName) throws QiniuException {
-        //构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(Zone.zone1());
-        String key = fileName;
-        Auth auth = Auth.create(accessKey, secretKey);
-        BucketManager bucketManager = new BucketManager(auth, cfg);
-        Response delete = bucketManager.delete(bucket, key);
-        return delete.statusCode;
-    }
-
 }

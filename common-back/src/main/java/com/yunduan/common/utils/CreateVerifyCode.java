@@ -12,8 +12,7 @@ import java.util.Random;
 
 /**
  * 随机字符验证码生成工具类
- *
- * @author Victor
+ * @author Guo
  */
 public class CreateVerifyCode {
 

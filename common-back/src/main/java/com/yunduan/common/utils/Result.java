@@ -1,15 +1,11 @@
 package com.yunduan.common.utils;
 
 
-//import com.fasterxml.jackson.annotation.JsonInclude;
-//import com.fasterxml.jackson.annotation.JsonProperty;
-//import com.fasterxml.jackson.annotation.JsonRawValue;
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * @author Victor
  * 前后端交互数据标准
  */
 @Data
@@ -45,9 +41,6 @@ public class Result<T> implements Serializable {
     /**
      * 加密串
      */
-//    @JsonRawValue
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(value = "data")
     private String data;
 
     /**

@@ -30,7 +30,6 @@ public class SendVerificationCodeUtil {
 
 
 
-
     /**
      * 发送短信验证码
      * @param mobile 手机号

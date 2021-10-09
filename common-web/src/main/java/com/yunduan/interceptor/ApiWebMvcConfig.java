@@ -1,5 +1,6 @@
 package com.yunduan.interceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,7 +16,7 @@ import javax.annotation.Resource;
 @Configuration
 public class ApiWebMvcConfig implements WebMvcConfigurer {
 
-    @Resource
+    @Autowired
     private TokenInterceptor tokenInterceptor;
 
 
@@ -25,9 +26,7 @@ public class ApiWebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/","classpath:/resources/","classpath:/static/");
     }
 
-    /**
-     * 使拦截器生效
-     */
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)

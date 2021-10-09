@@ -35,6 +35,9 @@ public class StatusCodeUtil {
     //用户token前缀
     public static final String ACCOUNT_TOKEN = "account:token:";
 
+    //默认Token
+    public static final String DEFAULT_TOKEN = "yun";
+
     //工程师Token前缀
     public static final String ENGINEER_TOKEN = "engineer:token:";
 
@@ -104,6 +107,9 @@ public class StatusCodeUtil {
 
     //首页用户概况柱状图数据统计
     public static final String ACCOUNT_BAR_DATA = "account:bar:info";
+
+    //普通海量员工身份
+    public static final Integer ACCOUNT_IDENTITY_FOR_NORMAL = 1;
 
     //工程师账号 正常状态
     public static final Integer ENGINEER_ACCOUNT_NORMAL_STATUS = 1;

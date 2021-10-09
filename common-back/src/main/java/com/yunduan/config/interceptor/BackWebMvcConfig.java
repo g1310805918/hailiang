@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @author Victor
+ * @author Guo
  */
 @Configuration
 @EnableWebMvc
@@ -28,6 +28,5 @@ public class BackWebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/");
     }
-
 
 }

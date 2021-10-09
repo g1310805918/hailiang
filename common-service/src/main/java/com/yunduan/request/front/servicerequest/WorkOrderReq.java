@@ -11,7 +11,7 @@ import java.util.List;
 @ApiModel("工单请求")
 public class WorkOrderReq extends RequestPageReq {
 
-    @ApiModelProperty("工单类型【1技术工单、2非技术工单】")
+    @ApiModelProperty("工单类型【1非技术工单、2技术工单】")
     private Integer workOrderType;
 
     @ApiModelProperty("我收藏的工单【布尔值  true、false】")
@@ -25,6 +25,9 @@ public class WorkOrderReq extends RequestPageReq {
 
     @ApiModelProperty("问题概要")
     private String problemProfile;
+
+    @ApiModelProperty("技术请求编号")
+    private String outTradeNo;
 
     @ApiModelProperty("客户服务号数组")
     private List<String> customerCSINumber;

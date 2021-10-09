@@ -32,8 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 登录成功处理类
- *
- * @author Victor
  */
 @Slf4j
 @Component

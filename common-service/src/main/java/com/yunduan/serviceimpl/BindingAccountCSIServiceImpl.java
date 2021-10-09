@@ -66,7 +66,7 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
                 return StatusCodeUtil.NOT_FOUND_FLAG;
             }
             //如果当前用户 手机号、邮箱 与 客户公司记录信息一致。那么当前用户直接成为CAU身份
-            if (Objects.equals(account.getMobile(),companyCSI.getCauMobile()) && Objects.equals(account.getMobile(),companyCSI.getCauEmail())) {
+            if (Objects.equals(account.getMobile(),companyCSI.getCauMobile()) && Objects.equals(account.getEmail(),companyCSI.getCauEmail())) {
                 BindingAccountCSI bind = new BindingAccountCSI();
                 bind.setId(SnowFlakeUtil.getPrimaryKeyId()).setAccountId(account.getId()).setCsiId(companyCSI.getId()).setIdentity(2).setStatus(2).setCreateTime(DateUtil.now());
                 return bindingAccountCSIMapper.insert(bind);
@@ -82,16 +82,13 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
             int row = bindingAccountCSIMapper.insert(normalBinding);
             if (row > 0) {
                 //异步发送验证信息到CAU用户信息
-                threadPoolTaskExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        account.setAccountId(account.getId().toString());  //将用户id转换为字符串
-                        //用户信息JSON字符串
-                        String accountJson = JSONObject.toJSONString(account);
-                        //向CAU管理员发送一条待审核消息
-                        AccountMsg msg = new AccountMsg().setAccountId(SnowFlakeUtil.getPrimaryKeyId()).setMsgTitle(StatusCodeUtil.SYS_MATH_MSG).setMsgContent(accountJson).setMsgType(2).setAccountId(CAUBindingRecord.getAccountId()).setIsRead(0).setDelFlag(0).setCreateTime(DateUtil.now());
-                        accountMsgMapper.insert(msg);
-                    }
+                threadPoolTaskExecutor.execute(() -> {
+                    account.setAccountId(account.getId().toString());  //将用户id转换为字符串
+                    //用户信息JSON字符串
+                    String accountJson = JSONObject.toJSONString(account);
+                    //向CAU管理员发送一条待审核消息
+                    AccountMsg msg = new AccountMsg().setAccountId(SnowFlakeUtil.getPrimaryKeyId()).setMsgTitle(StatusCodeUtil.SYS_MATH_MSG).setMsgContent(accountJson).setMsgType(2).setAccountId(CAUBindingRecord.getAccountId()).setIsRead(0).setDelFlag(0).setCreateTime(DateUtil.now());
+                    accountMsgMapper.insert(msg);
                 });
             }
             return row;

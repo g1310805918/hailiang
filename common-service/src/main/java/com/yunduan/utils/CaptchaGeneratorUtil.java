@@ -12,8 +12,6 @@ import java.util.Random;
 
 /**
  * 随机字符验证码生成工具类
- *
- * @author Victor
  */
 public class CaptchaGeneratorUtil {
 

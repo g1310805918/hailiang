@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.yunduan.utils.ContextUtil;
+import com.yunduan.utils.RedisUtil;
 import com.yunduan.utils.ResultUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -26,6 +29,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 
     @Resource
     private RedisTemplate redisTemplate;
+    @Autowired
+    private RedisUtil redisUtil;
 
     public static final String FRONT_TOKEN = "Token";
 
@@ -46,24 +51,22 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String uri = httpServletRequest.getRequestURI();
         String frontAccountToken = httpServletRequest.getHeader(FRONT_TOKEN);
-        if (StrUtil.hasEmpty(frontAccountToken)){
-            responseData(httpServletResponse);
-            log.error("【拦截器】" + uri + ":token失效请重新登陆");
-            return false;
-        }
-        if ("yun".equals(frontAccountToken)){
-            ContextUtil.removeUserId();
-            return true;
-        }
-        String userId = (String) redisTemplate.opsForValue().get(StatusCodeUtil.ACCOUNT_TOKEN + frontAccountToken);
-        if (StrUtil.hasEmpty(userId)){
+        if (StrUtil.hasEmpty(frontAccountToken)) {
             responseData(httpServletResponse);
             log.error(uri + ":token失效请重新登陆");
             return false;
         }
-        if (StrUtil.isNotEmpty(userId)) {
-            ContextUtil.setUserId(Convert.toLong(userId));
+        if (Objects.equals(StatusCodeUtil.DEFAULT_TOKEN, frontAccountToken)) {
+            ContextUtil.removeUserId();
+            return true;
         }
+        String userId = redisUtil.getKeyValue(StatusCodeUtil.ACCOUNT_TOKEN + frontAccountToken);
+        if (StrUtil.hasEmpty(userId)) {
+            responseData(httpServletResponse);
+            log.error(uri + ":token失效请重新登陆");
+            return false;
+        }
+        ContextUtil.setUserId(Convert.toLong(userId));
         return true;
     }
 
@@ -78,11 +81,17 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     }
 
 
+    /**
+     * 登录失效响应
+     *
+     * @param response 响应对象
+     * @throws IOException
+     */
     private void responseData(HttpServletResponse response) throws IOException {
         ContextUtil.removeUserId();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(JSONObject.toJSONString(new ResultUtil(StatusCodeUtil.TOKEN_FAILURE,"登录失效",null)));
+        response.getWriter().write(JSONObject.toJSONString(new ResultUtil<>(StatusCodeUtil.TOKEN_FAILURE, "登录失效", null)));
     }
 
 }

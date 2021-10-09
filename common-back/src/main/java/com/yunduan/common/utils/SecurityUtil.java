@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Victor
+ * @author Guo
  */
 @Component
 public class SecurityUtil {
@@ -117,8 +117,7 @@ public class SecurityUtil {
 
     /**
      * 通过用户名获取用户拥有权限
-     *
-     * @param username
+     * @param username 用户名
      */
     public List<GrantedAuthority> getCurrUserPerms(String username) {
 

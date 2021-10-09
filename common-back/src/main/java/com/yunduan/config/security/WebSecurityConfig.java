@@ -28,8 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Security 核心配置类
  * 开启注解控制权限至Controller
- *
- * @author Victor
+ * @author Guo
  */
 @Slf4j
 @Configuration
@@ -74,8 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http
-                .authorizeRequests();
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
 
         //除配置文件忽略路径其它所有请求都需经过认证和授权
         for (String url : ignoredUrlsProperties.getUrls()) {
