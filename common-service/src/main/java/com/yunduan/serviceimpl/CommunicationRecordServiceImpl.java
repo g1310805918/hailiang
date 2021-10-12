@@ -13,8 +13,6 @@ import com.yunduan.mapper.CommunicationRecordMapper;
 import com.yunduan.mapper.WorkOrderMapper;
 import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.service.CommunicationRecordService;
-import com.yunduan.utils.ContextUtil;
-import com.yunduan.utils.SnowFlakeUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.CommunicationResult;
 import com.yunduan.vo.WorkOrderProblemProfile;
@@ -22,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -101,6 +98,8 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
             profile.setAttachmentPath(StrUtil.hasEmpty(workOrder.getProblemDesImage()) ? "" : Arrays.asList(workOrder.getAttachmentPath().split(",")).get(0));
             //VDM标签
             profile.setVDMCode(StatusCodeUtil.VDM_CUSTOMER_PROBLEM_DESC);
+            //错误代码
+            profile.setErrorCode(StrUtil.hasBlank(workOrder.getErrorCode()) ? "" : workOrder.getErrorCode());
             return profile;
         }
         return null;
@@ -131,6 +130,8 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
                     //否则表示工程师
                     result.setHeadPic("LOGO").setUsername("海量数据技术支持");
                 }
+                //工单的错误代码
+                result.setErrorCode(StrUtil.hasBlank(workOrder.getErrorCode()) ? "" : workOrder.getErrorCode());
                 //沟通记录id、发送时间、发送内容、VDM标签
                 result.setRecordId(record.getId().toString()).setCreateTime(record.getCreateTime().substring(0,16)).setContent(record.getContent()).setVDMCode(StrUtil.hasEmpty(record.getCodeFlag()) ? "" : record.getCodeFlag());
                 //发送反馈内同截图列表、用户是否可见

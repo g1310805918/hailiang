@@ -28,7 +28,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Id;
 import java.util.*;
 
 
@@ -86,8 +85,8 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
                     account.setAccountId(account.getId().toString());  //将用户id转换为字符串
                     //用户信息JSON字符串
                     String accountJson = JSONObject.toJSONString(account);
-                    //向CAU管理员发送一条待审核消息
-                    AccountMsg msg = new AccountMsg().setAccountId(SnowFlakeUtil.getPrimaryKeyId()).setMsgTitle(StatusCodeUtil.SYS_MATH_MSG).setMsgContent(accountJson).setMsgType(2).setAccountId(CAUBindingRecord.getAccountId()).setIsRead(0).setDelFlag(0).setCreateTime(DateUtil.now());
+                    //向CAU管理员发送一条待审核消息【id、消息标题、消息内容、消息类型、用户id、是否已读、删除标志、添加时间】
+                    AccountMsg msg = new AccountMsg().setId(SnowFlakeUtil.getPrimaryKeyId()).setMsgTitle(StatusCodeUtil.SYS_MATH_MSG).setMsgContent(accountJson).setMsgType(2).setAccountId(CAUBindingRecord.getAccountId()).setIsRead(0).setDelFlag(0).setCreateTime(DateUtil.now());
                     accountMsgMapper.insert(msg);
                 });
             }

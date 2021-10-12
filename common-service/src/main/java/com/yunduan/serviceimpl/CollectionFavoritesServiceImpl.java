@@ -1,6 +1,7 @@
 package com.yunduan.serviceimpl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -89,7 +90,7 @@ public class CollectionFavoritesServiceImpl extends ServiceImpl<CollectionFavori
     public Map<String,Object> queryAccountFavoritesVos(FavoritesReq favoritesReq) {
         Map<String,Object> map = new HashMap<>();
         //收藏夹id
-        String favoritesId = favoritesReq.getFavoritesId();
+        String favoritesId = StrUtil.hasEmpty(favoritesReq.getFavoritesId()) ? "0" : favoritesReq.getFavoritesId();
 
         //收藏夹下的文档分页记录
         List<CollectionAccountDocument> records = collectionAccountDocumentMapper.selectPage(
@@ -111,7 +112,7 @@ public class CollectionFavoritesServiceImpl extends ServiceImpl<CollectionFavori
                 }
                 vo = new KnowledgeListVo();
                 String categoryName = knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(document.getThreeCategoryId().toString());
-                vo.setId(record.getId().toString()).setDocTitle(document.getDocTitle()).setCategoryName(categoryName).setDocProfile(ExtractRichTextUtil.dealContent(document.getDocContent()));
+                vo.setId(record.getId().toString()).setDocId(record.getDocumentId().toString()).setDocTitle(document.getDocTitle()).setCategoryName(categoryName).setDocProfile(ExtractRichTextUtil.dealContent(document.getDocContent()));
                 voList.add(vo);
             }
         }

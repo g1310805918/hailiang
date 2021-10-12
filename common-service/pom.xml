@@ -231,7 +231,7 @@
             <version>${bcprov.version}</version>
         </dependency>
 
-        <!-- 阿里云短信(新版) -->
+        <!-- 阿里云短信 -->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dysmsapi20170525</artifactId>
@@ -256,7 +256,7 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
-        <!-- 前后端交互Long转String -->
+        <!-- 前后端交互 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

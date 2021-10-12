@@ -35,6 +35,7 @@ com\yunduan\entity\AccountMsg.class
 com\yunduan\request\front\message\InitListReq.class
 com\yunduan\utils\SendEmailUtil.class
 com\yunduan\mapper\dao\AccountDao.class
+com\yunduan\request\front\servicerequest\AccountUpgradeWorkOrderReq.class
 com\yunduan\request\front\servicerequest\ChangeModelReq.class
 com\yunduan\request\front\knowledge\KnowledgeSearchReq.class
 com\yunduan\serviceimpl\EngineerServiceImpl.class
@@ -96,6 +97,7 @@ com\yunduan\vo\AccountBindingCSI.class
 com\yunduan\vo\back\VoUtil.class
 com\yunduan\request\front\document\CreateDocumentReq.class
 com\yunduan\entity\KnowledgeDocumentThreeCategory.class
+com\yunduan\request\front\knowledge\AccountAddCollect.class
 com\yunduan\service\KnowledgeDocumentTwoCategoryService.class
 com\yunduan\service\KnowledgeDocumentThreeCategoryService.class
 com\yunduan\request\front\servicerequest\EngineerUpgradeWorkOrderReq.class
@@ -118,6 +120,7 @@ com\yunduan\entity\KnowledgeDocumentOneCategory.class
 com\yunduan\mapper\SysDictionaryMapper.class
 com\yunduan\request\front\document\BugManagerInitPageReq.class
 com\yunduan\entity\AdminRole.class
+com\yunduan\request\front\servicerequest\ChangeWorkOrderContactInfoReq.class
 com\yunduan\serviceimpl\PermissionServiceImpl.class
 com\yunduan\vo\SystemVersionVo.class
 com\yunduan\request\front\account\SecurityCheckReq.class
@@ -218,6 +221,7 @@ com\yunduan\mapper\SettingMapper.class
 com\yunduan\entity\CollectionAccountDocument.class
 com\yunduan\request\front\review\ReviewInitReq.class
 com\yunduan\entity\Permission.class
+com\yunduan\request\front\center\ChangeMobileNow.class
 com\yunduan\mapper\CollectionAccountMapper.class
 com\yunduan\utils\ExtractRichTextUtil.class
 com\yunduan\vo\back\PageVo.class

@@ -89,7 +89,7 @@ public class DistributionUtil {
                     }
                 }
             }else {
-                log.info("暂无可分配工单的在线工程师。正在等待中。。。。。。。。");
+                log.info("暂无可分配工单的在线工程师。正在等待中。");
             }
         }else {
             log.error("系统自动分配工单给工程师【当前工单不存在】，workOrderId = " + workOrderId);

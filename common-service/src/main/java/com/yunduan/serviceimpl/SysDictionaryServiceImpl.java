@@ -1,5 +1,6 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -52,15 +53,15 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
      */
     @Override
     public List<DicInitListV> queryDictionaryInit() {
-        List<DicInitListV> voList = new ArrayList<>();
         //添加死数据
-        voList.add(new DicInitListV().setCodeName("硬件平台"));
-        voList.add(new DicInitListV().setCodeName("操作系统"));
-        voList.add(new DicInitListV().setCodeName("部署方式"));
+        List<DicInitListV> voList = CollectionUtil.newArrayList(
+                new DicInitListV().setCodeName("硬件平台"),
+                new DicInitListV().setCodeName("操作系统"),
+                new DicInitListV().setCodeName("部署方式"));
         for (DicInitListV dicInitListV : voList) {
             String content = "";
             List<SysDictionary> codeName = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("code_name", dicInitListV.getCodeName()));
-            if (codeName.size() > 0 && codeName != null) {
+            if (CollectionUtil.isNotEmpty(codeName)) {
                 int index = codeName.size();
                 for (int i = 0; i < index; i++) {
                     content += codeName.get(i).getContent();
@@ -102,8 +103,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         //操作系统下的子集
         List<SysDictionary> sysDictionaryList = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("code_name", codeName).orderByDesc("create_time"));
         //封装结果集合
-        List<DicInitListV> resultList = getResultList(sysDictionaryList);
-        return resultList;
+        return getResultList(sysDictionaryList);
     }
 
 
@@ -114,12 +114,12 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
      */
     private List<DicInitListV> getResultList(List<SysDictionary> sysDictionaryList) {
         List<DicInitListV> voList = new ArrayList<>();
-        if (sysDictionaryList.size() > 0 && sysDictionaryList != null) {
+        if (CollectionUtil.isNotEmpty(sysDictionaryList)) {
             DicInitListV vo = null;
             for (SysDictionary sysDictionary : sysDictionaryList) {
                 vo = new DicInitListV().setId(sysDictionary.getId().toString()).setCodeName(sysDictionary.getContent());
                 List<SysDictionary> twoLevelList = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("parent_id", sysDictionary.getId()).orderByDesc("create_time"));
-                if (twoLevelList.size() > 0 && twoLevelList != null) {
+                if (CollectionUtil.isNotEmpty(twoLevelList)) {
                     int index = twoLevelList.size();
                     String content = "";
                     for (int i = 0; i < index; i++) {
@@ -166,8 +166,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         //版本集合
         List<SysDictionary> banBenList = sysDictionaryMapper.selectList(new QueryWrapper<SysDictionary>().eq("parent_id", parentId).orderByDesc("create_time"));
         //封装结果
-        List<DicInitListV> resultList = getResultList(banBenList);
-        return resultList;
+        return getResultList(banBenList);
     }
 
 

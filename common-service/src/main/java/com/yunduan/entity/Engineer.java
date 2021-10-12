@@ -59,10 +59,10 @@ public class Engineer implements Serializable {
     @ApiModelProperty("工程师身份【1海量员工、2技术支持工程师、3COE工程师、4Bde工程师】")
     private Integer identity;
 
-    @ApiModelProperty("身份名称【海量员工、技术支持工程师、COE工程师、Bde工程师】")
+    @ApiModelProperty("身份名称【海量员工、技术支持工程师、COE工程师、BDE工程师、Manager】")
     private String identityName;
 
-    @ApiModelProperty("所属产品模块【3级分类id。逗号分割】")
+    @ApiModelProperty("所属产品模块【3级分类id逗号分割】")
     private String productCategoryId;
 
     @ApiModelProperty("产品模块名称")
@@ -84,7 +84,7 @@ public class Engineer implements Serializable {
     @ApiModelProperty("token")
     private String token;
 
-    @ApiModelProperty("最后登录时间")
+    @ApiModelProperty("最近登录时间")
     private String lastLoginTime;
 
     @ApiModelProperty("历史被分配的工单总数")

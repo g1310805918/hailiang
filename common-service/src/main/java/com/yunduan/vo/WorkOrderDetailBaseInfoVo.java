@@ -17,13 +17,16 @@ public class WorkOrderDetailBaseInfoVo implements Serializable {
     @ApiModelProperty("工单id")
     private String workOrderId;
 
+    @ApiModelProperty("工单类型【1非技术工单、2技术工单】")
+    private Integer workOrderType;
+
     @ApiModelProperty("是否是自己的工单【0否、1是】")
     private Integer isMySelf;
 
     @ApiModelProperty("是否收藏工单【0否、1是】")
     private Integer isCollection;
 
-    @ApiModelProperty("是否可以重开工单")
+    @ApiModelProperty("是否可以重开工单【0否、1是】")
     private Integer isCanOpenAgain;
 
     @ApiModelProperty("问题概要")
@@ -71,8 +74,23 @@ public class WorkOrderDetailBaseInfoVo implements Serializable {
     @ApiModelProperty("主要联系人")
     private String mainContact;
 
+    @ApiModelProperty("主要联系人手机号")
+    private String mainMobile;
+
+    @ApiModelProperty("主要联系人邮箱")
+    private String mainEmail;
+
     @ApiModelProperty("备用联系人")
     private String standbyContact;
+
+    @ApiModelProperty("备用联系人手机号")
+    private String standbyMobile;
+
+    @ApiModelProperty("备用联系人邮箱")
+    private String standbyEmail;
+
+    @ApiModelProperty("主要联系方式【1手机号、2邮箱号】")
+    private Integer contactWay;
 
     @ApiModelProperty("硬件平台")
     private String hardwarePlatform;

@@ -26,12 +26,6 @@ spring:
     port: 6333
     database: 0
     password: 1qaz4321
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: guo
-#    password: guo
-#    virtual-host: /hailiang
 
 #mybatis-plus
 mybatis-plus:
@@ -45,8 +39,6 @@ mybatis-plus:
       logic-delete-value: 1
       # 逻辑未删除值(默认为 0)
       logic-not-delete-value: 0
-  #mybatis-plus打印SQL语句
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  #mapper文件位置
   mapper-locations: classpath*:mapper/*.xml

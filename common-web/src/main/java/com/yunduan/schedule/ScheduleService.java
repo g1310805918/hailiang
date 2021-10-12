@@ -17,7 +17,6 @@ import java.util.List;
 
 @Component
 public class ScheduleService {
-
     private static final transient Logger log = LoggerFactory.getLogger(ScheduleService.class);
 
 

@@ -121,6 +121,12 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                     collectionWorkOrderIdList.add(collectionAccount.getWorkOrderId());
                 });
             }
+            //用户没有收藏的记录时返回空对象
+            if(CollectionUtil.isEmpty(collectionWorkOrderIdList)) {
+                map.put("total", collectionWorkOrderIdList.size());
+                map.put("voList", collectionWorkOrderIdList);
+                return map;
+            }
         }
         //条件构造器
         QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>()
@@ -129,16 +135,18 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 //我收藏选中时
                 .in(collectionWorkOrderIdList.size() > 0, "id", collectionWorkOrderIdList)
                 //客户服务号
-                .in((workOrderReq.getCustomerCSINumber() != null && workOrderReq.getCustomerCSINumber().size() > 0), "csi_number", workOrderReq.getCustomerCSINumber())
+                .in(CollectionUtil.isNotEmpty(workOrderReq.getCustomerCSINumber()), "csi_number", workOrderReq.getCustomerCSINumber())
                 //问题概要
                 .like(StrUtil.isNotEmpty(workOrderReq.getProblemProfile()), "problem_profile", workOrderReq.getProblemProfile())
                 //技术请求编号
                 .like(StrUtil.isNotEmpty(workOrderReq.getOutTradeNo()),"out_trade_no",workOrderReq.getOutTradeNo())
                 //我受理选中时
-                .eq(workOrderReq.getMyAccept(), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
-                .eq(workOrderReq.getMyAccept(), "account_id", ContextUtil.getUserId())
+                .eq((workOrderReq.getMyAccept() != null && workOrderReq.getMyAccept()), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
+                .eq((workOrderReq.getMyAccept() != null && workOrderReq.getMyAccept()), "account_id", ContextUtil.getUserId())
                 //进行中选中时
-                .eq(workOrderReq.getMyOngoing(), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS).orderByDesc("create_time");
+                .eq(workOrderReq.getMyOngoing(), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
+                //排序
+                .orderByDesc("create_time");
         //通过CSI编号查询公司所有人员工单
         List<WorkOrder> records = workOrderMapper.selectPage(new Page<>(workOrderReq.getPageNo(), workOrderReq.getPageSize()), queryWrapper).getRecords();
         //工单结果返回
@@ -151,8 +159,11 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 vo.setId(record.getId().toString()).setProblemProfile(record.getProblemProfile()).setOutTradeNo(record.getOutTradeNo()).setCategoryName(record.getProductNameVersion() + record.getProblemType());
                 //创建时间、上次更新时间、严重等级、主要联系人、工单状态
                 vo.setCreateTime(record.getCreateTime()).setUpdateTime(record.getLastUpdateTime()).setProblemSeverity(record.getProblemSeverity()).setMainContact(record.getMainContact()).setStatus(record.getStatus());
-                //是否收藏、客户服务号
-                vo.setIsCollection(record.getIsCollection()).setCsiNumber(record.getCsiNumber());
+                // 是否收藏【当前登录用户是否收藏当前工单】
+                Integer count = collectionAccountMapper.selectCount(new QueryWrapper<CollectionAccount>().eq("account_id", ContextUtil.getUserId()).eq("work_order_id", record.getId()));
+                vo.setIsCollection(count > 0 ? 1 : 0);
+                //客户服务号
+                vo.setCsiNumber(record.getCsiNumber());
                 voList.add(vo);
             }
         }
@@ -227,14 +238,14 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
      */
     public WorkOrderDetailBaseInfoVo getWorkOrderBaseInfo(WorkOrder workOrder, CompanyCSI companyCSI) {
         WorkOrderDetailBaseInfoVo vo = new WorkOrderDetailBaseInfoVo();
-        //是否是自己的工单，0否、1是  ||  工单状态
+        //是否是自己的工单，0否、1是  |  工单状态
         vo.setIsMySelf(ContextUtil.getUserId().compareTo(workOrder.getAccountId()) == 0 ? 1 : 0).setStatus(workOrder.getStatus());
         //创建时间、工单id、客户服务号、公司名
         vo.setCreateTime(workOrder.getCreateTime().substring(0, 16)).setWorkOrderId(workOrder.getId().toString()).setCsiNumber(workOrder.getCsiNumber()).setCompanyName(companyCSI.getCompanyName());
         //部署方式、硬件平台、最后更新时间
         vo.setDeploymentWay(workOrder.getDeploymentWay()).setHardwarePlatform(workOrder.getHardwarePlatform()).setLastUpdateTime(workOrder.getLastUpdateTime().substring(0, 16));
         //主要联系人、备用联系人、操作系统、版本、语言
-        vo.setMainContact(workOrder.getMainContact()).setStandbyContact(workOrder.getStandbyContact()).setOperatingSystem(workOrder.getOperatingSystem()).setOperatingSystemVersion(workOrder.getOperatingSystemVersion()).setOperatingSystemLanguage(workOrder.getOperatingSystemLanguage());
+        vo.setMainContact(workOrder.getMainContact()).setStandbyContact(StrUtil.hasEmpty(workOrder.getStandbyContact()) ? "" : workOrder.getStandbyContact()).setOperatingSystem(workOrder.getOperatingSystem()).setOperatingSystemVersion(workOrder.getOperatingSystemVersion()).setOperatingSystemLanguage(workOrder.getOperatingSystemLanguage());
         //工单编号、问题概要、问题严重等级、产品名称版本、问题类型
         vo.setOutTradeNo(workOrder.getOutTradeNo()).setProblemProfile(workOrder.getProblemProfile()).setProblemSeverity(workOrder.getProblemSeverity()).setProductNameVersion(workOrder.getProductNameVersion()).setProblemType(workOrder.getProblemType());
         //升级状态、升级原因
@@ -252,6 +263,14 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         //用户是否可以重开工单(大于一个月就不可以重开、否则可以)
         long between = DateUtil.between(DateUtil.parseDate(workOrder.getLastUpdateTime()), DateUtil.parse(DateUtil.now()), DateUnit.DAY);
         vo.setIsCanOpenAgain(between > 31 ? 0 : 1);
+        //工单类型【1非技术工单、2技术工单】
+        vo.setWorkOrderType(workOrder.getType());
+        //工单主要联系人手机号、主要联系人邮箱
+        vo.setMainMobile(StrUtil.hasEmpty(workOrder.getMainMobile()) ? "" : workOrder.getMainMobile()).setMainEmail(StrUtil.hasEmpty(workOrder.getMainEmail()) ? "" : workOrder.getMainEmail());
+        //工单备用联系人手机号、备用联系人邮箱
+        vo.setStandbyMobile(StrUtil.hasEmpty(workOrder.getStandbyMobile()) ? "" : workOrder.getStandbyMobile()).setStandbyEmail(StrUtil.hasEmpty(workOrder.getStandbyEmail()) ? "" : workOrder.getStandbyEmail());
+        //优先联系方式
+        vo.setContactWay(workOrder.getContactWay());
         return vo;
     }
 

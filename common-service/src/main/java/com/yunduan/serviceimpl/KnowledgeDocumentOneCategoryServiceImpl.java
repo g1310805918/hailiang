@@ -70,7 +70,8 @@ public class KnowledgeDocumentOneCategoryServiceImpl extends ServiceImpl<Knowled
             ProductNameVersionVo oneVo = null;
             for (KnowledgeDocumentOneCategory oneCategory : oneCategories) {
                 oneVo = new ProductNameVersionVo();
-                oneVo.setOneCategoryName(oneCategory.getCategoryTitle());
+                //一级分类id、分类名称
+                oneVo.setId(oneCategory.getId().toString()).setCategoryName(oneCategory.getCategoryTitle());
                 //二级分类结果封装
                 List<ProductNameVersionTwoVo> twoVoList = new ArrayList<>();
                 //二级分类列表
@@ -79,7 +80,7 @@ public class KnowledgeDocumentOneCategoryServiceImpl extends ServiceImpl<Knowled
                     ProductNameVersionTwoVo twoVo = null;
                     for (KnowledgeDocumentTwoCategory twoCategory : twoCategories) {
                         twoVo = new ProductNameVersionTwoVo();
-                        twoVo.setTwoCategoryId(twoCategory.getId().toString()).setTwoCategoryName(twoCategory.getCategoryTitle());
+                        twoVo.setId(twoCategory.getId().toString()).setCategoryName(twoCategory.getCategoryTitle());
                         twoVoList.add(twoVo);
                     }
                 }

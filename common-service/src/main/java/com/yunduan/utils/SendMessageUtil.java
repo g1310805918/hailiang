@@ -1,5 +1,6 @@
 package com.yunduan.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -8,9 +9,12 @@ import com.yunduan.service.BugManagerService;
 import com.yunduan.service.EngineerMsgService;
 import com.yunduan.service.EngineerService;
 import com.yunduan.service.KnowledgeDocumentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,6 +22,7 @@ import java.util.List;
  */
 @Component
 public class SendMessageUtil {
+    private static final transient Logger log = LoggerFactory.getLogger(SendMessageUtil.class);
 
     private EngineerMsg msg = null;
     @Autowired
@@ -115,6 +120,30 @@ public class SendMessageUtil {
             });
         }
     }
+
+
+    /**
+     * 工单告警
+     * 向Manager发送工单告警通知
+     */
+    public void sendManagerWorkOrderUpgradeAlarm(WorkOrder workOrder) {
+        //Manager工程师列表
+        List<Engineer> managerList = engineerService.list(new QueryWrapper<Engineer>().eq("identity", 5).eq("account_status", StatusCodeUtil.ENGINEER_ACCOUNT_NORMAL_STATUS));
+        if (CollectionUtil.isNotEmpty(managerList)) {
+            //批量消息集合
+            LinkedList<EngineerMsg> list = CollectionUtil.newLinkedList();
+            managerList.forEach(manager -> {
+                //向所有Manager发送工单处理消息
+                msg = new EngineerMsg().setEngineerId(manager.getId()).setMsgType(StatusCodeUtil.ENGINEER_MESSAGE_TYPE_WORK_ORDER).setTypeId(workOrder.getId()).setMsgTitle("工单告警").setMsgContent("工单编号：" + workOrder.getOutTradeNo() + "已提出工单升级请求，请尽快处理！");
+                list.add(msg);
+            });
+            engineerMsgService.saveBatch(list);
+        }else {
+            log.info("目前暂无Manager工程师，发送工单告警失败！");
+        }
+    }
+
+
 
 
     /**

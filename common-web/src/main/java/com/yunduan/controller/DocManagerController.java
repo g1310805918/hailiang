@@ -1,9 +1,12 @@
 package com.yunduan.controller;
 
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.yunduan.request.front.document.CreateDocumentReq;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
+import com.yunduan.request.front.knowledge.AccountAddCollect;
+import com.yunduan.service.CollectionAccountDocumentService;
 import com.yunduan.service.CollectionEngineerDocumentService;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
 import com.yunduan.service.KnowledgeDocumentService;
@@ -18,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Context;
 import java.util.Map;
 
 @RestController
@@ -36,7 +38,8 @@ public class DocManagerController {
     private CollectionEngineerDocumentService collectionEngineerDocumentService;
     @Autowired
     private KnowledgeDocumentNoPassService knowledgeDocumentNoPassService;
-
+    @Autowired
+    private CollectionAccountDocumentService collectionAccountDocumentService;
 
     @GetMapping("/init-page")
     @ApiOperation(httpMethod = "GET",value = "工程师-初始化我的文档列表")
@@ -91,6 +94,17 @@ public class DocManagerController {
         return row > 0 ? resultUtil.AesJSONSuccess("文档审核申请已提交","") : resultUtil.AesFAILError("提交审核失败");
     }
 
+
+    @PostMapping("/account-collect")
+    @ApiOperation(httpMethod = "POST",value = "用户收藏知识文档")
+    public ResultUtil<String> accountCollect(AccountAddCollect accountAddCollect) {
+        accountAddCollect = AESUtil.decryptToObj(accountAddCollect.getData(), AccountAddCollect.class);
+        if (StrUtil.hasEmpty(accountAddCollect.getDocId())) {
+            return resultUtil.AesFAILError("非法请求");
+        }
+        int row = collectionAccountDocumentService.accountCollect(ContextUtil.getUserId(), Convert.toLong(accountAddCollect.getDocId()), StrUtil.isNotEmpty(accountAddCollect.getFavoritesId()) ? Convert.toLong(accountAddCollect.getFavoritesId()) : null);
+        return row == 1 ? resultUtil.AesJSONSuccess("取消收藏成功", null) : row == -1 ? resultUtil.AesFAILError("取消收藏失败") : row == 2 ? resultUtil.AesJSONSuccess("收藏成功",null) : resultUtil.AesFAILError("收藏失败");
+    }
 
 
 }

@@ -129,7 +129,7 @@ public class AccountRegisteredController {
     }
 
 
-    @PostMapping("/check-mobil-draw")
+    @RequestMapping(value = "/check-mobil-draw",method = RequestMethod.GET)
     @ApiOperation(httpMethod = "GET",value = "检查手机号或邮箱以及图片验证码是否正确")
     public ResultUtil<String> checkMobileDraw(SecurityCheckReq securityCheckReq) {
         securityCheckReq = AESUtil.decryptToObj(securityCheckReq.getData(),SecurityCheckReq.class);

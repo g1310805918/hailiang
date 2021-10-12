@@ -3,6 +3,7 @@ D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\c
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\config\MybatisPlusConfig.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\MsgDetailVo.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\utils\AESUtil.java
+D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\AccountUpgradeWorkOrderReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\dao\EngineerDao.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\AdminAccount.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\center\AddFavoritesReq.java
@@ -76,6 +77,7 @@ D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\c
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\ChangeCommunicationRecordShowStatusReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\knowledge\KnowledgeLazySearchReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\RoleMapper.java
+D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\knowledge\AccountAddCollect.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\WorkOrderProblemProfile.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\KnowledgeDocumentThreeCategory.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\CommunicationRecordService.java
@@ -131,6 +133,7 @@ D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\c
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\BugManagerService.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\AddNormalFeedbackReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\DynamicSearchDocumentReq.java
+D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\center\ChangeMobileNow.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\EngineerService.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\ChangeUsernameReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\CollectionFavorites.java
@@ -213,6 +216,7 @@ D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\c
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\AdminRoleMapper.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\ChangeCommunicationRecordContentReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\Setting.java
+D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\servicerequest\ChangeWorkOrderContactInfoReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\serviceimpl\SysMessageServiceImpl.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\DocumentListVo.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\RoleService.java

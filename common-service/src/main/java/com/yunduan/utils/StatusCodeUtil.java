@@ -108,8 +108,12 @@ public class StatusCodeUtil {
     //首页用户概况柱状图数据统计
     public static final String ACCOUNT_BAR_DATA = "account:bar:info";
 
-    //普通海量员工身份
+    //工程师身份【1海量员工、2技术支持工程师、3COE工程师、4Bde工程师、5Manager】
     public static final Integer ACCOUNT_IDENTITY_FOR_NORMAL = 1;
+    public static final Integer ACCOUNT_IDENTITY_FOR_TECHNOLOGY = 2;
+    public static final Integer ACCOUNT_IDENTITY_FOR_COE = 3;
+    public static final Integer ACCOUNT_IDENTITY_FOR_BDE = 4;
+    public static final Integer ACCOUNT_IDENTITY_FOR_MANAGER = 5;
 
     //工程师账号 正常状态
     public static final Integer ENGINEER_ACCOUNT_NORMAL_STATUS = 1;

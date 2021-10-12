@@ -14,8 +14,11 @@ public class KnowledgeListVo implements Serializable {
     private static final long serialVersionUID = -6583353645267636345L;
 
 
-    @ApiModelProperty("文档id")
+    @ApiModelProperty("id")
     private String id;
+
+    @ApiModelProperty("文档id")
+    private String docId;
 
     @ApiModelProperty("文档编号")
     private String documentNumber;

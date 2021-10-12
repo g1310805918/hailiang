@@ -35,6 +35,9 @@ public class CommunicationResult implements Serializable {
     @ApiModelProperty("内容")
     private String content;
 
+    @ApiModelProperty("错误代码")
+    private String errorCode;
+
     @ApiModelProperty("反馈截图内容")
     private List<String> descImage;
 

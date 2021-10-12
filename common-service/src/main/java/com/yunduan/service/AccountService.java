@@ -5,7 +5,6 @@ import com.yunduan.entity.Account;
 import com.yunduan.request.front.account.AccountReq;
 import com.yunduan.request.front.account.RegisteredReq;
 
-import java.util.List;
 import java.util.Map;
 
 public interface AccountService extends IService<Account> {
@@ -62,10 +61,11 @@ public interface AccountService extends IService<Account> {
     /**
      * 修改手机号
      * @param accountId 用户id
-     * @param mobile 新手机号
+     * @param oldMobile 旧手机号
+     * @param newMobile 新手机号
      * @return int
      */
-    int changeMobile(String accountId,String mobile);
+    int changeMobile(String accountId,String oldMobile, String newMobile);
 
 
     /**
