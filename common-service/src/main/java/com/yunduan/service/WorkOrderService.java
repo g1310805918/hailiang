@@ -6,7 +6,6 @@ import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.vo.EngineerWorkOrderBaseInfoVo;
 import com.yunduan.vo.WorkOrderDetailBaseInfoVo;
 
-import java.util.List;
 import java.util.Map;
 
 public interface WorkOrderService extends IService<WorkOrder> {
@@ -26,6 +25,7 @@ public interface WorkOrderService extends IService<WorkOrder> {
      * @return map
      */
     Map<String,Object> queryCompanyWorkOrderList(WorkOrderReq workOrderReq);
+    Map<String,Object> queryCompanyWorkOrderListNormal(WorkOrderReq workOrderReq);
 
 
     /**

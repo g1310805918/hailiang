@@ -12,6 +12,7 @@ import com.yunduan.entity.Engineer;
 import com.yunduan.entity.Setting;
 import com.yunduan.service.*;
 import com.yunduan.utils.*;
+import com.yunduan.vo.KnowledgeLazySearchVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ class WebApplicationTests {
     private SendEmailUtil sendEmailUtil;
     @Autowired
     private SysDictionaryService sysDictionaryService;
+    @Autowired
+    private KnowledgeDocumentService knowledgeDocumentService;
 
 
     @Test
@@ -171,6 +174,12 @@ class WebApplicationTests {
         //相差一个月，31天
         long betweenDay = DateUtil.between(date1, date2, DateUnit.DAY);
         System.out.println("betweenDay = " + betweenDay);
+    }
+
+    @Test
+    void testSearchKnowledge() {
+        List<KnowledgeLazySearchVo> lazySearchVos = knowledgeDocumentService.queryKnowledgeLazySearch("用户");
+        System.out.println("lazySearchVos ================================= \n" + lazySearchVos);
     }
 
 

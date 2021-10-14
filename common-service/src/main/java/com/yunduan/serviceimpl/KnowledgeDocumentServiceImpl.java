@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yunduan.entity.*;
 import com.yunduan.mapper.*;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
+import com.yunduan.request.front.knowledge.AddKnowledgeReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
 import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
 import com.yunduan.request.front.servicerequest.DynamicSearchDocumentReq;
@@ -14,7 +15,6 @@ import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.ExtractRichTextUtil;
-import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,9 +46,9 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
     private EngineerMapper engineerMapper;
 
 
-
     /**
      * 查询三级分类下的知识文档
+     *
      * @param knowledgeListReq 知识文档
      * @return map
      */
@@ -61,7 +61,7 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 new QueryWrapper<KnowledgeDocument>()
                         .eq("three_category_id", knowledgeListReq.getThreeCategoryId())
                         //如果为空或者false标志当前用户未工程师。则查看公司所有文档
-                        .eq((knowledgeListReq.getEngineerFlag() == null || knowledgeListReq.getEngineerFlag() == false),"is_show", 1)
+                        .eq((knowledgeListReq.getEngineerFlag() == null || knowledgeListReq.getEngineerFlag() == false), "is_show", 1)
                         .eq(knowledgeListReq.getDocType() != null, "doc_type", knowledgeListReq.getDocType())
         ).getRecords();
         //结果封装
@@ -85,8 +85,8 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 .eq("is_show", 1)
                 .eq(knowledgeListReq.getDocType() != null, "doc_type", knowledgeListReq.getDocType()));
 
-        map.put("voList",voList);
-        map.put("total",total);
+        map.put("voList", voList);
+        map.put("total", total);
 
         return map;
     }
@@ -94,6 +94,7 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
 
     /**
      * 知识文档详情
+     *
      * @param id 文档id
      * @return KnowledgeDetailVo
      */
@@ -119,18 +120,19 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
 
     /**
      * 模糊搜索知识文档
+     *
      * @param searchContent 搜索内容
-     * @param nullStr 搜索标志
      * @return list
      */
     @Override
-    public List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent,String nullStr) {
-        return knowledgeDocumentMapper.selectKnowledgeLazySearch(searchContent,nullStr);
+    public List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent) {
+        return knowledgeDocumentMapper.selectKnowledgeLazySearch(searchContent);
     }
 
 
     /**
      * 模糊搜索知识文档列表数据
+     *
      * @param knowledgeSearchReq 搜索对象
      * @return map
      */
@@ -167,14 +169,15 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 .eq(StrUtil.isNotEmpty(knowledgeSearchReq.getThreeCategoryId()), "three_category_id", knowledgeSearchReq.getThreeCategoryId())
                 .eq(StrUtil.isNotEmpty(knowledgeSearchReq.getKnowledgeType()), "doc_type", knowledgeSearchReq.getKnowledgeType()));
 
-        map.put("voList",voList);
-        map.put("total",total);
+        map.put("voList", voList);
+        map.put("total", total);
         return map;
     }
 
 
     /**
      * 搜索内容所属文档分类
+     *
      * @param searchContent 搜索内容
      * @return list
      */
@@ -244,21 +247,22 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
 
     /**
      * 工程师初始化文档管理页面
+     *
      * @param initDocumentManagerReq 初始化对象
      * @return map
      */
     @Override
     public Map<String, Object> engineerInitPage(InitDocumentManagerReq initDocumentManagerReq) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         Long userId = ContextUtil.getUserId();
         //公司总文档数
-        map.put("totalDocumentCount",knowledgeDocumentMapper.selectCount(new QueryWrapper<>()));
+        map.put("totalDocumentCount", knowledgeDocumentMapper.selectCount(new QueryWrapper<>()));
         //我发布成功的文档
-        map.put("myFbCount",knowledgeDocumentMapper.selectCount(new QueryWrapper<KnowledgeDocument>().eq("engineer_id",userId)));
+        map.put("myFbCount", knowledgeDocumentMapper.selectCount(new QueryWrapper<KnowledgeDocument>().eq("engineer_id", userId)));
         //我的待审核文档
-        map.put("myNoCheckCount",noPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("engineer_id",userId).eq("doc_status",1)));
+        map.put("myNoCheckCount", noPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("engineer_id", userId).eq("doc_status", 1)));
         //我收藏的文档
-        map.put("myCollectionCount",engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id",userId)));
+        map.put("myCollectionCount", engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", userId)));
 
         //我收藏的文档选中时
         List<Long> docIdList = new ArrayList<>();
@@ -288,17 +292,18 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 //文档标题
                 .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getDocumentTitle()), "doc_title", initDocumentManagerReq.getDocumentTitle());
         //我的初始化文档列表
-        List<KnowledgeDocumentNoPass> records = noPassMapper.selectPage(new Page<>(initDocumentManagerReq.getPageNo(), initDocumentManagerReq.getPageSize()),queryWrapper).getRecords();
+        List<KnowledgeDocumentNoPass> records = noPassMapper.selectPage(new Page<>(initDocumentManagerReq.getPageNo(), initDocumentManagerReq.getPageSize()), queryWrapper).getRecords();
         //结果封装
         List<InitDocumentListVo> voList = queryInitResult(records);
-        map.put("voList",voList);
-        map.put("pageTotal",noPassMapper.selectCount(queryWrapper));
+        map.put("voList", voList);
+        map.put("pageTotal", noPassMapper.selectCount(queryWrapper));
         return map;
     }
 
 
     /**
      * 封装工程师文档列表初始化结果
+     *
      * @param records 文档列表
      * @return list
      */
@@ -314,8 +319,8 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 vo = new InitDocumentListVo();
                 vo.setDocumentId(record.getId().toString()).setDocumentTitle(record.getDocTitle());
                 vo.setDocumentNum(record.getDocNumber()).setCategoryName(knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(record.getThreeCategoryId().toString()));
-                vo.setDocumentType(record.getDocType()).setCreateBy(StrUtil.hasEmpty(engineer.getUsername()) ? "" : engineer.getUsername()).setCreateTime(record.getCreateTime().substring(0,16));
-                vo.setLastUpdateTime(StrUtil.hasEmpty(record.getUpdateTime()) ? "" : record.getUpdateTime().substring(0,16)).setDocumentStatus(record.getDocStatus());
+                vo.setDocumentType(record.getDocType()).setCreateBy(StrUtil.hasEmpty(engineer.getUsername()) ? "" : engineer.getUsername()).setCreateTime(record.getCreateTime().substring(0, 16));
+                vo.setLastUpdateTime(StrUtil.hasEmpty(record.getUpdateTime()) ? "" : record.getUpdateTime().substring(0, 16)).setDocumentStatus(record.getDocStatus());
                 Integer count = engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", engineer.getId()).eq("document_id", record.getId()));
                 vo.setIsCollect(count > 0 ? 1 : 0);
                 voList.add(vo);
@@ -327,6 +332,7 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
 
     /**
      * 工程师删除知识文档
+     *
      * @param documentId 文档id
      * @return int
      */
@@ -341,6 +347,7 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
 
     /**
      * 动态搜索文档列表
+     *
      * @param dynamicSearchDocumentReq 搜索条件
      * @return list
      */
@@ -356,7 +363,7 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
         String searchContent = dynamicSearchDocumentReq.getSearchContent();
         //条件构造器
         QueryWrapper<KnowledgeDocument> queryWrapper = new QueryWrapper<KnowledgeDocument>()
-                .eq("is_show",1)  //对外可见的
+                .eq("is_show", 1)  //对外可见的
                 .like(type == 1 && StrUtil.isNotEmpty(searchContent), "doc_number", searchContent)
                 .like(type == 2 && StrUtil.isNotEmpty(searchContent), "doc_title", searchContent);
         //筛选出的文档列表
@@ -369,6 +376,32 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
             }
         }
         return voList;
+    }
+
+
+    /**
+     * 搜索知识文档
+     *
+     * @param addKnowledgeReq 筛选条件
+     * @return List
+     */
+    @Override
+    public List<KnowledgeDocument> searchDocList(AddKnowledgeReq addKnowledgeReq) {
+        //文档编号               文档标题                 文档类型【normal表示普通知识文档、bug表示BUG文档】
+        String docId = addKnowledgeReq.getDocId(); String docTitle = addKnowledgeReq.getDocTitle(); String docFlag = addKnowledgeReq.getDocFlag();
+        //条件构造器
+        QueryWrapper<KnowledgeDocument> queryWrapper = new QueryWrapper<KnowledgeDocument>()
+                //对外可见的文档【用户可见的文档】
+                .eq("is_show", 1)
+                //普通知识文档
+                .eq(Objects.equals("normal", docFlag), "doc_type", 1)
+                //bug文档
+                .eq(Objects.equals("bug", docFlag), "doc_type", 2)
+                .like(StrUtil.isNotEmpty(docId), "doc_number", docId)
+                .like(StrUtil.isNotEmpty(docTitle), "doc_title", docTitle).orderByDesc("create_time");
+        //文档列表
+        List<KnowledgeDocument> knowledgeDocuments = knowledgeDocumentMapper.selectList(queryWrapper);
+        return knowledgeDocuments;
     }
 
 

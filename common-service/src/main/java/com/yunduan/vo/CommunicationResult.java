@@ -20,6 +20,9 @@ public class CommunicationResult implements Serializable {
     @ApiModelProperty("用户是否可见【布尔值】")
     private Boolean isShow;
 
+    @ApiModelProperty("工程师是否可以编辑沟通记录")
+    private Boolean isEdit;
+
     @ApiModelProperty("头像")
     private String headPic;
 

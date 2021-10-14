@@ -17,7 +17,6 @@ import com.yunduan.request.front.document.EngineerBugInitPageReq;
 import com.yunduan.service.BugManagerService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
-import com.yunduan.utils.ExtractRichTextUtil;
 import com.yunduan.utils.SendMessageUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.BudDetailVo;
@@ -26,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,12 +193,7 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
         int row = bugManagerMapper.insert(entity);
         if (row > 0) {
             //发送bug申请到BDE工程师
-            threadPoolTaskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    sendMessageUtil.sendBUGApplyToBDE(entity.getId().toString());
-                }
-            });
+            threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendBUGApplyToBDE(entity.getId().toString()));
         }
         return row;
     }

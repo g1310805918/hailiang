@@ -17,10 +17,8 @@ import com.yunduan.mapper.EngineerMapper;
 import com.yunduan.mapper.KnowledgeDocumentMapper;
 import com.yunduan.mapper.KnowledgeDocumentNoPassMapper;
 import com.yunduan.request.front.document.CreateDocumentReq;
-import com.yunduan.request.front.document.InitDocumentManagerReq;
 import com.yunduan.request.front.review.ReviewInitReq;
 import com.yunduan.service.KnowledgeDocumentNoPassService;
-import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.KnowledgeDocumentThreeCategoryService;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.SendMessageUtil;
@@ -108,12 +106,7 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
         noPass.setDocStatus(1);
         int row = knowledgeDocumentNoPassMapper.insert(noPass);
         if (row > 0) {
-            threadPoolTaskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    sendMessageUtil.engineerSendNormalDocumentReviewApplyToCOE(noPass.getId().toString());
-                }
-            });
+            threadPoolTaskExecutor.execute(() -> sendMessageUtil.engineerSendNormalDocumentReviewApplyToCOE(noPass.getId().toString()));
         }
         return row;
     }

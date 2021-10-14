@@ -15,9 +15,7 @@ import com.yunduan.mapper.*;
 import com.yunduan.request.front.servicerequest.*;
 import com.yunduan.service.KnowledgeDocumentService;
 import com.yunduan.service.WorkOrderService;
-import com.yunduan.utils.ContextUtil;
-import com.yunduan.utils.DistributionUtil;
-import com.yunduan.utils.StatusCodeUtil;
+import com.yunduan.utils.*;
 import com.yunduan.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -37,6 +35,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     @Autowired
     private BindingAccountCSIMapper bindingAccountCSIMapper;
     @Autowired
+    private AccountMsgMapper accountMsgMapper;
+    @Autowired
     private CompanyCSIMapper companyCSIMapper;
     @Autowired
     private KnowledgeDocumentService knowledgeDocumentService;
@@ -53,6 +53,12 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Autowired
+    private SendEmailUtil sendEmailUtil;
+    @Autowired
+    private EngineerMsgMapper engineerMsgMapper;
+    @Autowired
+    private SendMessageUtil sendMessageUtil;
+    @Autowired
     private DistributionUtil distributionUtil;
 
 
@@ -65,6 +71,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     @Override
     public Map<String, Integer> queryWorkOrderStatistical(String accountId) {
         Map<String, Integer> resultMap = new HashMap<>();
+        //当前登录用户id
+        Long userId = ContextUtil.getUserId();
         //用户绑定的所有CSI编号集合
         Set<String> CSINumberSet = new TreeSet<>();
         //用户绑定的CSI编号记录
@@ -74,6 +82,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 CSINumberSet.add(bindingCSI.getCsiNumber());
             }
         }
+        //当前用户未读消息数量
+        Integer accountUnreadMessageCount = accountMsgMapper.selectCount(new QueryWrapper<AccountMsg>().eq("account_id", userId).eq("is_read", 0));
         //用户绑定的CSI记录为空，那么直接返回
         if (CSINumberSet.isEmpty()) {
             //公司总计受理中的订单
@@ -84,21 +94,23 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
             resultMap.put("myCloseWorkOrderCount", 0);
             //我收藏的工单
             resultMap.put("myCollectionWorkOrderCount", 0);
+            //用户未读消息数
+            resultMap.put("accountUnreadMessageCount", accountUnreadMessageCount);
             return resultMap;
         }
         //公司总计受理中的订单
         Integer companyTotalAcceptWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("status", 2).in("csi_number", CSINumberSet));
         //我受理中的工单
-        Integer myAcceptWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("account_id", ContextUtil.getUserId()).eq("status", 2));
+        Integer myAcceptWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("account_id", userId).eq("status", 2));
         //我已完结的工单
-        Integer myCloseWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("account_id", ContextUtil.getUserId()).eq("status", 4));
+        Integer myCloseWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("account_id", userId).eq("status", 4));
         //我收藏的工单
-        Integer myCollectionWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("account_id", ContextUtil.getUserId()).eq("is_collection", 1));
-
+        Integer myCollectionWorkOrderCount = collectionAccountMapper.selectCount(new QueryWrapper<CollectionAccount>().eq("account_id",userId));
         resultMap.put("companyTotalAcceptWorkOrderCount", companyTotalAcceptWorkOrderCount);
         resultMap.put("myAcceptWorkOrderCount", myAcceptWorkOrderCount);
         resultMap.put("myCloseWorkOrderCount", myCloseWorkOrderCount);
         resultMap.put("myCollectionWorkOrderCount", myCollectionWorkOrderCount);
+        resultMap.put("accountUnreadMessageCount", accountUnreadMessageCount);
         return resultMap;
     }
 
@@ -112,8 +124,18 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     @Override
     public Map<String, Object> queryCompanyWorkOrderList(WorkOrderReq workOrderReq) {
         Map<String, Object> map = new HashMap<>();
+        //当前用户的绑定CSI记录【用户没有绑定CSI编号那么就没有技术性工单】
+        List<AccountBindingCSI> bindingRecord = bindingAccountCSIMapper.selectAccountBindingRecord(ContextUtil.getUserId().toString());
+        if (CollectionUtil.isEmpty(bindingRecord)) {
+            //空数组
+            ArrayList<WorkOrder> list = CollectionUtil.newArrayList();
+            map.put("total", 0);
+            map.put("voList", list);
+            return map;
+        }
         //用户收藏的所有工单id集合
         List<Long> collectionWorkOrderIdList = new ArrayList<>();
+        //我收藏的工单选中时
         if (workOrderReq.getMyCollection()) {
             List<CollectionAccount> collectionWokOrderIds = collectionAccountMapper.selectList(new QueryWrapper<CollectionAccount>().eq("account_id", ContextUtil.getUserId()));
             if (!CollectionUtils.isEmpty(collectionWokOrderIds)) {
@@ -122,24 +144,37 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 });
             }
             //用户没有收藏的记录时返回空对象
-            if(CollectionUtil.isEmpty(collectionWorkOrderIdList)) {
+            if (CollectionUtil.isEmpty(collectionWorkOrderIdList)) {
                 map.put("total", collectionWorkOrderIdList.size());
                 map.put("voList", collectionWorkOrderIdList);
                 return map;
             }
         }
+        //用户绑定的所有CSI编号集合
+        Set<String> bindCSINumberSet = new TreeSet<>();
+        for (AccountBindingCSI bindingCSI : bindingRecord) {
+            bindCSINumberSet.add(bindingCSI.getCsiNumber());
+        }
+        //客户服务号
+        List<String> customerCSINumber = workOrderReq.getCustomerCSINumber();
+        if (CollectionUtil.isNotEmpty(customerCSINumber)) {
+            //客户服务号不为空时。表示用户筛选客户服务号下的工单
+            bindCSINumberSet = new TreeSet<>();
+            for (String s : customerCSINumber) {
+                bindCSINumberSet.add(s);
+            }
+        }
         //条件构造器
         QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>()
-                //技术工单或非技术工单
-                .eq("type", workOrderReq.getWorkOrderType())
+                .eq("type", 2)
+                //客户服务号
+                .in("csi_number", bindCSINumberSet)
                 //我收藏选中时
                 .in(collectionWorkOrderIdList.size() > 0, "id", collectionWorkOrderIdList)
-                //客户服务号
-                .in(CollectionUtil.isNotEmpty(workOrderReq.getCustomerCSINumber()), "csi_number", workOrderReq.getCustomerCSINumber())
                 //问题概要
                 .like(StrUtil.isNotEmpty(workOrderReq.getProblemProfile()), "problem_profile", workOrderReq.getProblemProfile())
                 //技术请求编号
-                .like(StrUtil.isNotEmpty(workOrderReq.getOutTradeNo()),"out_trade_no",workOrderReq.getOutTradeNo())
+                .like(StrUtil.isNotEmpty(workOrderReq.getOutTradeNo()), "out_trade_no", workOrderReq.getOutTradeNo())
                 //我受理选中时
                 .eq((workOrderReq.getMyAccept() != null && workOrderReq.getMyAccept()), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
                 .eq((workOrderReq.getMyAccept() != null && workOrderReq.getMyAccept()), "account_id", ContextUtil.getUserId())
@@ -148,15 +183,113 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 //排序
                 .orderByDesc("create_time");
         //通过CSI编号查询公司所有人员工单
-        List<WorkOrder> records = workOrderMapper.selectPage(new Page<>(workOrderReq.getPageNo(), workOrderReq.getPageSize()), queryWrapper).getRecords();
+        Page<WorkOrder> workOrderPage = workOrderMapper.selectPage(new Page<>(workOrderReq.getPageNo(), workOrderReq.getPageSize()), queryWrapper);
+        List<WorkOrderListVo> listVo = getWorkOrderListVo(workOrderPage.getRecords());
+        map.put("total", Convert.toInt(workOrderPage.getTotal()));
+        map.put("voList", listVo);
+        return map;
+    }
+
+
+    @Override
+    public Map<String, Object> queryCompanyWorkOrderListNormal(WorkOrderReq workOrderReq) {
+        Map<String, Object> map = CollectionUtil.newHashMap();
+        //当前用户的绑定CSI记录
+        List<AccountBindingCSI> bindingRecord = bindingAccountCSIMapper.selectAccountBindingRecord(ContextUtil.getUserId().toString());
+        //当前用户绑定的CSI编号集合
+        ArrayList<String> bindingRecords = CollectionUtil.newArrayList();
+        if (CollectionUtil.isNotEmpty(bindingRecord)) {
+            for (AccountBindingCSI bindingCSI : bindingRecord) {
+                bindingRecords.add(bindingCSI.getCsiNumber());
+            }
+        }
+        //【最终】绑定的CSI列表下的用户id集合
+        ArrayList<Long> accountIdList = CollectionUtil.newArrayList();
+        //当前用户绑定的CSI编号下其他用户列表
+        if (CollectionUtil.isNotEmpty(bindingRecords)) {
+            //当前用户绑定的公司CSI信息集合
+            List<CompanyCSI> companyCSIList = companyCSIMapper.selectList(new QueryWrapper<CompanyCSI>().in("csi_number", bindingRecords));
+            if (CollectionUtil.isNotEmpty(companyCSIList)) {
+                //得到绑定的csi编号的id
+                ArrayList<Long> csiIdList = CollectionUtil.newArrayList();
+                for (CompanyCSI companyCSI : companyCSIList) {
+                    csiIdList.add(companyCSI.getId());
+                }
+                //得到了这些CSI编号下的所有绑定的用户信息
+                List<BindingAccountCSI> bindingAccountCSIS = bindingAccountCSIMapper.selectList(new QueryWrapper<BindingAccountCSI>().in("csi_id", csiIdList));
+                if (CollectionUtil.isNotEmpty(bindingAccountCSIS)) {
+                    for (BindingAccountCSI bindingAccountCSI : bindingAccountCSIS) {
+                        accountIdList.add(bindingAccountCSI.getAccountId());
+                    }
+                }
+            }
+        } else {
+            //当前用户没有绑定CSI编号信息，那么要获取他自己提交的工单列表
+            accountIdList.add(ContextUtil.getUserId());
+        }
+
+        //用户收藏的所有工单id集合
+        List<Long> collectionWorkOrderIdList = new ArrayList<>();
+        //我收藏的工单选中时
+        if (workOrderReq.getMyCollection()) {
+            List<CollectionAccount> collectionWokOrderIds = collectionAccountMapper.selectList(new QueryWrapper<CollectionAccount>().eq("account_id", ContextUtil.getUserId()));
+            if (CollectionUtil.isNotEmpty(collectionWokOrderIds)) {
+                collectionWokOrderIds.forEach(collectionAccount -> {
+                    collectionWorkOrderIdList.add(collectionAccount.getWorkOrderId());
+                });
+            }
+            //用户没有收藏的记录时返回空对象
+            if (CollectionUtil.isEmpty(collectionWorkOrderIdList)) {
+                map.put("total", collectionWorkOrderIdList.size());
+                map.put("voList", collectionWorkOrderIdList);
+                return map;
+            }
+        }
+        //条件构造器
+        QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>()
+                //非技术工单类型
+                .eq("type", 1)
+                //用户集合
+                .in("account_id", accountIdList)
+                //我收藏选中时
+                .in(collectionWorkOrderIdList.size() > 0, "id", collectionWorkOrderIdList)
+                //客户服务号
+                .in(CollectionUtil.isNotEmpty(workOrderReq.getCustomerCSINumber()), "csi_number", workOrderReq.getCustomerCSINumber())
+                //问题概要
+                .like(StrUtil.isNotEmpty(workOrderReq.getProblemProfile()), "problem_profile", workOrderReq.getProblemProfile())
+                //技术请求编号
+                .like(StrUtil.isNotEmpty(workOrderReq.getOutTradeNo()), "out_trade_no", workOrderReq.getOutTradeNo())
+                //我受理选中时
+                .eq((workOrderReq.getMyAccept() != null && workOrderReq.getMyAccept()), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
+                .eq((workOrderReq.getMyAccept() != null && workOrderReq.getMyAccept()), "account_id", ContextUtil.getUserId())
+                //进行中选中时
+                .eq(workOrderReq.getMyOngoing(), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
+                //排序
+                .orderByDesc("create_time");
+        //获取非技术工单列表
+        Page<WorkOrder> workOrderPage = workOrderMapper.selectPage(new Page<>(workOrderReq.getPageNo(), workOrderReq.getPageSize()), queryWrapper);
+        List<WorkOrderListVo> listVo = getWorkOrderListVo(workOrderPage.getRecords());
+        map.put("total", Convert.toInt(workOrderPage.getTotal()));
+        map.put("voList", listVo);
+        return map;
+    }
+
+
+    /**
+     * 获取工单封装结果
+     *
+     * @param workOrderList 原工单列表
+     * @return List
+     */
+    protected List<WorkOrderListVo> getWorkOrderListVo(List<WorkOrder> workOrderList) {
         //工单结果返回
         List<WorkOrderListVo> voList = new ArrayList<>();
-        if (records.size() > 0 && records != null) {
+        if (CollectionUtil.isNotEmpty(workOrderList)) {
             WorkOrderListVo vo = null;
-            for (WorkOrder record : records) {
+            for (WorkOrder record : workOrderList) {
                 vo = new WorkOrderListVo();
                 //工单id、问题概要、工单编号、分类名称
-                vo.setId(record.getId().toString()).setProblemProfile(record.getProblemProfile()).setOutTradeNo(record.getOutTradeNo()).setCategoryName(record.getProductNameVersion() + record.getProblemType());
+                vo.setId(record.getId().toString()).setProblemProfile(record.getProblemProfile()).setOutTradeNo(record.getOutTradeNo()).setCategoryName(StrUtil.hasEmpty(record.getProductNameVersion()) ? "" + record.getProblemType() : record.getProductNameVersion() + record.getProblemType());
                 //创建时间、上次更新时间、严重等级、主要联系人、工单状态
                 vo.setCreateTime(record.getCreateTime()).setUpdateTime(record.getLastUpdateTime()).setProblemSeverity(record.getProblemSeverity()).setMainContact(record.getMainContact()).setStatus(record.getStatus());
                 // 是否收藏【当前登录用户是否收藏当前工单】
@@ -167,10 +300,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 voList.add(vo);
             }
         }
-        Integer total = workOrderMapper.selectCount(queryWrapper);
-        map.put("total", total);
-        map.put("voList", voList);
-        return map;
+        return voList;
     }
 
 
@@ -370,7 +500,12 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         communicationRecordMapper.insert(record);
         //更新工单最后更新时间
         workOrder.setLastUpdateTime(DateUtil.now());
-        return workOrderMapper.updateById(workOrder);
+        int row = workOrderMapper.updateById(workOrder);
+        if (row > 0) {
+            //向工程师发送邮件提醒工程师处理用户反馈的问题
+            threadPoolTaskExecutor.execute(() -> sendEmailUtil.sendRemindEngineerForWorkOrder(workOrder));
+        }
+        return row;
     }
 
 
@@ -401,9 +536,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
     public Map<String, Integer> queryEngineerWorkOrderStatistical(String engineerId) {
         Map<String, Integer> map = new HashMap<>();
         //公司总计受理中的工单
-        List<Integer> workOrderStatusList = new ArrayList<>();
-        workOrderStatusList.add(1);
-        workOrderStatusList.add(2);
+        ArrayList<Integer> workOrderStatusList = CollectionUtil.newArrayList(1, 2);
         Integer companyTotalAcceptWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().in("status", workOrderStatusList));
         map.put("companyTotalAcceptWorkOrderCount", companyTotalAcceptWorkOrderCount);
         //我受理中的工单
@@ -415,6 +548,9 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         //我收藏的工单
         Integer collectionCount = collectionEngineerMapper.selectCount(new QueryWrapper<CollectionEngineer>().eq("engineer_id", engineerId));
         map.put("myCollectionWorkOrderCount", collectionCount);
+        //当前工程师未读消息数量
+        Integer engineerUnreadMessageCount = engineerMsgMapper.selectCount(new QueryWrapper<EngineerMsg>().eq("engineer_id", engineerId).eq("is_read", 0));
+        map.put("engineerUnreadMessageCount",engineerUnreadMessageCount);
         return map;
     }
 
@@ -449,8 +585,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         }
         //条件构造器
         QueryWrapper<WorkOrder> queryWrapper = new QueryWrapper<WorkOrder>()
-                .eq(StrUtil.isNotEmpty(engineerIndexInitReq.getOutTradeNo()), "out_trade_no", engineerIndexInitReq.getOutTradeNo())
-                .eq(StrUtil.isNotEmpty(engineerIndexInitReq.getProblemProfile()), "problem_profile", engineerIndexInitReq.getProblemProfile())
+                .like(StrUtil.isNotEmpty(engineerIndexInitReq.getOutTradeNo()), "out_trade_no", engineerIndexInitReq.getOutTradeNo())
+                .like(StrUtil.isNotEmpty(engineerIndexInitReq.getProblemProfile()), "problem_profile", engineerIndexInitReq.getProblemProfile())
                 .eq(StrUtil.isNotEmpty(engineerIndexInitReq.getAcceptPerson()), "engineer_id", engineerIndexInitReq.getAcceptPerson())
                 .eq(StrUtil.isNotEmpty(threeCategoryName), "problem_type", threeCategoryName)
                 //我受理中的工单
@@ -550,12 +686,12 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
 
             String resultStr = "";
             if (type == 1) {
-                //相关知识文档
-                resultStr = StrUtil.hasEmpty(workOrder.getRelatedDoc()) ? document.getId().toString() : workOrder.getRelatedDoc() + "," + document.getId();
+                //相关知识文档【工单之前没有关联过文档，直接关联新文档，否则拼接新文档】
+                resultStr = StrUtil.hasEmpty(workOrder.getRelatedDoc()) ? document.getId().toString() + "," : workOrder.getRelatedDoc() + document.getId() + ",";
                 workOrder.setRelatedDoc(resultStr);
             } else {
                 //相关bug文档
-                resultStr = StrUtil.hasEmpty(workOrder.getRelatedBugDoc()) ? document.getId().toString() : workOrder.getRelatedBugDoc() + "," + document.getId();
+                resultStr = StrUtil.hasEmpty(workOrder.getRelatedBugDoc()) ? document.getId().toString() + "," : workOrder.getRelatedBugDoc() + document.getId() + ",";
                 workOrder.setRelatedBugDoc(resultStr);
             }
             return workOrderMapper.updateById(workOrder);
@@ -680,12 +816,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         int row = workOrderMapper.insert(order);
         if (row > 0) {
             //异步处理工单分配
-            threadPoolTaskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    distributionUtil.autoDistributionWorkOrderToEngineer(order.getId().toString());
-                }
-            });
+            threadPoolTaskExecutor.execute(() -> distributionUtil.autoDistributionWorkOrderToEngineer(order.getId().toString()));
         }
         return row;
     }
@@ -706,8 +837,8 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         workOrder.setUpgradeStatus(StatusCodeUtil.WORK_ORDER_UPGRADE_STATUS).setUpgradeReason(engineerUpgradeWorkOrderReq.getUpgradeReason());
         int row = workOrderMapper.updateById(workOrder);
         if (row > 0) {
-            //todo 发送告警信息到 manager
-
+            //发送告警信息到 manager
+            threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendManagerWorkOrderUpgradeAlarm(workOrder));
         }
         return row;
     }

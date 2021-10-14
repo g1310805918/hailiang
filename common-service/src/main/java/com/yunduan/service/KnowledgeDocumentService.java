@@ -3,6 +3,7 @@ package com.yunduan.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yunduan.entity.KnowledgeDocument;
 import com.yunduan.request.front.document.InitDocumentManagerReq;
+import com.yunduan.request.front.knowledge.AddKnowledgeReq;
 import com.yunduan.request.front.knowledge.KnowledgeListReq;
 import com.yunduan.request.front.knowledge.KnowledgeSearchReq;
 import com.yunduan.request.front.servicerequest.DynamicSearchDocumentReq;
@@ -37,10 +38,9 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
     /**
      * 模糊搜索知识文档
      * @param searchContent 搜索内容
-     * @param nullStr 搜索标志
      * @return list
      */
-    List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent,String nullStr);
+    List<KnowledgeLazySearchVo> queryKnowledgeLazySearch(String searchContent);
 
 
     /**
@@ -81,4 +81,12 @@ public interface KnowledgeDocumentService extends IService<KnowledgeDocument> {
      * @return list
      */
     List<DocumentListVo> dynamicDocumentList(DynamicSearchDocumentReq dynamicSearchDocumentReq);
+
+
+    /**
+     * 搜索知识文档
+     * @param addKnowledgeReq 筛选条件
+     * @return List
+     */
+    List<KnowledgeDocument> searchDocList(AddKnowledgeReq addKnowledgeReq);
 }

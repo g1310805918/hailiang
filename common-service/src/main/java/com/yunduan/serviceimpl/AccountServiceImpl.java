@@ -129,6 +129,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 Map<String, String> map = new HashMap<>();
                 map.put("token", token);
                 map.put("isBind", StrUtil.hasEmpty(account.getOpenId()) ? "0" : "1");
+                map.put("username",account.getUsername());
+                map.put("headPic",account.getHeadPic());
                 return map;
             }
         }

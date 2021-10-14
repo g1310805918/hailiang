@@ -72,12 +72,7 @@ public class BugController {
             flag = bugManagerService.updateById(bugManager);
             if (flag) {
                 //BDE异步发送bug审核结果消息给工程师
-                threadPoolTaskExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendMessageUtil.sendBUGReviewPassMessage(id);
-                    }
-                });
+                threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendBUGReviewPassMessage(id));
             }
         }
         return flag ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
@@ -95,12 +90,7 @@ public class BugController {
             flag = bugManagerService.updateById(bugManager);
             if (flag) {
                 //BDE异步发送bug审核结果消息给工程师
-                threadPoolTaskExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendMessageUtil.sendBUGReviewRefusedMessage(bugManager.getId().toString());
-                    }
-                });
+                threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendBUGReviewRefusedMessage(bugManager.getId().toString()));
             }
         }
         return flag ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");

@@ -43,6 +43,7 @@ D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\c
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\SysMessage.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\KnowledgeDocumentMapper.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\BugManagerMapper.java
+D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\knowledge\AddKnowledgeReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\WorkOrder.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\review\ReviewInitReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\serviceimpl\CollectionFavoritesServiceImpl.java
@@ -78,6 +79,7 @@ D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\c
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\knowledge\KnowledgeLazySearchReq.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\mapper\RoleMapper.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\request\front\knowledge\AccountAddCollect.java
+D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\config\ToStringSerializer.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\vo\WorkOrderProblemProfile.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\entity\KnowledgeDocumentThreeCategory.java
 D:\CodeProject\Java\java-common-vastbase-hailiang\common-service\src\main\java\com\yunduan\service\CommunicationRecordService.java

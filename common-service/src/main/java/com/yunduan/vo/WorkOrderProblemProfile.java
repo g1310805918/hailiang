@@ -37,7 +37,7 @@ public class WorkOrderProblemProfile implements Serializable {
     private List<String> problemImages;
 
     @ApiModelProperty("附件地址")
-    private String attachmentPath;
+    private List<String> attachmentPath;
 
     @ApiModelProperty("错误代码")
     private String errorCode;

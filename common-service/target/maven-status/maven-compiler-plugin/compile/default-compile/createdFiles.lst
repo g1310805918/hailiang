@@ -132,6 +132,7 @@ com\yunduan\utils\StatusCodeUtil.class
 com\yunduan\mapper\dao\RoleDao.class
 com\yunduan\vo\EngineerMsgInitVo.class
 com\yunduan\mapper\BindingAccountCSIMapper.class
+com\yunduan\request\front\knowledge\AddKnowledgeReq.class
 com\yunduan\service\EngineerMsgService.class
 com\yunduan\mapper\AdminRoleMapper.class
 com\yunduan\utils\RedisUtil.class
@@ -226,6 +227,7 @@ com\yunduan\mapper\CollectionAccountMapper.class
 com\yunduan\utils\ExtractRichTextUtil.class
 com\yunduan\vo\back\PageVo.class
 com\yunduan\entity\Setting.class
+com\yunduan\config\ToStringSerializer.class
 com\yunduan\mapper\CollectionEngineerMapper.class
 com\yunduan\vo\back\SearchVo.class
 com\yunduan\mapper\EngineerMapper.class

@@ -1,12 +1,9 @@
 package com.yunduan.controller;
 
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yunduan.entity.Account;
 import com.yunduan.entity.AccountMsg;
-import com.yunduan.entity.EngineerMsg;
 import com.yunduan.request.front.message.EngineerInitPageReq;
 import com.yunduan.request.front.message.InitListReq;
 import com.yunduan.service.AccountMsgService;
@@ -14,7 +11,6 @@ import com.yunduan.service.EngineerMsgService;
 import com.yunduan.utils.AESUtil;
 import com.yunduan.utils.ContextUtil;
 import com.yunduan.utils.ResultUtil;
-import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.EngineerMsgDetailVo;
 import com.yunduan.vo.EngineerMsgInitVo;
 import com.yunduan.vo.MsgDetailVo;
@@ -22,13 +18,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

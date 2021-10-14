@@ -156,7 +156,7 @@ public class StatusCodeUtil {
     //消息未读标志
     public static final Integer MESSAGE_NO_READ_FLAG = 0;
     //消息已读标志
-    public static final Integer MESSAGE_HAS_READ_FLAG = 0;
+    public static final Integer MESSAGE_HAS_READ_FLAG = 1;
 
 
     //工程师工单消息
@@ -168,8 +168,9 @@ public class StatusCodeUtil {
     //工程师系统消息
     public static final Integer ENGINEER_MESSAGE_TYPE_SYSTEM = 4;
 
-    //用户放弃解决
-    public static final String ACCOUNT_GIVE_UP_WORK_ORDER = "放弃解决";
+    //用户已解除绑定
+    public static final Integer MESSAGE_ACCOUNT_UNBINDING = 4444;
+
 
 
 }

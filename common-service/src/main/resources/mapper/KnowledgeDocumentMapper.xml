@@ -2,25 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yunduan.mapper.KnowledgeDocumentMapper">
 
-    <!-- 模糊搜所知识文档以及文档分类 -->
+    <!-- 模糊搜所知识文档以及文档分类
+
+         SELECT id,category_title, 1 AS type FROM tb_knowledge_document_one_category WHERE del_flag = 0 AND category_title LIKE concat('%',#{searchContent},'%')
+         UNION ALL
+         SELECT id,category_title, 2 AS type  FROM tb_knowledge_document_two_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
+         UNION ALL
+         SELECT id,category_title, 3 AS type  FROM tb_knowledge_document_three_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
+         UNION ALL
+    -->
     <select id="selectKnowledgeLazySearch" resultType="com.yunduan.vo.KnowledgeLazySearchVo">
-        SELECT id,category_title, 1 AS type FROM tb_knowledge_document_one_category WHERE del_flag = 0 AND category_title LIKE concat('%',#{searchContent},'%')
-        UNION ALL
-        SELECT id,category_title, 2 AS type  FROM tb_knowledge_document_two_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
-        UNION ALL
-        SELECT id,category_title, 3 AS type  FROM tb_knowledge_document_three_category WHERE del_flag = 0 AND  category_title LIKE concat('%',#{searchContent},'%')
-        UNION ALL
-        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document
-        WHERE del_flag = 0 AND  doc_title LIKE concat ('%',#{searchContent},'%')
-        <if test="nullStr == null or nullStr == ''">
-            AND is_show = 1
-        </if>
-        UNION ALL
-        SELECT id,doc_title AS category_title,4 AS type FROM tb_knowledge_document
-        WHERE del_flag = 0 AND  doc_content LIKE concat ('%',#{searchContent},'%')
-        <if test="nullStr == null or nullStr == ''">
-            AND is_show = 1
-        </if>
+        SELECT
+            ID,doc_title AS category_title,4 AS TYPE
+        FROM
+            tb_knowledge_document
+        WHERE
+            del_flag = 0
+          AND is_show = 1
+          AND doc_title LIKE concat ( '%', #{searchContent}, '%' ) UNION ALL
+        SELECT
+            ID,doc_title AS category_title,4 AS TYPE
+        FROM
+            tb_knowledge_document
+        WHERE
+            del_flag = 0
+          AND is_show = 1
+          AND doc_content LIKE concat ( '%', #{searchContent}, '%' )
     </select>
 
     <!-- 某搜索包含xxx的id集合 -->

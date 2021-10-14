@@ -89,6 +89,8 @@ public class AccountCenterController {
             return resultUtil.AesFAILError("CSI编号不存在");
         } else if (row == StatusCodeUtil.COMPANY_CSI_CAU_NO_BINDING) {
             return resultUtil.AesFAILError("公司CAU管理员未绑定，请联系负责人绑定。");
+        } else if (row == StatusCodeUtil.HAS_EXIST) {
+            return resultUtil.AesFAILError("您已提交绑定，请勿重复提交申请！");
         }
         return row > 0 ? resultUtil.AesJSONSuccess("绑定申请提交成功，等待管理员审核。", "") : resultUtil.AesFAILError("绑定申请提交失败");
     }
@@ -118,8 +120,10 @@ public class AccountCenterController {
             log.error("CAU删除绑定用户 bindingId、type 为空");
             return resultUtil.AesFAILError("非法请求");
         }
-        //删除绑定记录
         int row = bindingAccountCSIService.operationBindingAccountRecord(bindingId, type);
+        if (row == StatusCodeUtil.MESSAGE_ACCOUNT_UNBINDING) {
+            return resultUtil.AesFAILError("用户已解除绑定。");
+        }
         return row > 0 ? resultUtil.AesJSONSuccess("操作成功", "") : resultUtil.AesFAILError("操作失败");
     }
 

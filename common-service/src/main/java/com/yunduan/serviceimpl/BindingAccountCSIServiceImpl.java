@@ -1,6 +1,7 @@
 package com.yunduan.serviceimpl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -76,13 +77,24 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
                 return StatusCodeUtil.COMPANY_CSI_CAU_NO_BINDING;
             }
             //添加申请绑定记录(普通员工)
-            BindingAccountCSI normalBinding = new BindingAccountCSI();
-            normalBinding.setId(SnowFlakeUtil.getPrimaryKeyId()).setAccountId(account.getId()).setCsiId(companyCSI.getId()).setIdentity(1).setStatus(1).setCreateTime(DateUtil.now());
+            BindingAccountCSI normalBinding = bindingAccountCSIMapper.selectOne(new QueryWrapper<BindingAccountCSI>().eq("account_id", account.getId()).eq("csi_id", companyCSI.getId()));
+            if (normalBinding != null) {
+                return StatusCodeUtil.HAS_EXIST;
+            }
+            normalBinding = new BindingAccountCSI();
+            //生成id
+            String bindingAccountCSIId = SnowFlakeUtil.getPrimaryKeyId().toString();
+            //id、用户id、csi记录id、身份、状态、申请时间
+            normalBinding.setId(Convert.toLong(bindingAccountCSIId)).setAccountId(account.getId()).setCsiId(companyCSI.getId()).setIdentity(1).setStatus(1).setCreateTime(DateUtil.now());
+            //添加
             int row = bindingAccountCSIMapper.insert(normalBinding);
             if (row > 0) {
                 //异步发送验证信息到CAU用户信息
                 threadPoolTaskExecutor.execute(() -> {
-                    account.setAccountId(account.getId().toString());  //将用户id转换为字符串
+                    //添加绑定的csi记录id【方便之后CAU审核时方便查找记录】
+                    account.setBindingAccountCSIId(bindingAccountCSIId);
+                    //将用户id转换为字符串
+                    account.setAccountId(account.getId().toString());
                     //用户信息JSON字符串
                     String accountJson = JSONObject.toJSONString(account);
                     //向CAU管理员发送一条待审核消息【id、消息标题、消息内容、消息类型、用户id、是否已读、删除标志、添加时间】
@@ -139,8 +151,8 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
         //绑定记录
         BindingAccountCSI record = bindingAccountCSIMapper.selectOne(new QueryWrapper<BindingAccountCSI>().eq("id", bindingId));
         if (record == null) {
-            log.error("CAU操作绑定用户 record 为空");
-            return 0;
+            log.info("【CAU操作绑定的用户】绑定记录已删除，表示用户已经解除绑定CSI号");
+            return StatusCodeUtil.MESSAGE_ACCOUNT_UNBINDING;
         }
         if (Objects.equals("1",type)) {
             //同意
@@ -154,7 +166,7 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
             //删除记录
             return bindingAccountCSIMapper.deleteById(record.getId());
         }
-        return bindingAccountCSIMapper.update(record,new QueryWrapper<BindingAccountCSI>().eq("id",record.getId()));
+        return bindingAccountCSIMapper.updateById(record);
     }
 
 
@@ -169,8 +181,8 @@ public class BindingAccountCSIServiceImpl extends ServiceImpl<BindingAccountCSIM
         //当前CAU绑定的CSI记录id
         BindingAccountCSI record = bindingAccountCSIMapper.selectOne(new QueryWrapper<BindingAccountCSI>().eq("id", bindingId));
         if (record != null) {
-            //CSI下绑定的普通用户列表
-            List<BindingAccountCSI> personList = bindingAccountCSIMapper.selectList(new QueryWrapper<BindingAccountCSI>().ne("id", record.getId()).eq("csi_id", record.getCsiId()).eq("identity", 1));
+            //CSI下绑定的普通用户列表【已经绑定成功的CSI普通用户列表】
+            List<BindingAccountCSI> personList = bindingAccountCSIMapper.selectList(new QueryWrapper<BindingAccountCSI>().ne("id", record.getId()).eq("csi_id", record.getCsiId()).eq("identity", 1).eq("status",2));
             if (personList.size() > 0 && personList != null) {
                 BindingOtherCSIAccountVo vo = null;
                 for (BindingAccountCSI bindingAccountCSI : personList) {

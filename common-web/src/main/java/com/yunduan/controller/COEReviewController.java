@@ -62,12 +62,7 @@ public class COEReviewController {
         int row = knowledgeDocumentNoPassService.changeDocumentStatus(documentId, 2);
         if (row > 0) {
             //异步发送文档审核通过消息
-            threadPoolTaskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    sendMessageUtil.sendDocumentPassMessage(documentId);
-                }
-            });
+            threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendDocumentPassMessage(documentId));
         }
         return row > 0 ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
     }
@@ -83,12 +78,7 @@ public class COEReviewController {
         int row = knowledgeDocumentNoPassService.changeDocumentStatus(documentId, 3);
         if (row > 0) {
             //异步发送文档审核已拒绝消息
-            threadPoolTaskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    sendMessageUtil.sendDocumentRefusedMessage(documentId);
-                }
-            });
+            threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendDocumentRefusedMessage(documentId));
         }
         return row > 0 ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
     }

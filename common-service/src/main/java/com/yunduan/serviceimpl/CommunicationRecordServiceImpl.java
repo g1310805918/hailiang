@@ -95,7 +95,7 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
             //问题截图
             profile.setProblemImages(StrUtil.hasEmpty(workOrder.getProblemDesImage()) ? list : Arrays.asList(workOrder.getProblemDesImage().split(",")));
             //问题附件
-            profile.setAttachmentPath(StrUtil.hasEmpty(workOrder.getProblemDesImage()) ? "" : Arrays.asList(workOrder.getAttachmentPath().split(",")).get(0));
+            profile.setAttachmentPath(StrUtil.hasEmpty(workOrder.getAttachmentPath()) ? list : Arrays.asList(workOrder.getAttachmentPath().split(",")));
             //VDM标签
             profile.setVDMCode(StatusCodeUtil.VDM_CUSTOMER_PROBLEM_DESC);
             //错误代码
@@ -126,9 +126,11 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
                     Account account = accountMapper.selectById(record.getAccountId());
                     //用户头像、昵称
                     result.setHeadPic(StrUtil.hasEmpty(account.getHeadPic()) ? "" : account.getHeadPic()).setUsername(StrUtil.hasEmpty(account.getUsername()) ? "" : account.getUsername());
+                    //工程师是否可以编辑沟通记录
+                    result.setIsEdit(false);
                 }else {
-                    //否则表示工程师
-                    result.setHeadPic("LOGO").setUsername("海量数据技术支持");
+                    //否则表示工程师、工程师是否可以编辑沟通记录
+                    result.setHeadPic("LOGO").setUsername("海量数据技术支持").setIsEdit(true);
                 }
                 //工单的错误代码
                 result.setErrorCode(StrUtil.hasBlank(workOrder.getErrorCode()) ? "" : workOrder.getErrorCode());

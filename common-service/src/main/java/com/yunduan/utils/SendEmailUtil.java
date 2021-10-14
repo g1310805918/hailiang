@@ -3,7 +3,10 @@ package com.yunduan.utils;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.sun.mail.util.MailSSLSocketFactory;
+import com.yunduan.entity.Engineer;
 import com.yunduan.entity.Setting;
+import com.yunduan.entity.WorkOrder;
+import com.yunduan.mapper.EngineerMapper;
 import com.yunduan.service.SettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,8 @@ public class SendEmailUtil {
 
     @Autowired
     private SettingService settingService;
+    @Autowired
+    private EngineerMapper engineerMapper;
 
     //登录账户
     public String account = null;
@@ -63,6 +68,28 @@ public class SendEmailUtil {
         commonSend(email,content);
         return randomCode;
     }
+
+
+    /**
+     * 向工程师发送提醒处理用户反馈内容邮件
+     * @param workOrder 工单
+     */
+    public void sendRemindEngineerForWorkOrder(WorkOrder workOrder) {
+        Engineer engineer = engineerMapper.selectById(workOrder.getEngineerId());
+        if (engineer != null) {
+            //发送邮件内容
+            String content = "您处理的工单，编号为：" + workOrder.getOutTradeNo() + "，用户已提交新的反馈内容，请您尽快处理。";
+            String email = engineer.getEmail();
+            try {
+                commonSend(email,content);
+            } catch (Exception e) {
+                log.error("【向工程师发送提醒处理用户反馈内容邮件】发送邮件失败，邮箱：" + email + "\t发送内容：" + content);
+            }
+        } else {
+            log.error("【向工程师发送提醒处理用户反馈内容邮件】工单id = " + workOrder.getId() + "\t工程师id = " + workOrder.getEngineerId() + "\t不存在，发送邮件失败！");
+        }
+    }
+
 
 
     /**

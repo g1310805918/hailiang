@@ -135,8 +135,9 @@ public class CollectionFavoritesServiceImpl extends ServiceImpl<CollectionFavori
         CollectionFavorites favorites = collectionFavoritesMapper.selectOne(new QueryWrapper<CollectionFavorites>().eq("id", id));
         if (favorites != null) {
             favorites.setFavoritesName(favoritesName);
-            return collectionFavoritesMapper.update(favorites, new QueryWrapper<CollectionFavorites>().eq("id", favorites.getId()));
+            return collectionFavoritesMapper.updateById(favorites);
         }
+        log.error("收藏夹不存在，传递的收藏夹id = " + id);
         return 0;
     }
 

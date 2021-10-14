@@ -70,10 +70,18 @@ public class ServiceRequestController {
 
 
     @GetMapping("/account-work-order-list-technology")
-    @ApiOperation(httpMethod = "GET", value = "用户工单列表-技术工单")
+    @ApiOperation(httpMethod = "GET", value = "用户工单列表-技术工单列表")
     public ResultUtil<Map<String, Object>> accountWorkOrderListTechnology(WorkOrderReq workOrderReq) {
         workOrderReq = AESUtil.decryptToObj(workOrderReq.getData(), WorkOrderReq.class);
         Map<String, Object> map = workOrderService.queryCompanyWorkOrderList(workOrderReq);
+        return resultUtil.AesJSONSuccess("SUCCESS", map);
+    }
+
+    @GetMapping("/account-work-order-list-normal")
+    @ApiOperation(httpMethod = "GET", value = "用户工单列表-非技术工单列表")
+    public ResultUtil<Map<String, Object>> accountWorkOrderListNormal(WorkOrderReq workOrderReq) {
+        workOrderReq = AESUtil.decryptToObj(workOrderReq.getData(), WorkOrderReq.class);
+        Map<String, Object> map = workOrderService.queryCompanyWorkOrderListNormal(workOrderReq);
         return resultUtil.AesJSONSuccess("SUCCESS", map);
     }
 
@@ -333,7 +341,7 @@ public class ServiceRequestController {
 
 
     @PostMapping("/engineer-add-knowledge-document")
-    @ApiOperation(httpMethod = "GET", value = "工程师关联工单【知识文档、bug文档】")
+    @ApiOperation(httpMethod = "POST", value = "工程师关联工单【知识文档、bug文档】")
     public ResultUtil<String> engineerAddKnowledgeDocument(AddKnowledgeDocReq addKnowledgeDocReq) {
         addKnowledgeDocReq = AESUtil.decryptToObj(addKnowledgeDocReq.getData(), AddKnowledgeDocReq.class);
         int row = workOrderService.joinWorkOrderDocumentInfo(addKnowledgeDocReq);
@@ -397,14 +405,11 @@ public class ServiceRequestController {
         workOrder.setEngineerId(StrUtil.hasEmpty(transferOrderReq.getEngineerId()) ? workOrder.getEngineerId() : Convert.toLong(transferOrderReq.getEngineerId()));
         boolean flag = workOrderService.updateById(workOrder);
         if (flag) {
-            //更新该工单沟通记录的工程师id为转单后的工程师id
-            threadPoolTaskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    communicationRecordService.changeCommunicationRecordEngineerID(workOrder.getId().toString(), workOrder.getEngineerId().toString());
-                    //发送消息通知接受工单的工程师
-                    sendMessageUtil.sendWorkOrderMessage(workOrder);
-                }
+            threadPoolTaskExecutor.execute(() -> {
+                //更新该工单沟通记录的工程师id为转单后的工程师id
+                communicationRecordService.changeCommunicationRecordEngineerID(workOrder.getId().toString(), workOrder.getEngineerId().toString());
+                //发送消息通知接受工单的工程师
+                sendMessageUtil.sendWorkOrderMessage(workOrder);
             });
         }
         return flag ? resultUtil.AesJSONSuccess("转单成功", "") : resultUtil.AesFAILError("转单失败");
@@ -490,14 +495,8 @@ public class ServiceRequestController {
         }
         workOrder.setStatus(StatusCodeUtil.WORK_ORDER_PROCESS_STATUS);
         workOrderService.updateById(workOrder);
-        //另起线程执行分配任务，直接返回结果
-        threadPoolTaskExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                //直接调用分配，如果没有分配成功、那么后续会由定时任务来分配
-                distributionUtil.autoDistributionWorkOrderToEngineer(workOrderId);
-            }
-        });
+        //直接调用分配，如果没有分配成功、那么后续会由定时任务来分配
+        threadPoolTaskExecutor.execute(() -> distributionUtil.autoDistributionWorkOrderToEngineer(workOrderId));
         return resultUtil.AesJSONSuccess("已将工单放回系统，等待分配。", "");
     }
 

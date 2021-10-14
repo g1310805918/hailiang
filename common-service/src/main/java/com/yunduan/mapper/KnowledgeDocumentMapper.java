@@ -18,7 +18,7 @@ public interface KnowledgeDocumentMapper extends BaseMapper<KnowledgeDocument> {
      * @param nullStr 搜索标志
      * @return list
      */
-    List<KnowledgeLazySearchVo> selectKnowledgeLazySearch(@Param("searchContent") String searchContent, @Param("nullStr") String nullStr);
+    List<KnowledgeLazySearchVo> selectKnowledgeLazySearch(@Param("searchContent") String searchContent);
 
 
     /**
