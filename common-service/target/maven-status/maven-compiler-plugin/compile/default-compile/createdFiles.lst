@@ -9,7 +9,6 @@ com\yunduan\service\CollectionEngineerDocumentService.class
 com\yunduan\mapper\AccountMapper.class
 com\yunduan\entity\SysDictionary.class
 com\yunduan\mapper\KnowledgeDocumentTwoCategoryMapper.class
-com\yunduan\serviceimpl\WorkOrderServiceImpl$1.class
 com\yunduan\mapper\KnowledgeDocumentNoPassMapper.class
 com\yunduan\request\front\center\FavoritesReq.class
 com\yunduan\request\front\servicerequest\SubmitKMDocumentReq.class
@@ -81,7 +80,6 @@ com\yunduan\vo\ProductNameVersionTwoVo.class
 com\yunduan\serviceimpl\KnowledgeDocumentServiceImpl.class
 com\yunduan\request\front\servicerequest\DynamicSearchDocumentReq.class
 com\yunduan\serviceimpl\CollectionFavoritesServiceImpl.class
-com\yunduan\serviceimpl\KnowledgeDocumentNoPassServiceImpl$1.class
 com\yunduan\vo\CustomerServiceNoVo.class
 com\yunduan\entity\CollectionFavorites.class
 com\yunduan\mapper\KnowledgeDocumentThreeCategoryMapper.class
@@ -105,7 +103,6 @@ com\yunduan\utils\Base64DecodeMultipartFile.class
 com\yunduan\mapper\dao\EngineerDao.class
 com\yunduan\vo\DicInitListV.class
 com\yunduan\config\SwaggerConfig.class
-com\yunduan\serviceimpl\BugManagerServiceImpl$1.class
 com\yunduan\mapper\dao\PermissionDao.class
 com\yunduan\vo\back\RedisVo.class
 com\yunduan\service\CompanyCSIService.class

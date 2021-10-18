@@ -1,5 +1,6 @@
 package com.yunduan.serviceimpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -266,7 +267,7 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
 
         //我收藏的文档选中时
         List<Long> docIdList = new ArrayList<>();
-        if (initDocumentManagerReq.getMyCollection()) {
+        if (initDocumentManagerReq.getMyCollection() != null && initDocumentManagerReq.getMyCollection()) {
             //工程师收藏的文档列表
             List<CollectionEngineerDocument> documentList = engineerDocumentMapper.selectList(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", userId));
             if (documentList.size() > 0 && documentList != null) {
@@ -280,23 +281,23 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
                 //全部创建人
                 .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getEngineerId()), "engineer_id", initDocumentManagerReq.getEngineerId())
                 //文档所属分类
-                .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getCategoryId()), "threeCategory_id", initDocumentManagerReq.getCategoryId())
+                .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getCategoryId()), "three_category_id", initDocumentManagerReq.getCategoryId())
                 //我创建的文档
-                .eq(initDocumentManagerReq.getMyCreate(), "engineer_id", userId)
+                .eq((initDocumentManagerReq.getMyCreate() != null && initDocumentManagerReq.getMyCreate()), "engineer_id", userId)
                 //我发布成功的文档
-                .eq(initDocumentManagerReq.getMyFb(), "doc_status", 2)
+                .eq((initDocumentManagerReq.getMyFb() != null && initDocumentManagerReq.getMyFb()), "doc_status", 2)
                 //我收藏的文档
-                .in(docIdList.size() > 0 && docIdList != null, "id", docIdList)
+                .in(CollectionUtil.isNotEmpty(docIdList), "id", docIdList)
                 //文档id
                 .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getDocumentId()), "id", initDocumentManagerReq.getDocumentId())
                 //文档标题
                 .eq(StrUtil.isNotEmpty(initDocumentManagerReq.getDocumentTitle()), "doc_title", initDocumentManagerReq.getDocumentTitle());
         //我的初始化文档列表
-        List<KnowledgeDocumentNoPass> records = noPassMapper.selectPage(new Page<>(initDocumentManagerReq.getPageNo(), initDocumentManagerReq.getPageSize()), queryWrapper).getRecords();
+        Page<KnowledgeDocumentNoPass> page = noPassMapper.selectPage(new Page<>(initDocumentManagerReq.getPageNo(), initDocumentManagerReq.getPageSize()), queryWrapper);
         //结果封装
-        List<InitDocumentListVo> voList = queryInitResult(records);
+        List<InitDocumentListVo> voList = queryInitResult(page.getRecords());
         map.put("voList", voList);
-        map.put("pageTotal", noPassMapper.selectCount(queryWrapper));
+        map.put("pageTotal", page.getTotal());
         return map;
     }
 
@@ -308,23 +309,28 @@ public class KnowledgeDocumentServiceImpl extends ServiceImpl<KnowledgeDocumentM
      * @return list
      */
     private List<InitDocumentListVo> queryInitResult(List<KnowledgeDocumentNoPass> records) {
-        List<InitDocumentListVo> voList = new ArrayList<>();
-        if (records.size() > 0 && records != null) {
-            InitDocumentListVo vo = null;
-            for (KnowledgeDocumentNoPass record : records) {
-                Engineer engineer = engineerMapper.selectById(record.getEngineerId());
-                if (engineer == null) {
-                    continue;
-                }
-                vo = new InitDocumentListVo();
-                vo.setDocumentId(record.getId().toString()).setDocumentTitle(record.getDocTitle());
-                vo.setDocumentNum(record.getDocNumber()).setCategoryName(knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(record.getThreeCategoryId().toString()));
-                vo.setDocumentType(record.getDocType()).setCreateBy(StrUtil.hasEmpty(engineer.getUsername()) ? "" : engineer.getUsername()).setCreateTime(record.getCreateTime().substring(0, 16));
-                vo.setLastUpdateTime(StrUtil.hasEmpty(record.getUpdateTime()) ? "" : record.getUpdateTime().substring(0, 16)).setDocumentStatus(record.getDocStatus());
-                Integer count = engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", engineer.getId()).eq("document_id", record.getId()));
-                vo.setIsCollect(count > 0 ? 1 : 0);
-                voList.add(vo);
-            }
+        List<InitDocumentListVo> voList = CollectionUtil.newLinkedList();
+        if (CollectionUtil.isNotEmpty(records)) {
+            Optional.ofNullable(records).ifPresent(list ->
+                list.forEach(record -> {
+                    Engineer engineer = engineerMapper.selectById(record.getEngineerId());
+                    if (engineer == null) {
+                        return;
+                    }
+                    InitDocumentListVo vo = new InitDocumentListVo();
+                    //文档id、文档标题
+                    vo.setDocumentId(record.getId().toString()).setDocumentTitle(record.getDocTitle());
+                    //文档编号、所属产品模块、
+                    vo.setDocumentNum(record.getDocNumber()).setCategoryName(knowledgeDocumentThreeCategoryService.getKnowledgeCategoryName(record.getThreeCategoryId().toString()));
+                    //文档类型、创建人、创建时间
+                    vo.setDocumentType(record.getDocType()).setCreateBy(StrUtil.hasEmpty(engineer.getUsername()) ? "" : engineer.getUsername()).setCreateTime(record.getCreateTime().substring(0, 16));
+                    //上次更新时间
+                    vo.setLastUpdateTime(StrUtil.hasEmpty(record.getUpdateTime()) ? "" : record.getUpdateTime().substring(0, 16)).setDocumentStatus(record.getDocStatus());
+                    //是否收藏
+                    Integer count = engineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", engineer.getId()).eq("document_id", record.getId()));
+                    vo.setIsCollect(count > 0 ? 1 : 0);
+                    voList.add(vo);
+                }));
         }
         return voList;
     }

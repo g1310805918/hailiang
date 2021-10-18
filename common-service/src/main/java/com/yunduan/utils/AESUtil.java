@@ -4,7 +4,6 @@ import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
 import com.alibaba.fastjson.JSONObject;
-import com.yunduan.request.front.knowledge.KnowledgeLazySearchReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,10 +199,8 @@ public class AESUtil {
 
 
     public static void main(String[] args) {
-
-        KnowledgeLazySearchReq searchReq = decryptToObj("xq/OtfBs2mIYELGtObQz h6A/okQCY77fFbb1qdTb8k=", KnowledgeLazySearchReq.class);
-
-        System.out.println(JSONObject.toJSONString(searchReq));
+        String decrypt = decrypt("f I6EFZxl/4hbyu9U1xb8Ixtj/Wesmf0Ujn3oDX9E6OrKO88ro1gC5xQPEZN1hIASeC7 b5jrWvfD5v0aRjB0eXQdS/QDrKuvlcF/sIYFIs=");
+        System.out.println("decrypt = " + decrypt);
     }
 
 }

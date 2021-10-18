@@ -1,11 +1,13 @@
 package com.yunduan.entity;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.yunduan.config.LongJsonDeserializer;
 import com.yunduan.config.LongJsonSerializer;
+import com.yunduan.config.ToStringSerializer;
 import com.yunduan.utils.SnowFlakeUtil;
 import com.yunduan.utils.StatusCodeUtil;
 import com.yunduan.vo.FavoritesVo;
@@ -39,6 +41,7 @@ public class Engineer implements Serializable {
     @ApiModelProperty("主键id")
     @JsonSerialize(using = LongJsonSerializer.class)
     @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id = SnowFlakeUtil.getPrimaryKeyId();
 
     @ApiModelProperty("用户名")

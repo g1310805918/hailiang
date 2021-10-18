@@ -17,7 +17,7 @@ public class AddVDMFeedbackReq extends RequestBodyReq {
     @ApiModelProperty("当前工单处理流程【1-1、1-2、1-3、2-1、2-2......】")
     private String currentProcess;
 
-    @ApiModelProperty("回复标志【问题澄清......】")
+    @ApiModelProperty("回复标志【VDM问题澄清......】")
     private String VDMCode;
 
     @ApiModelProperty("内容")

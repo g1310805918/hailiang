@@ -23,6 +23,9 @@ public class CommunicationResult implements Serializable {
     @ApiModelProperty("工程师是否可以编辑沟通记录")
     private Boolean isEdit;
 
+    @ApiModelProperty("当前沟通记录是否是工程师发布的记录【false、true】")
+    private Boolean isEngineerRecord;
+
     @ApiModelProperty("头像")
     private String headPic;
 

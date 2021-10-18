@@ -97,7 +97,7 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
     public int engineerCreateDocument(String engineerId, CreateDocumentReq createDocumentReq) {
         KnowledgeDocumentNoPass noPass = new KnowledgeDocumentNoPass();
         //id、工程师id、文档编号
-        noPass.setId(SnowFlakeUtil.getPrimaryKeyId()).setEngineerId(Convert.toLong(engineerId)).setDocNumber(RandomUtil.randomNumbers(10));
+        noPass.setId(SnowFlakeUtil.getPrimaryKeyId()).setEngineerId(Convert.toLong(engineerId)).setDocNumber("D" + RandomUtil.randomNumbers(10));
         //文档类型、三级分类id、文档内容
         noPass.setDocType(createDocumentReq.getDocumentType()).setThreeCategoryId(Convert.toLong(createDocumentReq.getThreeCategoryId())).setDocContent(createDocumentReq.getDocumentContent());
         //更新时间、添加时间、删除标志、对内对外显示、文档标题
@@ -126,7 +126,7 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
         //审核已拒绝的文档
         map.put("refusedCount",knowledgeDocumentNoPassMapper.selectCount(new QueryWrapper<KnowledgeDocumentNoPass>().eq("doc_status",3)));
         //我收藏的文档
-        map.put("collectCount",collectionEngineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineerId", ContextUtil.getUserId())));
+        map.put("collectCount",collectionEngineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", ContextUtil.getUserId())));
         return map;
     }
 
@@ -146,21 +146,20 @@ public class KnowledgeDocumentNoPassServiceImpl extends ServiceImpl<KnowledgeDoc
                 //三级文档分类
                 .eq(StrUtil.isNotEmpty(reviewInitReq.getThreeCategoryId()), "three_category_id", reviewInitReq.getThreeCategoryId())
                 //待审核
-                .eq(reviewInitReq.getNoPassReview(), "doc_status", 1)
+                .eq((reviewInitReq.getNoPassReview() != null && reviewInitReq.getNoPassReview()), "doc_status", 1)
                 //审核通过
-                .eq(reviewInitReq.getPassReview(), "doc_status", 2)
+                .eq((reviewInitReq.getPassReview() != null && reviewInitReq.getPassReview()), "doc_status", 2)
                 //审核拒绝
-                .eq(reviewInitReq.getRefusedReview(), "doc_status", 3)
+                .eq((reviewInitReq.getRefusedReview() != null && reviewInitReq.getRefusedReview()), "doc_status", 3)
                 //文档编号
                 .eq(StrUtil.isNotEmpty(reviewInitReq.getDocumentId()), "doc_number", reviewInitReq.getDocumentId())
                 //文档标题
                 .like(StrUtil.isNotEmpty(reviewInitReq.getDocumentTitle()), "doc_title", reviewInitReq.getDocumentTitle())
                 .orderByDesc("create_time");
         //文档审核记录
-        List<KnowledgeDocumentNoPass> records = knowledgeDocumentNoPassMapper.selectPage(new Page<>(reviewInitReq.getPageNo(), reviewInitReq.getPageSize()), queryWrapper).getRecords();
-
-        map.put("voList",getInitPageData(records));
-        map.put("total",knowledgeDocumentNoPassMapper.selectCount(queryWrapper));
+        Page<KnowledgeDocumentNoPass> page = knowledgeDocumentNoPassMapper.selectPage(new Page<>(reviewInitReq.getPageNo(), reviewInitReq.getPageSize()), queryWrapper);
+        map.put("voList",getInitPageData(page.getRecords()));
+        map.put("total",page.getTotal());
         return map;
     }
 

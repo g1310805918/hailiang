@@ -99,7 +99,7 @@ public class SendMessageUtil {
         List<Engineer> engineerList = engineerService.list(new QueryWrapper<Engineer>().eq("identity", 3).eq("account_status", StatusCodeUtil.ENGINEER_ACCOUNT_NORMAL_STATUS));
         if (engineerList.size() > 0 && engineerList != null) {
             engineerList.forEach(item -> {
-                msg = new EngineerMsg().setEngineerId(item.getId()).setMsgType(StatusCodeUtil.ENGINEER_MESSAGE_TYPE_DOCUMENT).setTypeId(Convert.toLong(documentId)).setMsgTitle("文档审核通知").setMsgContent("你有一个新的文档审核申请，等待您的审核。");
+                msg = new EngineerMsg().setEngineerId(item.getId()).setMsgType(StatusCodeUtil.ENGINEER_MESSAGE_TYPE_DOCUMENT).setTypeId(Convert.toLong(documentId)).setMsgTitle("文档审核通知").setMsgContent("您有一个新的文档审核申请，等待您的审核。");
                 sendMessage(msg);
             });
         }

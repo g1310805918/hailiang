@@ -13,20 +13,13 @@ public class CreateBugFeedbackReq extends RequestBodyReq {
     @ApiModelProperty("关联的工单编号")
     private String outTradeNo;
 
-    @ApiModelProperty("分类id")
-    private String categoryId;
-
     @ApiModelProperty("bug标题")
     private String bugTitle;
-
-    @ApiModelProperty("内容")
-    private String content;
 
     @ApiModelProperty("附件地址")
     private String attachmentPatch;
 
     @ApiModelProperty("附件注释")
     private String attachmentDescription;
-
 
 }

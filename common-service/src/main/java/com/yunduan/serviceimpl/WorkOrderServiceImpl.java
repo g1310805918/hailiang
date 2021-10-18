@@ -105,7 +105,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         //我已完结的工单
         Integer myCloseWorkOrderCount = workOrderMapper.selectCount(new QueryWrapper<WorkOrder>().eq("account_id", userId).eq("status", 4));
         //我收藏的工单
-        Integer myCollectionWorkOrderCount = collectionAccountMapper.selectCount(new QueryWrapper<CollectionAccount>().eq("account_id",userId));
+        Integer myCollectionWorkOrderCount = collectionAccountMapper.selectCount(new QueryWrapper<CollectionAccount>().eq("account_id", userId));
         resultMap.put("companyTotalAcceptWorkOrderCount", companyTotalAcceptWorkOrderCount);
         resultMap.put("myAcceptWorkOrderCount", myAcceptWorkOrderCount);
         resultMap.put("myCloseWorkOrderCount", myCloseWorkOrderCount);
@@ -550,7 +550,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         map.put("myCollectionWorkOrderCount", collectionCount);
         //当前工程师未读消息数量
         Integer engineerUnreadMessageCount = engineerMsgMapper.selectCount(new QueryWrapper<EngineerMsg>().eq("engineer_id", engineerId).eq("is_read", 0));
-        map.put("engineerUnreadMessageCount",engineerUnreadMessageCount);
+        map.put("engineerUnreadMessageCount", engineerUnreadMessageCount);
         return map;
     }
 
@@ -563,7 +563,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
      */
     @Override
     public Map<String, Object> queryEngineerIndexInit(EngineerIndexInitReq engineerIndexInitReq) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = CollectionUtil.newHashMap();
         //当前工程师id
         Long userId = ContextUtil.getUserId();
         //三级分类id不为空时，表示筛选了三级分类
@@ -577,10 +577,15 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
         if (engineerIndexInitReq.getMyCollectionOrder() != null && engineerIndexInitReq.getMyCollectionOrder()) {
             //工程师收藏列表
             List<CollectionEngineer> collectionEngineerList = collectionEngineerMapper.selectList(new QueryWrapper<CollectionEngineer>().eq("engineer_id", userId));
-            if (!CollectionUtils.isEmpty(collectionEngineerList)) {
+            if (CollectionUtil.isNotEmpty(collectionEngineerList)) {
                 collectionEngineerList.forEach(collection -> {
                     workOrderIdList.add(collection.getWorkOrderId());
                 });
+            }
+            if (CollectionUtil.isEmpty(workOrderIdList)) {
+                map.put("voList", workOrderIdList);
+                map.put("total", workOrderIdList.size());
+                return map;
             }
         }
         //条件构造器
@@ -594,19 +599,19 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
                 .eq((engineerIndexInitReq.getMyAcceptOrder() != null && engineerIndexInitReq.getMyAcceptOrder()), "status", StatusCodeUtil.WORK_ORDER_ACCEPT_STATUS)
                 //我的已完结工单
                 .eq((engineerIndexInitReq.getMyCloseOrder() != null && engineerIndexInitReq.getMyCloseOrder()), "engineer_id", userId)
-                .eq((engineerIndexInitReq.getMyAcceptOrder() != null && engineerIndexInitReq.getMyAcceptOrder()), "status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS)
+                .eq((engineerIndexInitReq.getMyCloseOrder() != null && engineerIndexInitReq.getMyCloseOrder()), "status", StatusCodeUtil.WORK_ORDER_CLOSE_STATUS)
                 //我收藏的工单
-                .in(workOrderIdList.size() > 0 && workOrderIdList != null, "id", workOrderIdList)
+                .in(CollectionUtil.isNotEmpty(workOrderIdList), "id", workOrderIdList)
                 //开始时间
-                .ge(StrUtil.isNotEmpty(engineerIndexInitReq.getStartTime()), "create_time", engineerIndexInitReq.getStartTime())
+                .ge(StrUtil.isNotEmpty(engineerIndexInitReq.getStartTime()), "create_time", (engineerIndexInitReq.getStartTime() + " 00:00:00"))
                 //结束时间
-                .le(StrUtil.isNotEmpty(engineerIndexInitReq.getEndTime()), "last_update_time", engineerIndexInitReq.getEndTime())
+                .le(StrUtil.isNotEmpty(engineerIndexInitReq.getEndTime()), "create_time", (engineerIndexInitReq.getEndTime() + " 23:59:59"))
                 //id倒序排序
                 .orderByDesc("id");
         //筛选后的工单分页列表
-        List<WorkOrder> records = workOrderMapper.selectPage(new Page<>(engineerIndexInitReq.getPageNo(), engineerIndexInitReq.getPageSize()), queryWrapper).getRecords();
-        map.put("voList", getEngineerResultWorkOrderList(records, userId));
-        map.put("total", workOrderMapper.selectCount(queryWrapper));
+        Page<WorkOrder> orderPage = workOrderMapper.selectPage(new Page<>(engineerIndexInitReq.getPageNo(), engineerIndexInitReq.getPageSize()), queryWrapper);
+        map.put("voList", getEngineerResultWorkOrderList(orderPage.getRecords(), userId));
+        map.put("total", orderPage.getTotal());
         return map;
     }
 
@@ -623,7 +628,7 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
             for (WorkOrder record : records) {
                 vo = new WorkOrderListVo();
                 //工单id、问题概要、工单编号、分类名称、开始时间、最后更新时间
-                vo.setId(record.getId().toString()).setProblemProfile(record.getProblemProfile()).setOutTradeNo(record.getOutTradeNo()).setCategoryName(record.getProductNameVersion() + record.getProblemType()).setCreateTime(record.getCreateTime().substring(0, 16)).setUpdateTime(record.getLastUpdateTime().substring(0, 16));
+                vo.setId(record.getId().toString()).setProblemProfile(record.getProblemProfile()).setOutTradeNo(record.getOutTradeNo()).setCategoryName(StrUtil.hasEmpty(record.getProductNameVersion()) ? ("" + record.getProblemType()) : record.getProblemType()).setCreateTime(record.getCreateTime().substring(0, 16)).setUpdateTime(record.getLastUpdateTime().substring(0, 16));
                 //严重等级、联系人、工单状态、客户服务号
                 vo.setProblemSeverity(record.getProblemSeverity()).setMainContact(record.getMainContact()).setStatus(record.getStatus()).setCsiNumber(record.getCsiNumber());
                 //是否收藏工单

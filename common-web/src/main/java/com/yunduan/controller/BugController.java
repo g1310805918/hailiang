@@ -40,27 +40,26 @@ public class BugController {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
-
     @GetMapping("/base-info")
-    @ApiOperation(httpMethod = "GET",value = "BUG审核管理页面统计")
+    @ApiOperation(httpMethod = "GET", value = "BUG审核管理页面统计")
     public ResultUtil<Map<String, Integer>> baseInfo() {
         Map<String, Integer> map = bugManagerService.queryBaseInfo();
-        return resultUtil.AesJSONSuccess("SUCCESS",map);
+        return resultUtil.AesJSONSuccess("SUCCESS", map);
     }
 
 
     @GetMapping("/init-page")
-    @ApiOperation(httpMethod = "GET",value = "BUG审核管理初始化页面")
+    @ApiOperation(httpMethod = "GET", value = "BUG审核管理初始化页面")
     public ResultUtil<Map<String, Object>> initPage(BugManagerInitPageReq bugManagerInitPageReq) {
-        bugManagerInitPageReq = AESUtil.decryptToObj(bugManagerInitPageReq.getData(),BugManagerInitPageReq.class);
+        bugManagerInitPageReq = AESUtil.decryptToObj(bugManagerInitPageReq.getData(), BugManagerInitPageReq.class);
         Map<String, Object> map = bugManagerService.queryInitPage(bugManagerInitPageReq);
-        return resultUtil.AesJSONSuccess("SUCCESS",map);
+        return resultUtil.AesJSONSuccess("SUCCESS", map);
     }
 
 
     @PostMapping("/pass-review/{id}")
-    @ApiOperation(httpMethod = "POST",value = "BUG审核管理审核通过bug操作")
-    public ResultUtil<String> passReview(@PathVariable String id){
+    @ApiOperation(httpMethod = "POST", value = "BUG审核管理审核通过bug操作")
+    public ResultUtil<String> passReview(@PathVariable String id) {
         if (StrUtil.hasEmpty(id)) {
             log.error("审核通过操作 id 为空");
             return resultUtil.AesFAILError("非法请求");
@@ -75,14 +74,14 @@ public class BugController {
                 threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendBUGReviewPassMessage(id));
             }
         }
-        return flag ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
+        return flag ? resultUtil.AesJSONSuccess("操作成功", "") : resultUtil.AesFAILError("操作失败");
     }
 
 
     @PostMapping("/refused-bug")
-    @ApiOperation(httpMethod = "POST",value = "BUG审核管理拒绝bug")
+    @ApiOperation(httpMethod = "POST", value = "BUG审核管理拒绝bug")
     public ResultUtil<String> refusedBug(PassReviewReq passReviewReq) {
-        passReviewReq = AESUtil.decryptToObj(passReviewReq.getData(),PassReviewReq.class);
+        passReviewReq = AESUtil.decryptToObj(passReviewReq.getData(), PassReviewReq.class);
         boolean flag = false;
         BugManager bugManager = bugManagerService.getById(passReviewReq.getId());
         if (bugManager != null) {
@@ -93,75 +92,70 @@ public class BugController {
                 threadPoolTaskExecutor.execute(() -> sendMessageUtil.sendBUGReviewRefusedMessage(bugManager.getId().toString()));
             }
         }
-        return flag ? resultUtil.AesJSONSuccess("操作成功","") : resultUtil.AesFAILError("操作失败");
+        return flag ? resultUtil.AesJSONSuccess("操作成功", "") : resultUtil.AesFAILError("操作失败");
     }
 
 
     @GetMapping("/detail-info/{id}")
-    @ApiOperation(httpMethod = "POST",value = "BUG审核管理bug反馈详情")
+    @ApiOperation(httpMethod = "GET", value = "BUG审核管理bug反馈详情")
     public ResultUtil<BudDetailVo> detailInfo(@PathVariable String id) {
         if (StrUtil.hasEmpty(id)) {
             log.error("审核通过操作 id 为空");
             return resultUtil.AesFAILError("非法请求");
         }
         BudDetailVo vo = bugManagerService.queryDetail(id);
-        return resultUtil.AesJSONSuccess("SUCCESS",vo);
+        return resultUtil.AesJSONSuccess("SUCCESS", vo);
     }
 
 
     @GetMapping("/engineer-base-info")
-    @ApiOperation(httpMethod = "GET",value = "工程师BUG反馈页面统计")
+    @ApiOperation(httpMethod = "GET", value = "工程师BUG反馈页面统计")
     public ResultUtil<Map<String, Integer>> engineerBaseInfo() {
         Map<String, Integer> map = bugManagerService.queryFeedbackBaseInfo();
-        return resultUtil.AesJSONSuccess("SUCCESS",map);
+        return resultUtil.AesJSONSuccess("SUCCESS", map);
     }
 
 
     @GetMapping("/engineer-init-page")
-    @ApiOperation(httpMethod = "GET",value = "工程师Bug反馈列表初始化")
+    @ApiOperation(httpMethod = "GET", value = "工程师Bug反馈列表初始化")
     public ResultUtil<Map<String, Object>> engineerInitPage(EngineerBugInitPageReq engineerBugInitPageReq) {
-        engineerBugInitPageReq = AESUtil.decryptToObj(engineerBugInitPageReq.getData(),EngineerBugInitPageReq.class);
+        engineerBugInitPageReq = AESUtil.decryptToObj(engineerBugInitPageReq.getData(), EngineerBugInitPageReq.class);
         Map<String, Object> map = bugManagerService.queryEngineerInitPage(engineerBugInitPageReq);
-        return resultUtil.AesJSONSuccess("SUCCESS",map);
+        return resultUtil.AesJSONSuccess("SUCCESS", map);
     }
 
 
     @PostMapping("/engineer-add")
-    @ApiOperation(httpMethod = "POST",value = "工程师添加bug反馈")
-    public ResultUtil<String> engineerAdd(CreateBugFeedbackReq createBugFeedbackReq) {
-        createBugFeedbackReq = AESUtil.decryptToObj(createBugFeedbackReq.getData(),CreateBugFeedbackReq.class);
-        int row = bugManagerService.createBugFeedback(createBugFeedbackReq);
-        return row > 0 ? resultUtil.AesJSONSuccess("反馈成功","") : resultUtil.AesFAILError("反馈失败");
+    @ApiOperation(httpMethod = "POST", value = "工程师添加bug反馈")
+    public ResultUtil<String> engineerAdd(CreateBugFeedbackReq createBugFeedbackReq, @RequestBody String content) {
+        createBugFeedbackReq = AESUtil.decryptToObj(createBugFeedbackReq.getData(), CreateBugFeedbackReq.class);
+        int row = bugManagerService.createBugFeedback(createBugFeedbackReq, content);
+        return row > 0 ? resultUtil.AesJSONSuccess("反馈成功", "") : resultUtil.AesFAILError("反馈失败");
     }
 
 
     @GetMapping("/engineer-refused-reason/{id}")
-    @ApiOperation(httpMethod = "GET",value = "工程师查看BUG文档拒绝原因")
+    @ApiOperation(httpMethod = "GET", value = "工程师查看BUG文档拒绝原因")
     public ResultUtil<String> engineerRefusedReason(@PathVariable String id) {
         if (StrUtil.hasEmpty(id)) {
             log.error("工程师查看BUG文档拒绝原因【id】为空");
             return resultUtil.AesFAILError("非法请求");
         }
         BugManager one = bugManagerService.getById(id);
-        return resultUtil.AesJSONSuccess("SUCCESS",StrUtil.hasEmpty(one.getRefusedReason()) ? "" : one.getRefusedReason());
+        return resultUtil.AesJSONSuccess("SUCCESS", StrUtil.hasEmpty(one.getRefusedReason()) ? "" : one.getRefusedReason());
     }
 
 
     @GetMapping("engineer-tapd-feedback-result/{id}")
-    @ApiOperation(httpMethod = "GET",value = "工程师查看tabd反馈结果")
+    @ApiOperation(httpMethod = "GET", value = "工程师查看tabd反馈结果")
     public ResultUtil<String> engineerTAPDResult(@PathVariable String id) {
         if (StrUtil.hasEmpty(id)) {
             log.error("工程师查看tabd反馈结果【id】为空");
             return resultUtil.AesFAILError("非法请求");
         }
         BugManager one = bugManagerService.getById(id);
-        return resultUtil.AesJSONSuccess("SUCCESS",StrUtil.hasEmpty(one.getTabdFeedback()) ? "" : one.getTabdFeedback());
+        return resultUtil.AesJSONSuccess("SUCCESS", StrUtil.hasEmpty(one.getTabdFeedback()) ? "" : one.getTabdFeedback());
     }
-
-
-
-
-
 
 
 }

@@ -127,10 +127,10 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
                     //用户头像、昵称
                     result.setHeadPic(StrUtil.hasEmpty(account.getHeadPic()) ? "" : account.getHeadPic()).setUsername(StrUtil.hasEmpty(account.getUsername()) ? "" : account.getUsername());
                     //工程师是否可以编辑沟通记录
-                    result.setIsEdit(false);
-                }else {
+                    result.setIsEdit(false).setIsEngineerRecord(false);
+                } else {
                     //否则表示工程师、工程师是否可以编辑沟通记录
-                    result.setHeadPic("LOGO").setUsername("海量数据技术支持").setIsEdit(true);
+                    result.setHeadPic(StatusCodeUtil.ENGINEER_DEFAULT_HEADPIC).setUsername("海量数据技术支持").setIsEdit(true).setIsEngineerRecord(true);
                 }
                 //工单的错误代码
                 result.setErrorCode(StrUtil.hasBlank(workOrder.getErrorCode()) ? "" : workOrder.getErrorCode());
@@ -232,8 +232,8 @@ public class CommunicationRecordServiceImpl extends ServiceImpl<CommunicationRec
     public int createCommunicationRecordVDM(AddVDMFeedbackReq addVDMFeedbackReq) {
         WorkOrder workOrder = workOrderMapper.selectById(addVDMFeedbackReq.getWorkOrderId());
         if (workOrder != null) {
-            CommunicationRecord record = new CommunicationRecord();
-            record.setWorkOrderId(workOrder.getId()).setEngineerId(workOrder.getEngineerId()).setCodeFlag(addVDMFeedbackReq.getVDMCode()).setIsShow(1).setContent(addVDMFeedbackReq.getContent()).setDescImage(addVDMFeedbackReq.getDescImage());
+            //工单id、工程师id、VDM标签、内容、用户是否可见、问题图片
+            CommunicationRecord record = new CommunicationRecord().setWorkOrderId(workOrder.getId()).setEngineerId(workOrder.getEngineerId()).setCodeFlag(StrUtil.isNotEmpty(addVDMFeedbackReq.getVDMCode()) ? "VDM" + addVDMFeedbackReq.getVDMCode() : "").setIsShow(1).setContent(addVDMFeedbackReq.getContent()).setDescImage(addVDMFeedbackReq.getDescImage());
             int row = communicationRecordMapper.insert(record);
             if (row > 0) {
                 //更新工单处理流程

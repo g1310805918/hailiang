@@ -114,7 +114,7 @@ public class EngineerServiceImpl extends ServiceImpl<EngineerMapper, Engineer> i
             vo.setId(null).setCount(collectionEngineerDocumentMapper.selectCount(new QueryWrapper<CollectionEngineerDocument>().eq("engineer_id", engineerId).eq("favorites_id", null))).setFavoritesName("默认收藏夹");
             favoritesVoList.add(vo);
             //查询用户所有收藏夹
-            List<CollectionFavorites> favoritesList = collectionFavoritesMapper.selectList(new QueryWrapper<CollectionFavorites>().eq("engineer_id", engineerId));
+            List<CollectionFavorites> favoritesList = collectionFavoritesMapper.selectList(new QueryWrapper<CollectionFavorites>().eq("account_id", engineerId));
             if (favoritesList.size() > 0 && favoritesList != null) {
                 //得到用户创建收藏夹
                 for (CollectionFavorites collectionFavorites : favoritesList) {

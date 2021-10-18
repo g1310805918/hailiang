@@ -115,6 +115,9 @@ public class StatusCodeUtil {
     public static final Integer ACCOUNT_IDENTITY_FOR_BDE = 4;
     public static final Integer ACCOUNT_IDENTITY_FOR_MANAGER = 5;
 
+    //工程师默认头像
+    public static final String ENGINEER_DEFAULT_HEADPIC = "http://mvs.vastdata.com.cn/defaultHeadpic.png";
+
     //工程师账号 正常状态
     public static final Integer ENGINEER_ACCOUNT_NORMAL_STATUS = 1;
 

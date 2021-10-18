@@ -53,9 +53,10 @@ public interface BugManagerService extends IService<BugManager> {
     /**
      * 添加bug反馈
      * @param createBugFeedbackReq 添加参数
+     * @param content bug内容
      * @return int
      */
-    int createBugFeedback(CreateBugFeedbackReq createBugFeedbackReq);
+    int createBugFeedback(CreateBugFeedbackReq createBugFeedbackReq,String content);
 }
 
 

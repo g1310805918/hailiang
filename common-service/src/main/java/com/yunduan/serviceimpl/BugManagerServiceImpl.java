@@ -52,23 +52,25 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
 
     /**
      * BUG审核管理页面统计
+     *
      * @return map
      */
     @Override
     public Map<String, Integer> queryBaseInfo() {
         Map<String, Integer> map = new HashMap<>();
         //总反馈bug数
-        map.put("totalBugCount",bugManagerMapper.selectCount(new QueryWrapper<>()));
+        map.put("totalBugCount", bugManagerMapper.selectCount(new QueryWrapper<>()));
         //带我审核的反馈bug数
-        map.put("passReviewCount",bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS)));
+        map.put("passReviewCount", bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS)));
         //审核通过的bug数
-        map.put("noPassReviewCount",bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS)));
+        map.put("noPassReviewCount", bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS)));
         return map;
     }
 
 
     /**
      * bug页面初始化
+     *
      * @param bugManagerInitPageReq 筛选对象
      * @return map
      */
@@ -82,19 +84,20 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
                 //三级分类id
                 .eq(StrUtil.isNotEmpty(bugManagerInitPageReq.getCategoryId()), "category_id", bugManagerInitPageReq.getCategoryId())
                 //带我审核
-                .eq(bugManagerInitPageReq.getStayMyReview(), "bug_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS)
+                .eq((bugManagerInitPageReq.getStayMyReview() != null && bugManagerInitPageReq.getStayMyReview()), "bug_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS)
                 //审核通过
-                .eq(bugManagerInitPageReq.getReviewPass(), "bug_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS).orderByDesc("create_time");
+                .eq((bugManagerInitPageReq.getReviewPass() != null && bugManagerInitPageReq.getReviewPass()), "bug_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS).orderByDesc("create_time");
         //查询出的结果集
-        List<BugManager> records = bugManagerMapper.selectPage(new Page<>(bugManagerInitPageReq.getPageNo(), bugManagerInitPageReq.getPageSize()), queryWrapper).getRecords();
-        map.put("voList",getResultBugRecordList(records));
-        map.put("total",bugManagerMapper.selectCount(queryWrapper));
+        Page<BugManager> page = bugManagerMapper.selectPage(new Page<>(bugManagerInitPageReq.getPageNo(), bugManagerInitPageReq.getPageSize()), queryWrapper);
+        map.put("voList", getResultBugRecordList(page.getRecords()));
+        map.put("total", page.getTotal());
         return map;
     }
 
 
     /**
      * 封装bug反馈列表结果数据集合
+     *
      * @param records 原数据集合
      * @return list
      */
@@ -118,16 +121,17 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
 
     /**
      * bug反馈详情
+     *
      * @param id id
      * @return BudDetailVo
      */
     @Override
     public BudDetailVo queryDetail(String id) {
         BugManager bugManager = bugManagerMapper.selectById(id);
-        if (bugManager != null){
+        if (bugManager != null) {
             BudDetailVo vo = new BudDetailVo();
             vo.setId(bugManager.getId().toString()).setContent(bugManager.getBugContent()).setCategoryName(bugManager.getCategoryName());
-            vo.setOutTradeNo(bugManager.getOutTradeNo()).setStatus(bugManager.getBugStatus()).setCreateTime(bugManager.getCreateTime().substring(0,16));
+            vo.setOutTradeNo(bugManager.getOutTradeNo()).setStatus(bugManager.getBugStatus()).setCreateTime(bugManager.getCreateTime().substring(0, 16));
             vo.setCreateBy(engineerMapper.selectById(bugManager.getEngineerId()).getUsername()).setTitle(bugManager.getBugTitle());
             return vo;
         }
@@ -136,6 +140,7 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
 
     /**
      * 查询普通工程师BUG反馈页面统计
+     *
      * @return map
      */
     @Override
@@ -143,17 +148,18 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
         Map<String, Integer> map = new HashMap<>();
         Long userId = ContextUtil.getUserId();
         //待审核的反馈bug
-        map.put("noReviewBugCount",bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status",StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS).eq("engineer_id",userId)));
+        map.put("noReviewBugCount", bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS).eq("engineer_id", userId)));
         //审核通过的反馈bug
-        map.put("passReviewCount",bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS).eq("engineer_id",userId)));
+        map.put("passReviewCount", bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS).eq("engineer_id", userId)));
         //审核失败的反馈bug
-        map.put("noPassReviewCount",bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_NO_PASS_REVIEW_STATUS).eq("engineer_id",userId)));
+        map.put("noPassReviewCount", bugManagerMapper.selectCount(new QueryWrapper<BugManager>().eq("bug_status", StatusCodeUtil.BUG_DOC_NO_PASS_REVIEW_STATUS).eq("engineer_id", userId)));
         return map;
     }
 
 
     /**
      * 工程师bug反馈页面初始化
+     *
      * @param engineerBugInitPageReq 筛选对象
      * @return map
      */
@@ -163,33 +169,38 @@ public class BugManagerServiceImpl extends ServiceImpl<BugManagerMapper, BugMana
         //条件构造器
         QueryWrapper<BugManager> queryWrapper = new QueryWrapper<BugManager>()
                 .eq("engineer_id", ContextUtil.getUserId())
-                .eq(engineerBugInitPageReq.getNoReview(), "doc_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS)
-                .eq(engineerBugInitPageReq.getPassReview(), "doc_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS)
-                .eq(engineerBugInitPageReq.getRefusedReview(), "doc_status", StatusCodeUtil.BUG_DOC_NO_PASS_REVIEW_STATUS)
+                .eq((engineerBugInitPageReq.getNoReview() != null && engineerBugInitPageReq.getNoReview()), "doc_status", StatusCodeUtil.BUG_DOC_NO_REVIEW_STATUS)
+                .eq((engineerBugInitPageReq.getPassReview() != null && engineerBugInitPageReq.getPassReview()), "doc_status", StatusCodeUtil.BUG_DOC_PASS_REVIEW_STATUS)
+                .eq((engineerBugInitPageReq.getRefusedReview() != null && engineerBugInitPageReq.getRefusedReview()), "doc_status", StatusCodeUtil.BUG_DOC_NO_PASS_REVIEW_STATUS)
                 .eq(StrUtil.isNotEmpty(engineerBugInitPageReq.getCategoryId()), "category_id", engineerBugInitPageReq.getCategoryId())
                 .eq(StrUtil.isNotEmpty(engineerBugInitPageReq.getOutTradeNo()), "out_trade_no", engineerBugInitPageReq.getOutTradeNo())
                 .like(StrUtil.isNotEmpty(engineerBugInitPageReq.getBugTitle()), "bug_title", engineerBugInitPageReq.getBugTitle())
                 .orderByDesc("create_time");
         //bug反馈记录列表
-        List<BugManager> records = bugManagerMapper.selectPage(new Page<>(engineerBugInitPageReq.getPageNo(), engineerBugInitPageReq.getPageSize()), queryWrapper).getRecords();
-        map.put("voList",getResultBugRecordList(records));
-        map.put("total",bugManagerMapper.selectCount(queryWrapper));
+        Page<BugManager> page = bugManagerMapper.selectPage(new Page<>(engineerBugInitPageReq.getPageNo(), engineerBugInitPageReq.getPageSize()), queryWrapper);
+        map.put("voList", getResultBugRecordList(page.getRecords()));
+        map.put("total", page.getTotal());
         return map;
     }
 
 
     /**
      * 添加bug反馈
+     *
      * @param createBugFeedbackReq 添加参数
+     * @param content              bug反馈内容
      * @return int
      */
     @Override
-    public int createBugFeedback(CreateBugFeedbackReq createBugFeedbackReq) {
+    public int createBugFeedback(CreateBugFeedbackReq createBugFeedbackReq, String content) {
         BugManager entity = new BugManager();
         WorkOrder workOrder = workOrderMapper.selectOne(new QueryWrapper<WorkOrder>().eq("out_trade_no", createBugFeedbackReq.getOutTradeNo()));
+        //工单编号、工单id、工程师id
         entity.setOutTradeNo(createBugFeedbackReq.getOutTradeNo()).setWorkOrderId(workOrder == null ? 0L : workOrder.getId()).setEngineerId(ContextUtil.getUserId());
-        entity.setCategoryId(Convert.toLong(createBugFeedbackReq.getCategoryId())).setCategoryName(threeCategoryService.getKnowledgeCategoryName(createBugFeedbackReq.getCategoryId()));
-        entity.setBugTitle(createBugFeedbackReq.getBugTitle()).setBugContent(createBugFeedbackReq.getContent());
+        //三级分类id、分类名称
+        entity.setCategoryId(Convert.toLong(workOrder.getCategoryId())).setCategoryName(threeCategoryService.getKnowledgeCategoryName(workOrder.getCategoryId()));
+        //bug标题、bug文档内容
+        entity.setBugTitle(createBugFeedbackReq.getBugTitle()).setBugContent(content);
         int row = bugManagerMapper.insert(entity);
         if (row > 0) {
             //发送bug申请到BDE工程师
